@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/errors"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/errors"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/uefi"
 	"github.com/9elements/converged-security-suite/v2/pkg/uefi/ffs"

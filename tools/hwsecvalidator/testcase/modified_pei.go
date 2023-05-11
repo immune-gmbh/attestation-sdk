@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/uefiedit"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/validator"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/errors"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/uefiedit"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
 
 	"github.com/linuxboot/fiano/pkg/guid"
 )

@@ -3,10 +3,10 @@ package registry
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/amd"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/intel"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/amd"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/intel"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 )
 
 var all = types.TestCases{}

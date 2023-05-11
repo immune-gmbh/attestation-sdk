@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/registry"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 )
 

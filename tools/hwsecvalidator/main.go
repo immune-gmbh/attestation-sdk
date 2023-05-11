@@ -22,10 +22,10 @@ import (
 	fianoLog "github.com/linuxboot/fiano/pkg/log"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/commands/fwinfo"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/commands/list"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/commands/setup"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/commands/validate"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/fwinfo"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/list"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/setup"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/validate"
 )
 
 var (

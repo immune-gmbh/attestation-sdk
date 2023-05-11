@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/validate/testcase/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 
 	"github.com/stretchr/testify/require"
 )
