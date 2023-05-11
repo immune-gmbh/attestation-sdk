@@ -3,7 +3,7 @@ package typeconv
 import (
 	"testing"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmdetection"

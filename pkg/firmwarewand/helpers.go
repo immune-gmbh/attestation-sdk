@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
 
 	"github.com/facebookincubator/go-belt/pkg/field"

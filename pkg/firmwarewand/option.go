@@ -7,20 +7,13 @@ import (
 )
 
 type config struct {
-	FirmwareAnalyzerSMCTier   string
-	firmwareAnalyzerEndpoints []string
-	FirmwareAnalyzerLogLevel  logger.Level
-	FlashromOptions           []flashrom.Option
+	afasEndpoints   []string
+	AFASLogLevel    logger.Level
+	FlashromOptions []flashrom.Option
 }
 
 type Option interface {
 	apply(*config)
-}
-
-type OptionFirmwareAnalyzerSMCTier string
-
-func (opt OptionFirmwareAnalyzerSMCTier) apply(cfg *config) {
-	cfg.FirmwareAnalyzerSMCTier = string(opt)
 }
 
 // OptionFirmwareAnalyzerEndpoints specifies an exact endpoint to connect to
@@ -28,7 +21,7 @@ func (opt OptionFirmwareAnalyzerSMCTier) apply(cfg *config) {
 type OptionFirmwareAnalyzerEndpoints []string
 
 func (opt OptionFirmwareAnalyzerEndpoints) apply(cfg *config) {
-	cfg.firmwareAnalyzerEndpoints = opt
+	cfg.afasEndpoints = opt
 }
 
 type OptionFlashromOptions []flashrom.Option
@@ -40,12 +33,12 @@ func (opt OptionFlashromOptions) apply(cfg *config) {
 type OptionRemoteLogLevel logger.Level
 
 func (opt OptionRemoteLogLevel) apply(cfg *config) {
-	cfg.FirmwareAnalyzerLogLevel = logger.Level(opt)
+	cfg.AFASLogLevel = logger.Level(opt)
 }
 
 func getConfig(opts ...Option) config {
 	cfg := config{
-		FirmwareAnalyzerLogLevel: logger.LevelWarning,
+		AFASLogLevel: logger.LevelWarning,
 	}
 	for _, opt := range opts {
 		opt.apply(&cfg)

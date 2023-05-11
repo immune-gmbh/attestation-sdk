@@ -151,21 +151,6 @@ struct SearchReportResult {
   1: list<AnalyzeResult> Found;
 }
 
-struct ReportHostConfigurationRequest {
-  1: string FirmwareVersion;
-  2: string FirmwareDateString;
-  3: optional TPMType TpmDevice;
-  4: optional list<StatusRegister> StatusRegisters;
-  5: optional tpm.EventLog TPMEventLog;
-  6: optional binary PCRValue;
-  7: HostInfo HostInfo;
-}
-
-struct ReportHostConfigurationResult {
-  1: binary PCR0SHA1;
-  2: binary PCR0SHA256;
-}
-
 struct FirmwareVersion {
   1: string Version;
   2: string Date;
@@ -308,12 +293,6 @@ struct CheckFirmwareVersionResult {
 service AttestationFailureAnalyzerService {
   SearchFirmwareResult SearchFirmware(1: SearchFirmwareRequest request);
   SearchReportResult SearchReport(1: SearchReportRequest request);
-  ReportHostConfigurationResult ReportHostConfiguration(
-    1: ReportHostConfigurationRequest request,
-  ) throws (
-    1: UnableToGetOriginalFirmware unableToGetOriginalFirmware,
-    2: IncorrectHostConfiguration incorrectHostConfiguration,
-  );
   AnalyzeResult Analyze(1: AnalyzeRequest request);
   CheckFirmwareVersionResult CheckFirmwareVersion(
     1: CheckFirmwareVersionRequest request,

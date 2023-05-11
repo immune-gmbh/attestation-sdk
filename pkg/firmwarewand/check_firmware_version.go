@@ -3,7 +3,7 @@ package firmwarewand
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 )
 
 // CheckFirmwareVersion sends a firmware versions check request to AFAS
@@ -16,7 +16,7 @@ func (fwwand *FirmwareWand) CheckFirmwareVersion(
 	for idx := range firmwares {
 		request.Firmwares[idx] = &firmwares[idx]
 	}
-	response, err := fwwand.firmwareAnalyzer.CheckFirmwareVersion(&request)
+	response, err := fwwand.afasClient.CheckFirmwareVersion(ctx, &request)
 	if err != nil {
 		return nil, err
 	}

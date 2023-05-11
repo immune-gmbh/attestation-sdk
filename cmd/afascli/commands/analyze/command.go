@@ -12,7 +12,6 @@ import (
 	"strings"
 	"text/template"
 
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
@@ -67,7 +66,7 @@ type Command struct {
 	analyzers               analyzersFlag
 	eventLog                *string
 	expectPCR0              *string
-	firmwareAnalysisAddress *string
+	afasAddress             *string
 	firmwareRTPFilename     *string
 	firmwareEverstoreHandle *string
 	firmwareVersion         *string
@@ -268,12 +267,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	cmd.dumpCommand.SetupFlagSet(flag)
 
 	flag.Var(&cmd.analyzers, "analyzer", "List of analyzers to start, values: "+knownAnalyzersArg())
-	// It is called "Address" instead of "Tier" to add support of direct thrift
-	// addresses in future (it will be determined by presence of a port, so
-	// for direct addresses the format is: host:port)
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
-	cmd.firmwareRTPFilename = flag.String("firmware-rtp-filename", "", "specific firmware file that should be taken from firmware repository to analyze")
-	cmd.firmwareEverstoreHandle = flag.String("firmware-everstore-handle", "", "specific firmware image that should be taken from everstore to analyze")
+	cmd.afasAddress = flag.String("afas-endpoint", "", "")
 	cmd.firmwareVersion = flag.String("firmware-version", "", "the version of the firmware to compare with; empty value means to read SMBIOS values")
 	cmd.firmwareDate = flag.String("firmware-date", "", "the date of the firmware to compare with; empty value means to read SMBIOS values")
 	cmd.eventLog = flag.String("event-log", "", "path to the binary EventLog")
@@ -297,7 +291,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 // FirmwarewandOptions returns firmwarewand.Option slice
 // which should be used according to passed flags.
 func (cmd Command) FirmwarewandOptions() []firmwarewand.Option {
-	return append(helpers.FirmwarewandOptions(*cmd.firmwareAnalysisAddress), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
+	return append(helpers.FirmwarewandOptions(*cmd.afasAddress), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
 }
 
 // TODO: Consider splitting "afascli analyze" to "afascli scan" and "afascli analyze".

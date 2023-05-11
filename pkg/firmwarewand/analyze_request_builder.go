@@ -2,11 +2,12 @@ package firmwarewand
 
 import (
 	"fmt"
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	"sort"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements"
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 
@@ -88,7 +89,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			FwImage: originalFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
@@ -99,7 +100,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			},
 		}
 		idx := req.addArtifact(firmwareVersionArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	}
 
 	{
@@ -107,23 +108,23 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			FwImage: &actualFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetActualFirmwareImage(idx)
+		input.ActualFirmwareImage = idx
 	}
 
 	if len(thriftRegisters) > 0 {
-		registersArtirfact := &afas.Artifact{
+		registersArtifact := &afas.Artifact{
 			StatusRegisters: thriftRegisters,
 		}
-		idx := req.addArtifact(registersArtirfact)
-		input.SetStatusRegisters(&idx)
+		idx := req.addArtifact(registersArtifact)
+		input.StatusRegisters = &idx
 	}
 
 	if thriftTPM != afas.TPMType_UNKNOWN {
-		tpmTypeArtirfact := &afas.Artifact{
+		tpmTypeArtifact := &afas.Artifact{
 			TPMDevice: &thriftTPM,
 		}
-		idx := req.addArtifact(tpmTypeArtirfact)
-		input.SetTPMDevice(&idx)
+		idx := req.addArtifact(tpmTypeArtifact)
+		input.TPMDevice = &idx
 	}
 
 	if thriftEventlog != nil {
@@ -131,7 +132,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			TPMEventLog: thriftEventlog,
 		}
 		idx := req.addArtifact(eventlogArtifact)
-		input.SetTPMEventLog(&idx)
+		input.TPMEventLog = &idx
 	}
 
 	if len(actualPCR0) > 0 {
@@ -142,7 +143,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			},
 		}
 		idx := req.addArtifact(pcrArtifact)
-		input.SetActualPCR0(&idx)
+		input.ActualPCR0 = &idx
 	}
 
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
@@ -179,7 +180,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 			FwImage: originalFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
@@ -190,7 +191,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 			},
 		}
 		idx := req.addArtifact(firmwareVersionArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	}
 
 	{
@@ -198,7 +199,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 			FwImage: &actualFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetActualFirmwareImage(idx)
+		input.ActualFirmwareImage = idx
 	}
 
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
@@ -260,7 +261,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			FwImage: originalFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
@@ -271,7 +272,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			},
 		}
 		idx := req.addArtifact(firmwareVersionArtifact)
-		input.SetOriginalFirmwareImage(&idx)
+		input.OriginalFirmwareImage = &idx
 	}
 
 	{
@@ -279,23 +280,23 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			FwImage: &actualFirmwareImage,
 		}
 		idx := req.addArtifact(firmwareImageArtifact)
-		input.SetActualFirmwareImage(idx)
+		input.ActualFirmwareImage = idx
 	}
 
 	if len(thriftRegisters) > 0 {
-		registersArtirfact := &afas.Artifact{
+		registersArtifact := &afas.Artifact{
 			StatusRegisters: thriftRegisters,
 		}
-		idx := req.addArtifact(registersArtirfact)
-		input.SetStatusRegisters(&idx)
+		idx := req.addArtifact(registersArtifact)
+		input.StatusRegisters = &idx
 	}
 
 	if thriftTPM != afas.TPMType_UNKNOWN {
-		tpmTypeArtirfact := &afas.Artifact{
+		tpmTypeArtifact := &afas.Artifact{
 			TPMDevice: &thriftTPM,
 		}
-		idx := req.addArtifact(tpmTypeArtirfact)
-		input.SetTPMDevice(&idx)
+		idx := req.addArtifact(tpmTypeArtifact)
+		input.TPMDevice = &idx
 	}
 
 	if thriftEventlog != nil {
@@ -303,7 +304,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			TPMEventLog: thriftEventlog,
 		}
 		idx := req.addArtifact(eventlogArtifact)
-		input.SetTPMEventLog(&idx)
+		input.TPMEventLog = &idx
 	}
 
 	if len(expectedPCR0) > 0 {
@@ -314,7 +315,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			},
 		}
 		idx := req.addArtifact(pcrArtifact)
-		input.SetExpectedPCR(idx)
+		input.ExpectedPCR = idx
 	}
 
 	if thriftPCRFlow != measurements.Flow_AUTO {
@@ -322,7 +323,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			MeasurementsFlow: &thriftPCRFlow,
 		}
 		idx := req.addArtifact(pcrArtifact)
-		input.SetMeasurementsFlow(&idx)
+		input.MeasurementsFlow = &idx
 	}
 
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
@@ -347,7 +348,7 @@ func (req *AnalyzeRequestBuilder) AddPSPSignatureInput(
 	idx := req.addArtifact(&afas.Artifact{
 		FwImage: actualFirmwareImage,
 	})
-	input.SetActualFirmwareImage(idx)
+	input.ActualFirmwareImage = idx
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
 		PSPSignature: &input,
 	})
@@ -370,7 +371,7 @@ func (req *AnalyzeRequestBuilder) AddBIOSRTMVolumeInput(
 	idx := req.addArtifact(&afas.Artifact{
 		FwImage: actualFirmwareImage,
 	})
-	input.SetActualFirmwareImage(idx)
+	input.ActualFirmwareImage = idx
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
 		BIOSRTMVolume: &input,
 	})
@@ -393,7 +394,7 @@ func (req *AnalyzeRequestBuilder) AddAPCBSecurityTokensInput(
 	idx := req.addArtifact(&afas.Artifact{
 		FwImage: actualFirmwareImage,
 	})
-	input.SetActualFirmwareImage(idx)
+	input.ActualFirmwareImage = idx
 	req.request.Analyzers = append(req.request.Analyzers, &afas.AnalyzerInput{
 		APCBSecurityTokens: &input,
 	})
@@ -401,15 +402,15 @@ func (req *AnalyzeRequestBuilder) AddAPCBSecurityTokensInput(
 }
 
 func (req *AnalyzeRequestBuilder) addArtifact(art *afas.Artifact) int32 {
-	artifacthash := objhash.MustBuild(art)
-	idx, found := req.putArtifactsToPos[artifacthash]
+	artifactHash := objhash.MustBuild(art)
+	idx, found := req.putArtifactsToPos[artifactHash]
 	if found {
 		return idx
 	}
 
 	idx = int32(len(req.request.Artifacts))
 	req.request.Artifacts = append(req.request.Artifacts, art)
-	req.putArtifactsToPos[artifacthash] = idx
+	req.putArtifactsToPos[artifactHash] = idx
 	return idx
 }
 

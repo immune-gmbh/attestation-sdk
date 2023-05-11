@@ -1,9 +1,12 @@
 package firmwarewand
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"io"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 )
 
-type firmwareAnalyzerInterface interface {
-	afas.FirmwareAnalyzerClientInterface
+type afasClient interface {
+	io.Closer
+	afas.AttestationFailureAnalyzerService
 }
