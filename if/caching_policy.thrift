@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.if.caching_policy
-namespace py immune.AttestationFailureAnalysisService.caching_policy
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.caching_policy
 
 enum CachingPolicy {
   // Default means the server itself may chose the CachingPolicy.

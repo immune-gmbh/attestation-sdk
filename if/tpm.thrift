@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.if.tpm
-namespace py immune.AttestationFailureAnalysisService.tpm
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.tpm
 
 struct EventLog {
   1: list<Event> Events;

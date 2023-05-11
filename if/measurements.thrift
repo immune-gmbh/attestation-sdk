@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.if.measurements
-namespace py immune.AttestationFailureAnalysisService.measurements
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.measurements
 
 enum Flow {
   AUTO = 0,

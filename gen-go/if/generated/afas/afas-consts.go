@@ -8,12 +8,12 @@ import(
 	"fmt"
 	"time"
 	"github.com/apache/thrift/lib/go/thrift"
-	"immune/AttestationFailureAnalysisService/if/analyzerreport"
-	"immune/AttestationFailureAnalysisService/if/caching_policy"
-	"immune/AttestationFailureAnalysisService/if/measurements"
-	"immune/AttestationFailureAnalysisService/if/tpm"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/caching_policy"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/tpm"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
 
 )
 

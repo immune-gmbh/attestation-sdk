@@ -8,7 +8,7 @@ import(
 	"fmt"
 	"time"
 	"github.com/apache/thrift/lib/go/thrift"
-	"immune/AttestationFailureAnalysisService/if/measurements"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
 
 )
 

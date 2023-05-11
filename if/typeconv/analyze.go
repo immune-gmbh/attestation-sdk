@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/analyzerreport"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"

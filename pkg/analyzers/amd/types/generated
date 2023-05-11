@@ -1,1 +1,1 @@
-../../../../gen-go/immune/AttestationFailureAnalysisService/pkg/analyzers/amd/types
+../pkg/analyzers/amd/types/generated

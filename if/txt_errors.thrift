@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.if.txt_errors
-namespace py immune.AttestationFailureAnalysisService.txt_errors
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.txt_errors
 
 exception ErrUnknown {}
 exception ErrBPTIntegrity {}

@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.diffmeasuredboot.report.diffanalysis
-namespace py immune.AttestationFailureAnalysisService.diffmeasuredboot.diffanalysis
-namespace py3 immune.AttestationFailureAnalysisService.diffmeasuredboot
-namespace cpp2 immune.AttestationFailureAnalysisService.diffmeasuredboot
+namespace go pkg.analyzers.diffmeasuredboot.report.generated.diffanalysis
 
 const string DiffMeasuredBootAnalyzerID = "DiffMeasuredBoot";
 

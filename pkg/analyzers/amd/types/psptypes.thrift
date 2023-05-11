@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.amd.types.psptypes
-namespace py immune.AttestationFailureAnalysisService.psptypes
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go pkg.analyzers.amd.types.generated.psptypes
 
 enum DirectoryType {
   PSPTableLevel1 = 0,

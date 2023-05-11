@@ -5,10 +5,7 @@ include "../pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
 include "../pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
 include "../pkg/analyzers/reproducepcr/report/reproducepcranalysis.thrift"
 
-namespace go immune.AttestationFailureAnalysisService.if.analyzerreport
-namespace py immune.AttestationFailureAnalysisService.analyzerreport
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.analyzerreport
 
 enum Severity {
   SeverityUnknown = 0,

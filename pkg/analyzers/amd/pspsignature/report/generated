@@ -1,1 +1,1 @@
-../../../../../gen-go/immune/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report
+../pkg/analyzers/amd/pspsignature/report/generated

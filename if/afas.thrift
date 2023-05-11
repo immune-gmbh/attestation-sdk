@@ -5,10 +5,7 @@ include "tpm.thrift"
 include "../pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
 include "../pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
 
-namespace go immune.AttestationFailureAnalysisService.if.afas
-namespace py immune.AttestationFailureAnalysisService.afas
-namespace py3 immune.AttestationFailureAnalysisService
-namespace cpp2 immune.AttestationFailureAnalysisService
+namespace go if.generated.afas
 
 // TODO: remove these typedef-s, they are set only for backward compatibility
 typedef diffanalysis.NodeInfo NodeInfo

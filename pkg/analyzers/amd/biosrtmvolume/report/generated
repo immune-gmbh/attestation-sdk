@@ -1,1 +1,1 @@
-../../../../../gen-go/immune/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report
+../pkg/analyzers/amd/biosrtmvolume/report/generated

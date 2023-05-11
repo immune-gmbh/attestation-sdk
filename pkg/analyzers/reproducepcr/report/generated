@@ -1,1 +1,1 @@
-../../../../gen-go/immune/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report
+../pkg/analyzers/reproducepcr/report/generated

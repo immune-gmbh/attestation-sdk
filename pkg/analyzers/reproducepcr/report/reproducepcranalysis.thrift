@@ -1,9 +1,6 @@
 include "../../../../if/measurements.thrift"
 
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.reproducepcr.report.reproducepcranalysis
-namespace py immune.AttestationFailureAnalysisService.reproducepcr.reproducepcranalysis
-namespace py3 immune.AttestationFailureAnalysisService.reproducepcr
-namespace cpp2 immune.AttestationFailureAnalysisService.reproducepcr
+namespace go pkg.analyzers.reproducepcr.report.generated.reproducepcranalysis
 
 const string ReproducePCRAnalyzerID = "ReproducePCR";
 

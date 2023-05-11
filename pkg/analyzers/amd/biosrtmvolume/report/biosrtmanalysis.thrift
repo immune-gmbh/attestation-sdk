@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.amd.biosrtmvolume.report.biosrtmanalysis
-namespace py immune.AttestationFailureAnalysisService.biosrtmvolume.biosrtmanalysis
-namespace py3 immune.AttestationFailureAnalysisService.biosrtmvolume
-namespace cpp2 immune.AttestationFailureAnalysisService.biosrtmvolume
+namespace go pkg.analyzers.amd.biosrtmvolume.report.generated.biosrtmanalysis
 
 const string BIOSRTMVolumeAnalyzerID = "BIOSRTMVolume";
 

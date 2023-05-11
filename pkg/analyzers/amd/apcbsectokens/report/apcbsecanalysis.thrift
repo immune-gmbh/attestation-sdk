@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.amd.apcbsectokens.report.apcbsecanalysis
-namespace py immune.AttestationFailureAnalysisService.apcbsectokens.apcbsecanalysis
-namespace py3 immune.AttestationFailureAnalysisService.apcbsectokens
-namespace cpp2 immune.AttestationFailureAnalysisService.apcbsectokens
+namespace go pkg.analyzers.amd.apcbsectokens.report.generated.apcbsecanalysis
 
 const string APCBSecurityTokensAnalyzerID = "APCBSecurityTokens";
 

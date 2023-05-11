@@ -1,7 +1,4 @@
-namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.amd.pspsignature.report.pspsignanalysis
-namespace py immune.AttestationFailureAnalysisService.pspsignature.pspsignanalysis
-namespace py3 immune.AttestationFailureAnalysisService.pspsignature
-namespace cpp2 immune.AttestationFailureAnalysisService.pspsignature
+namespace go pkg.analyzers.amd.pspsignature.report.generated.pspsignanalysis
 
 include "../../types/psptypes.thrift"
 

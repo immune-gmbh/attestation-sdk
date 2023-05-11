@@ -10,12 +10,12 @@ import(
 	"fmt"
 	"time"
 	"github.com/apache/thrift/lib/go/thrift"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
 
 )
 

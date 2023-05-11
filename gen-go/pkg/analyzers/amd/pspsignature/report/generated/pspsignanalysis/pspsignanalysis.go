@@ -10,7 +10,7 @@ import(
 	"fmt"
 	"time"
 	"github.com/apache/thrift/lib/go/thrift"
-	"immune/AttestationFailureAnalysisService/pkg/analyzers/amd/types/psptypes"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
 
 )
 
