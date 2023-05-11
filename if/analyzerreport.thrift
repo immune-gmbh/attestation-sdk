@@ -1,9 +1,9 @@
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis.thrift"
+include "../pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis.thrift"
+include "../pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis.thrift"
+include "../pkg/analyzers/amd/pspsignature/report/pspsignanalysis.thrift"
+include "../pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
+include "../pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
+include "../pkg/analyzers/reproducepcr/report/reproducepcranalysis.thrift"
 
 namespace go immune.AttestationFailureAnalysisService.if.analyzerreport
 namespace py immune.AttestationFailureAnalysisService.analyzerreport

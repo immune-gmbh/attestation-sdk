@@ -1,4 +1,4 @@
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements.thrift"
+include "../../../../if/measurements.thrift"
 
 namespace go immune.AttestationFailureAnalysisService.pkg.analyzers.reproducepcr.report.reproducepcranalysis
 namespace py immune.AttestationFailureAnalysisService.reproducepcr.reproducepcranalysis

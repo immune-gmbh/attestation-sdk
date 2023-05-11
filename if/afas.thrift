@@ -1,10 +1,9 @@
-include "libfb/go/go303/go303.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/if/analyzerreport.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/if/caching_policy.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/if/tpm.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
+include "analyzerreport.thrift"
+include "caching_policy.thrift"
+include "measurements.thrift"
+include "tpm.thrift"
+include "../pkg/analyzers/diffmeasuredboot/report/diffanalysis.thrift"
+include "../pkg/analyzers/intelacm/report/intelacmanalysis.thrift"
 
 namespace go immune.AttestationFailureAnalysisService.if.afas
 namespace py immune.AttestationFailureAnalysisService.afas
@@ -309,7 +308,7 @@ struct CheckFirmwareVersionResult {
   1: list<bool> existStatus;
 }
 
-service FirmwareAnalyzer extends go303.GoFacebookService {
+service FirmwareAnalyzer {
   SearchFirmwareResult SearchFirmware(1: SearchFirmwareRequest request);
   SearchReportResult SearchReport(1: SearchReportRequest request);
   ReportHostConfigurationResult ReportHostConfiguration(

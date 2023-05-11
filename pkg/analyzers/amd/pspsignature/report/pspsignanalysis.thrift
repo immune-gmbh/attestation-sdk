@@ -3,7 +3,7 @@ namespace py immune.AttestationFailureAnalysisService.pspsignature.pspsignanalys
 namespace py3 immune.AttestationFailureAnalysisService.pspsignature
 namespace cpp2 immune.AttestationFailureAnalysisService.pspsignature
 
-include "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/psptypes.thrift"
+include "../../types/psptypes.thrift"
 
 const string PSPSignatureAnalyzerID = "PSPSignature";
 
