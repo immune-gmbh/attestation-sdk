@@ -1,0 +1,18 @@
+@startmindmap attestation_overall
+* Remote Attestation
+** Success
+*** Issue a certificate
+** Failure
+***[#tomato] Decide what to do
+****[#tomato] Auto-report for auto-remediation
+***** Auto-remediate
+****[#tomato] Explain and escalate
+*****[#tomato] Explain and escalate to DCOps
+****** Remediate
+*****[#tomato] Explain and escalate to SecOps
+****** Investigate
+*****[#tomato] Explain and escalate to somebody else?
+****** ?
+****[#tomato] Send info for statistics
+***** Accumulate statistics
+@endmindmap

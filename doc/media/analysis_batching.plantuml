@@ -1,0 +1,50 @@
+@startmindmap analysis_batching
+
++[#LightGreen] AnalyzeRequest
+-- Artifacts
+--- 0: ActualFirmwareImage
+--- 1: OriginalFirmwareVersion
+--- 2: Status registers
+--- 3: TPM EventLog
+--- ...etc...
+-- AnalyzerInputs
+--- DiffMeasuredBoot
+---- ArtifactID(ActualFirmware): 0
+---- ArtifactID(OriginalFirmware): 1
+---- ArtifactID(TPMEventLog): 3
+---- ...etc...
+--- ReproducePCR
+---- ArtifactID(ActualFirmware): 0
+---- ArtifactID(TPMEventLog): 3
+---- ...etc...
+--- ...etc...
+++_ AnalyzerDispatcher
++++ DiffMeasuredBootInput
+++++_ DiffMeasuredBoot
++++ ReproducePCRInput
+++++_ ReproducePCR
++++ IntelACMInput
+++++_ IntelACM
++++ ...etc...
+++++_ ...etc...
+
++[#LightGreen] AnalyzeResult
+-- DiffMeasuredBootReport
+---_ DiffMeasuredBoot
+---- DiffMeasuredBootInput
+-- ReproducePCRReport
+---_ ReproducePCR
+---- ReproducePCRInput
+-- IntelACMReport
+---_ IntelACM
+---- IntelACMInput
+-- ...etc...
+---_ ...etc...
+---- ...etc...
+++_ PrintReport
++++_ PrintDiffMeasureBootReport
++++_ PrintReproducePCRReport
++++_ PrintIntelACMReport
++++_ ...etc...
+
+@endmindmap

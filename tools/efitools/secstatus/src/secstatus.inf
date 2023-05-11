@@ -1,0 +1,25 @@
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = secstatus
+  FILE_GUID                      = 4424178b-a4f5-49ca-876d-fd87d8b0d1c4
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 0.1
+  ENTRY_POINT                    = UefiMain
+  VALID_ARCHITECTURES            = IA32|X64
+
+[Sources]
+  src/secstatus.c
+  src/graphics.c
+  src/port80.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  ShellPkg/ShellPkg.dec
+
+[Protocols]
+  gEfiShellParametersProtocolGuid
+
+[LibraryClasses]
+  UefiApplicationEntryPoint
+  UefiLib
+  IoLib

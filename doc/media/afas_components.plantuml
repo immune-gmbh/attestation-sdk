@@ -1,0 +1,57 @@
+@startuml afas_components
+
+node "target" {
+	[afascli]
+}
+
+node "Attestation Failure Analysis Service" {
+  interface HTTP as afasd_http
+  [afasd]
+  afasd_http - [afasd]
+
+  database MySQL as afasd_mysql {
+    folder "DB: afasd" as afasd_db {
+      file analyze_report
+      file analyzer_report
+      file "other blob metadata tables" as other_blob_metadata_tables
+      file firmware_image_metadata
+      file reproduced_pcrs
+      analyze_report -- analyzer_report
+      analyzer_report - firmware_image_metadata
+      analyzer_report -- other_blob_metadata_tables
+      firmware_image_metadata -- reproduced_pcrs
+    }
+  }
+
+  database BlobStorage as afasd_blobstorage {
+
+  }
+
+  afasd --> analyze_report: store all inputs and resulting reports
+  afasd -> afasd_blobstorage: store observed huge blob artifacts
+}
+
+afascli --> afasd_http: here is my status, diagnose it
+
+node "Repository of original firmwares (/other artifacts)" {
+  interface HTTP as origfwrepo_http
+  [origfwrepo]
+  origfwrepo_http - [origfwrepo]
+
+  database FileStorage as origfwrepo_filestorage {
+
+  }
+
+  database MySQL as origfwrepo_mysql {
+    folder "DB: firmware" as origfwrepo_db {
+      file "various tables" as tables
+    }
+  }
+
+  origfwrepo -- origfwrepo_filestorage: files
+  origfwrepo -- tables: metadata
+}
+
+afasd --> origfwrepo_http: get the original firmware for better analysis
+
+@enduml

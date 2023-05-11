@@ -1,0 +1,34 @@
+@startuml attestation_common
+
+!startsub parties
+
+skinparam sequence {
+    ParticipantBackgroundColor<<FailureAnalysisService>> tomato
+}
+
+box "trusted"
+    actor provisioning
+end box
+box "zero trust"
+    participant target
+end box
+box "anchor of trust"
+    participant AttestService
+    participant CA
+end box
+!if ($hide_afas != true || $hide_monitoring != true || $hide_secops != true)
+box "trusted"
+!if ($hide_afas != true)
+    participant FailureAnalysisService <<FailureAnalysisService>>
+!endif
+!if ($hide_monitoring != true)
+    queue Monitoring
+!endif
+!if ($hide_secops != true)
+    actor SecOps
+!endif
+end box
+!endif
+!endsub
+
+@enduml
