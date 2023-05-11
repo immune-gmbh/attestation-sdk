@@ -20,6 +20,7 @@ const (
 //
 // TODO: reimplement this logic to download images from Everstore/Manifold.
 type FirmwareStorage struct {
+	baseURL    string
 	callerName string
 
 	firmwareUncompressedCount int64
@@ -28,8 +29,12 @@ type FirmwareStorage struct {
 }
 
 // NewFirmwareStorage returns an instance of FirmwareStorage.
-func NewFirmwareStorage(callerName string) *FirmwareStorage {
+func NewFirmwareStorage(
+	baseURL string,
+	callerName string,
+) *FirmwareStorage {
 	return &FirmwareStorage{
+		baseURL:           baseURL,
 		fetchFirmwareJobs: map[string]*fetchFirmwareJob{},
 		callerName:        callerName,
 	}

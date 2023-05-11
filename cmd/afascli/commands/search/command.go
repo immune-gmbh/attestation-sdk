@@ -6,7 +6,7 @@ import (
 	"flag"
 	"fmt"
 
-	fasclient "libfb/go/afas"
+	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"

@@ -36,6 +36,8 @@ contrib.go.opencensus.io/exporter/stackdriver v0.13.4/go.mod h1:aXENhDJ1Y4lIg4EU
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230428154108-d810ba315bae h1:4kcxjf2ceQrym/qhPF4rNP+Z17LQMvlIj5BtH9dRWW4=
 github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230428154108-d810ba315bae/go.mod h1:NJWikt0RZcBvAPJ1Lm+yxudHiYiw2Ov6t9Wqmh/XW0Q=
+github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230511191641-8c08f2b5883c h1:XU2aQnGJLO7rpo8X7Sm0y8kVPwHERchNkJED+EVap1Q=
+github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230511191641-8c08f2b5883c/go.mod h1:TPIbEMyJFg5apfnAZt8fhWIBA6BfVTJ/q4dBe1yfYPg=
 github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b h1:98V5o52v/uFUliAMAvMcol3b5e5JFMVxzj8XGlVHCm8=
 github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b/go.mod h1:NRv+EGNg4+XO4g9W9BzC/ckMg/5zgLNkRd/Hh09Nxr4=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
@@ -302,6 +304,7 @@ github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANyt
 github.com/insomniacslk/dhcp v0.0.0-20211209223715-7d93572ebe8e/go.mod h1:h+MxyHxRg9NH3terB1nfRIUaQEcI0XOVkdR9LNBlp8E=
 github.com/intel-go/cpuid v0.0.0-20200819041909-2aa72927c3e2 h1:h+RKaNPjka7LRJGoeub/IQBdXSoEaJjfADkBq02hvjw=
 github.com/intel-go/cpuid v0.0.0-20200819041909-2aa72927c3e2/go.mod h1:RmeVYf9XrPRbRc3XIx0gLYA8qOFvNoPOfaEZduRlEp4=
+github.com/intel-go/cpuid v0.0.0-20220614022739-219e067757cb/go.mod h1:RmeVYf9XrPRbRc3XIx0gLYA8qOFvNoPOfaEZduRlEp4=
 github.com/jedib0t/go-pretty/v6 v6.4.6 h1:v6aG9h6Uby3IusSSEjHaZNXpHFhzqMmjXcPq1Rjl9Jw=
 github.com/jedib0t/go-pretty/v6 v6.4.6/go.mod h1:Ndk3ase2CkQbXLLNf5QDHoYb6J9WtVfmHZu9n8rk2xs=
 github.com/jhump/protoreflect v1.6.1/go.mod h1:RZQ/lnuN+zqeRVpQigTwO6o0AJUkxbnSnpuG7toUTG4=

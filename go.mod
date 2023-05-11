@@ -3,7 +3,7 @@ module github.com/immune-gmbh/AttestationFailureAnalysisService
 go 1.20
 
 require (
-	github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230428154108-d810ba315bae
+	github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230511191641-8c08f2b5883c
 	github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b
 	github.com/bxcodec/faker/v3 v3.8.1
 	github.com/davecgh/go-spew v1.1.1
@@ -52,7 +52,7 @@ require (
 	github.com/google/go-attestation v0.4.3 // indirect
 	github.com/google/go-tspi v0.2.1-0.20190423175329-115dea689aad // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
-	github.com/intel-go/cpuid v0.0.0-20200819041909-2aa72927c3e2 // indirect
+	github.com/intel-go/cpuid v0.0.0-20220614022739-219e067757cb // indirect
 	github.com/jedib0t/go-pretty/v6 v6.4.6 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

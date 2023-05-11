@@ -3,11 +3,12 @@ package firmwarewand
 import (
 	"fmt"
 
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/tpm"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmdetection"
@@ -20,10 +21,10 @@ import (
 func (fwwand *FirmwareWand) ReportHostConfiguration(
 	eventLog *tpmeventlog.TPMEventLog,
 	enforcedStatusRegisters registers.Registers,
-	enforcedPCR0SHA1 []byte,
+	enforcedPCR0SHA1 types.ConvertedBytes,
 	enforcedFirmwareVersion, enforcedFirmwareDate string,
 	enforcedTPMDevice tpmdetection.Type,
-) ([][]byte, error) {
+) ([]types.ConvertedBytes, error) {
 	l := logger.FromCtx(fwwand.context)
 
 	usedTPMDevice := enforcedTPMDevice
@@ -132,7 +133,7 @@ func (fwwand *FirmwareWand) ReportHostConfiguration(
 	}
 	l.Debugf("received a response from the firmware analyzer service; err == %T:%v", *response)
 
-	var pcrs [][]byte
+	var pcrs []types.ConvertedBytes
 	for _, pcr := range [][]byte{response.GetPCR0SHA1(), response.GetPCR0SHA256()} {
 		if len(pcr) == 0 {
 			continue

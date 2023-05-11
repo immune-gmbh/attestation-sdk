@@ -267,11 +267,11 @@ func (analyzer *ReproducePCR) Analyze(ctx context.Context, in Input) (*analysis.
 			})
 		}
 
-		if reproResult.CorrectACMPolicyStatus != nil {
+		if reproResult.ACMPolicyStatus != nil {
 			report.Issues = append(report.Issues, analysis.Issue{
 				Severity: analysis.SeverityInfo,
 				Description: fmt.Sprintf("Internal problem: ACM policy status was re-corrected from %X (found: %v) to %X",
-					acmStatusFixed, foundACMStatusFixed, *reproResult.CorrectACMPolicyStatus),
+					acmStatusFixed, foundACMStatusFixed, *reproResult.ACMPolicyStatus),
 			})
 		}
 	}

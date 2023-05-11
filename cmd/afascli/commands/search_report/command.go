@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	fasclient "libfb/go/afas"
+	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/analyze/format"

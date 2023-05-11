@@ -7,11 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
-	"facebook/storage/everstore"
-	"libfb/go/sr"
-	"libfb/go/thriftbase"
 
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
@@ -19,18 +14,12 @@ import (
 )
 
 const (
-	everstoreURLPrefix               = "everstore://"
-	firmwareTarballRepositoryBaseURL = `https://yum/opsfiles_bin/bin/firmware/`
+	everstoreURLPrefix = "everstore://"
 )
 
 // DownloadByFilename downloads a raw firmware file by its name
 func (storage *FirmwareStorage) DownloadByFilename(ctx context.Context, filename string) ([]byte, string, error) {
-	return storage.FetchFirmwareByURL(ctx, firmwareTarballRepositoryBaseURL+filename)
-}
-
-// DownloadByEverstoreHandle downloads a raw firmware file by its handle
-func (storage *FirmwareStorage) DownloadByEverstoreHandle(ctx context.Context, handle string) ([]byte, string, error) {
-	return storage.FetchFirmwareByURL(ctx, everstoreURLPrefix+handle)
+	return storage.FetchFirmwareByURL(ctx, storage.baseURL+filename)
 }
 
 type image struct {
@@ -124,17 +113,7 @@ func (storage *FirmwareStorage) newFetchFirmwareJob(
 }
 
 func (job *fetchFirmwareJob) fetch() {
-	var (
-		data     []byte
-		filename string
-		err      error
-	)
-	switch {
-	case strings.HasPrefix(job.url, everstoreURLPrefix):
-		data, filename, err = job.fetchFromEverstore()
-	default:
-		data, filename, err = job.fetchFromURL()
-	}
+	data, filename, err := job.fetchFromURL()
 
 	if err != nil {
 		job.Error = err
@@ -142,19 +121,6 @@ func (job *fetchFirmwareJob) fetch() {
 	}
 
 	job.Image = image{Bytes: data, Filename: filename}
-}
-
-func (job *fetchFirmwareJob) fetchFromEverstore() ([]byte, string, error) {
-	handle := job.url[len(everstoreURLPrefix):]
-	logger.FromCtx(job.ctx).Infof("everstore handle: '%s'", handle)
-
-	conn, err := sr.GetClient("dfsrouter.common", sr.Timeout(time.Minute), sr.ThriftOptions([]thriftbase.Option{thriftbase.Timeout(time.Minute)}))
-	if err != nil {
-		return nil, handle, fmt.Errorf("failed to get everstore connection: %w", err)
-	}
-	everstoreClient := everstore.NewEverstoreClient(conn.Transport(), conn, conn)
-	data, err := everstoreClient.Read(handle, job.firmwareStorage.callerName)
-	return data, handle, err
 }
 
 func (job *fetchFirmwareJob) fetchFromURL() ([]byte, string, error) {

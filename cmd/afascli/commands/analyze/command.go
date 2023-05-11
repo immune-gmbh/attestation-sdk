@@ -12,7 +12,7 @@ import (
 	"strings"
 	"text/template"
 
-	fasclient "libfb/go/afas"
+	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"

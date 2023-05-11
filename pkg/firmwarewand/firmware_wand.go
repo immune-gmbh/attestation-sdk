@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"libfb/go/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
 
 	"github.com/facebookincubator/go-belt/beltctx"

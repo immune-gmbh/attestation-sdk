@@ -8,8 +8,6 @@ import (
 	"runtime"
 	"time"
 
-	"libfb/go/afas"
-
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/consts"

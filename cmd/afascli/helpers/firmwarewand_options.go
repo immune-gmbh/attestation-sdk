@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	fasclient "libfb/go/afas"
+	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 	"syseng/yard/attestation/lib/yard"
 )

@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 )
