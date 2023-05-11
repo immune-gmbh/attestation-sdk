@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/analyze/format"
-	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/helpers"
+	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
+	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 )
@@ -38,7 +38,7 @@ func (cmd Command) Description() string {
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	// for "firmwareAnalysisAddress" see the comment in ../verify/command.go
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+fasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
+	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
 
 	cmd.limit = flag.Uint64("limit", 1, "maximal amount of entries to fetch and display (the order is reversed-chronological)")
 	cmd.jobID = flag.String("job-id", "", "JobID to filter the reports by")

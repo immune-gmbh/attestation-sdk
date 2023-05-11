@@ -305,7 +305,7 @@ struct CheckFirmwareVersionResult {
   1: list<bool> existStatus;
 }
 
-service FirmwareAnalyzer {
+service AttestationFailureAnalyzerService {
   SearchFirmwareResult SearchFirmware(1: SearchFirmwareRequest request);
   SearchReportResult SearchReport(1: SearchReportRequest request);
   ReportHostConfigurationResult ReportHostConfiguration(

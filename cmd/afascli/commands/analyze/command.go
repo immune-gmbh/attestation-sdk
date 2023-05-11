@@ -12,22 +12,22 @@ import (
 	"strings"
 	"text/template"
 
-	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis"
 	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/analyze/format"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/display_eventlog"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/dump"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/display_eventlog"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/dump"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
@@ -271,7 +271,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	// It is called "Address" instead of "Tier" to add support of direct thrift
 	// addresses in future (it will be determined by presence of a port, so
 	// for direct addresses the format is: host:port)
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+fasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
+	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
 	cmd.firmwareRTPFilename = flag.String("firmware-rtp-filename", "", "specific firmware file that should be taken from firmware repository to analyze")
 	cmd.firmwareEverstoreHandle = flag.String("firmware-everstore-handle", "", "specific firmware image that should be taken from everstore to analyze")
 	cmd.firmwareVersion = flag.String("firmware-version", "", "the version of the firmware to compare with; empty value means to read SMBIOS values")
@@ -285,10 +285,10 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	cmd.showNotApplicable = flag.Bool("show-not-applicable", false, "specifies whether to show not applicable analyzers result")
 	cmd.outputJSON = flag.Bool("json", false, "prints the result AnalyzeResult thrift structure in json format")
 
-	// TODO: Consider splitting "fwtool analyze" to "fwtool scan" and "fwtool analyze".
+	// TODO: Consider splitting "afascli analyze" to "afascli scan" and "afascli analyze".
 	//       The "scan" should gather all the information, but do not send it anywhere,
 	//       while "analyze" should send the gathered info for analysis.
-	//       Otherwise "fwtool analyze" is trying to cover too many too different use cases and becomes overloaded.
+	//       Otherwise "afascli analyze" is trying to cover too many too different use cases and becomes overloaded.
 	cmd.dumpRequest = flag.String("dump-request", "", "prints the AnalyzeRequest in json or binary format. No Analyze API is invoked")
 	cmd.useRequest = flag.String("use-request", "", "use an AnalyzeRequest from file, instead; it supports only the binary format, yet")
 	cmd.outputFormat = flag.String("format", "", "output format using Go template language; supported pre-defined templates: '__short__' [incompatible with -json]")
@@ -300,11 +300,11 @@ func (cmd Command) FirmwarewandOptions() []firmwarewand.Option {
 	return append(helpers.FirmwarewandOptions(*cmd.firmwareAnalysisAddress), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
 }
 
-// TODO: Consider splitting "fwtool analyze" to "fwtool scan" and "fwtool analyze".
+// TODO: Consider splitting "afascli analyze" to "afascli scan" and "afascli analyze".
 //
 //	The "scan" should gather all the information, but do not send it anywhere,
 //	while "analyze" should send the gathered info for analysis.
-//	Otherwise "fwtool analyze" is trying to cover too many too different use cases and becomes overloaded.
+//	Otherwise "afascli analyze" is trying to cover too many too different use cases and becomes overloaded.
 func (cmd Command) buildAnalyzeRequest(
 	cfg commands.Config,
 	fwWand *firmwarewand.FirmwareWand,
@@ -532,13 +532,6 @@ func (cmd Command) OutputTemplate() (*template.Template, error) {
 	var outputTemplate *template.Template
 	var err error
 	switch {
-	// fwtool is used by the FBAR remediation to analyze the firmware before sending the
-	// host to PWM. FBAR executes remote commands via RemCmd, which has a limit for
-	// commands output set to 12,000 characters. Since "-json" output is too verbose and
-	// will be trimmed, we introduced a "-format" option to provide a more concise output.
-	// Unfortunately, passing raw format doesn't work well with sudo, since it contains
-	// quotes.
-	// For this particular case, we're going to use a pre-defined format option "__short__".
 	case *cmd.outputFormat == "__short__":
 		shortTemplate := `TraceID: {{ first .TraceIDs }}{{printf "\n"}}` +
 			`{{if ne (len .JobID) 0}}JobID: {{ asUUID .JobID }}{{printf "\n"}}{{ end }}`
@@ -662,7 +655,7 @@ func compressXZ(image []byte) ([]byte, error) {
 	}
 	err = xzWriter.Close()
 	if err != nil {
-		return nil, fmt.Errorf("unable to finilize the compression of data with XZ: %w", err)
+		return nil, fmt.Errorf("unable to finalize the compression of data with XZ: %w", err)
 	}
 	return compressed.Bytes(), nil
 }

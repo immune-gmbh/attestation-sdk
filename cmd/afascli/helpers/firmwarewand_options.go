@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 	"syseng/yard/attestation/lib/yard"
 )
 
 // FirmwarewandOptions returns firmwarewand.Option-s should be use to initialize
-// firmwarewand in fwtool/cmd/ verbs.
+// firmwarewand in afascli/cmd/ verbs.
 func FirmwarewandOptions(addrs string) []firmwarewand.Option {
 	if addrs == "" {
-		opts := []firmwarewand.Option{firmwarewand.OptionFirmwareAnalyzerSMCTier(fasclient.DefaultSMCTier)}
+		opts := []firmwarewand.Option{firmwarewand.OptionFirmwareAnalyzerSMCTier(afasclient.DefaultSMCTier)}
 
 		cfg, err := yard.NewConfig()
 		if err != nil {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/display_eventlog/format"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/display_eventlog/format"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xtpmeventlog"
 

@@ -109,10 +109,10 @@ func printReferencesToImages(w io.Writer, result afas.AnalyzeResult_) {
 	// on this size is neglectically low. While if the collision is delibirate we will get an explicit
 	// error.
 	for _, imageID := range actualImageIDs {
-		fmt.Fprintf(w, "To download the actual image use:   fwtool fetch hex:%s > /tmp/fw-actual.img\n", imageID.String()[:32])
+		fmt.Fprintf(w, "To download the actual image use:   afascli fetch hex:%s > /tmp/fw-actual.img\n", imageID.String()[:32])
 	}
 	for _, imageID := range originalImageIDs {
-		fmt.Fprintf(w, "To download the original image use: fwtool fetch hex:%s > /tmp/fw-orig.img\n", imageID.String()[:32])
+		fmt.Fprintf(w, "To download the original image use: afascli fetch hex:%s > /tmp/fw-orig.img\n", imageID.String()[:32])
 	}
 }
 

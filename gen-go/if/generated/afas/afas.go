@@ -8121,7 +8121,7 @@ func (p *CheckFirmwareVersionResult_) String() string {
   return fmt.Sprintf("CheckFirmwareVersionResult_(%+v)", *p)
 }
 
-type FirmwareAnalyzer interface {
+type AttestationFailureAnalyzerService interface {
   // Parameters:
   //  - Request
   SearchFirmware(ctx context.Context, request *SearchFirmwareRequest) (r *SearchFirmwareResult_, err error)
@@ -8139,47 +8139,47 @@ type FirmwareAnalyzer interface {
   CheckFirmwareVersion(ctx context.Context, request *CheckFirmwareVersionRequest) (r *CheckFirmwareVersionResult_, err error)
 }
 
-type FirmwareAnalyzerClient struct {
+type AttestationFailureAnalyzerServiceClient struct {
   c thrift.TClient
   meta thrift.ResponseMeta
 }
 
-func NewFirmwareAnalyzerClientFactory(t thrift.TTransport, f thrift.TProtocolFactory) *FirmwareAnalyzerClient {
-  return &FirmwareAnalyzerClient{
+func NewAttestationFailureAnalyzerServiceClientFactory(t thrift.TTransport, f thrift.TProtocolFactory) *AttestationFailureAnalyzerServiceClient {
+  return &AttestationFailureAnalyzerServiceClient{
     c: thrift.NewTStandardClient(f.GetProtocol(t), f.GetProtocol(t)),
   }
 }
 
-func NewFirmwareAnalyzerClientProtocol(t thrift.TTransport, iprot thrift.TProtocol, oprot thrift.TProtocol) *FirmwareAnalyzerClient {
-  return &FirmwareAnalyzerClient{
+func NewAttestationFailureAnalyzerServiceClientProtocol(t thrift.TTransport, iprot thrift.TProtocol, oprot thrift.TProtocol) *AttestationFailureAnalyzerServiceClient {
+  return &AttestationFailureAnalyzerServiceClient{
     c: thrift.NewTStandardClient(iprot, oprot),
   }
 }
 
-func NewFirmwareAnalyzerClient(c thrift.TClient) *FirmwareAnalyzerClient {
-  return &FirmwareAnalyzerClient{
+func NewAttestationFailureAnalyzerServiceClient(c thrift.TClient) *AttestationFailureAnalyzerServiceClient {
+  return &AttestationFailureAnalyzerServiceClient{
     c: c,
   }
 }
 
-func (p *FirmwareAnalyzerClient) Client_() thrift.TClient {
+func (p *AttestationFailureAnalyzerServiceClient) Client_() thrift.TClient {
   return p.c
 }
 
-func (p *FirmwareAnalyzerClient) LastResponseMeta_() thrift.ResponseMeta {
+func (p *AttestationFailureAnalyzerServiceClient) LastResponseMeta_() thrift.ResponseMeta {
   return p.meta
 }
 
-func (p *FirmwareAnalyzerClient) SetLastResponseMeta_(meta thrift.ResponseMeta) {
+func (p *AttestationFailureAnalyzerServiceClient) SetLastResponseMeta_(meta thrift.ResponseMeta) {
   p.meta = meta
 }
 
 // Parameters:
 //  - Request
-func (p *FirmwareAnalyzerClient) SearchFirmware(ctx context.Context, request *SearchFirmwareRequest) (r *SearchFirmwareResult_, err error) {
-  var _args22 FirmwareAnalyzerSearchFirmwareArgs
+func (p *AttestationFailureAnalyzerServiceClient) SearchFirmware(ctx context.Context, request *SearchFirmwareRequest) (r *SearchFirmwareResult_, err error) {
+  var _args22 AttestationFailureAnalyzerServiceSearchFirmwareArgs
   _args22.Request = request
-  var _result23 FirmwareAnalyzerSearchFirmwareResult
+  var _result23 AttestationFailureAnalyzerServiceSearchFirmwareResult
   var meta thrift.ResponseMeta
   meta, err = p.Client_().Call(ctx, "SearchFirmware", &_args22, &_result23)
   p.SetLastResponseMeta_(meta)
@@ -8191,10 +8191,10 @@ func (p *FirmwareAnalyzerClient) SearchFirmware(ctx context.Context, request *Se
 
 // Parameters:
 //  - Request
-func (p *FirmwareAnalyzerClient) SearchReport(ctx context.Context, request *SearchReportRequest) (r *SearchReportResult_, err error) {
-  var _args24 FirmwareAnalyzerSearchReportArgs
+func (p *AttestationFailureAnalyzerServiceClient) SearchReport(ctx context.Context, request *SearchReportRequest) (r *SearchReportResult_, err error) {
+  var _args24 AttestationFailureAnalyzerServiceSearchReportArgs
   _args24.Request = request
-  var _result25 FirmwareAnalyzerSearchReportResult
+  var _result25 AttestationFailureAnalyzerServiceSearchReportResult
   var meta thrift.ResponseMeta
   meta, err = p.Client_().Call(ctx, "SearchReport", &_args24, &_result25)
   p.SetLastResponseMeta_(meta)
@@ -8206,10 +8206,10 @@ func (p *FirmwareAnalyzerClient) SearchReport(ctx context.Context, request *Sear
 
 // Parameters:
 //  - Request
-func (p *FirmwareAnalyzerClient) ReportHostConfiguration(ctx context.Context, request *ReportHostConfigurationRequest) (r *ReportHostConfigurationResult_, err error) {
-  var _args26 FirmwareAnalyzerReportHostConfigurationArgs
+func (p *AttestationFailureAnalyzerServiceClient) ReportHostConfiguration(ctx context.Context, request *ReportHostConfigurationRequest) (r *ReportHostConfigurationResult_, err error) {
+  var _args26 AttestationFailureAnalyzerServiceReportHostConfigurationArgs
   _args26.Request = request
-  var _result27 FirmwareAnalyzerReportHostConfigurationResult
+  var _result27 AttestationFailureAnalyzerServiceReportHostConfigurationResult
   var meta thrift.ResponseMeta
   meta, err = p.Client_().Call(ctx, "ReportHostConfiguration", &_args26, &_result27)
   p.SetLastResponseMeta_(meta)
@@ -8228,10 +8228,10 @@ func (p *FirmwareAnalyzerClient) ReportHostConfiguration(ctx context.Context, re
 
 // Parameters:
 //  - Request
-func (p *FirmwareAnalyzerClient) Analyze(ctx context.Context, request *AnalyzeRequest) (r *AnalyzeResult_, err error) {
-  var _args28 FirmwareAnalyzerAnalyzeArgs
+func (p *AttestationFailureAnalyzerServiceClient) Analyze(ctx context.Context, request *AnalyzeRequest) (r *AnalyzeResult_, err error) {
+  var _args28 AttestationFailureAnalyzerServiceAnalyzeArgs
   _args28.Request = request
-  var _result29 FirmwareAnalyzerAnalyzeResult
+  var _result29 AttestationFailureAnalyzerServiceAnalyzeResult
   var meta thrift.ResponseMeta
   meta, err = p.Client_().Call(ctx, "Analyze", &_args28, &_result29)
   p.SetLastResponseMeta_(meta)
@@ -8243,10 +8243,10 @@ func (p *FirmwareAnalyzerClient) Analyze(ctx context.Context, request *AnalyzeRe
 
 // Parameters:
 //  - Request
-func (p *FirmwareAnalyzerClient) CheckFirmwareVersion(ctx context.Context, request *CheckFirmwareVersionRequest) (r *CheckFirmwareVersionResult_, err error) {
-  var _args30 FirmwareAnalyzerCheckFirmwareVersionArgs
+func (p *AttestationFailureAnalyzerServiceClient) CheckFirmwareVersion(ctx context.Context, request *CheckFirmwareVersionRequest) (r *CheckFirmwareVersionResult_, err error) {
+  var _args30 AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs
   _args30.Request = request
-  var _result31 FirmwareAnalyzerCheckFirmwareVersionResult
+  var _result31 AttestationFailureAnalyzerServiceCheckFirmwareVersionResult
   var meta thrift.ResponseMeta
   meta, err = p.Client_().Call(ctx, "CheckFirmwareVersion", &_args30, &_result31)
   p.SetLastResponseMeta_(meta)
@@ -8256,36 +8256,36 @@ func (p *FirmwareAnalyzerClient) CheckFirmwareVersion(ctx context.Context, reque
   return _result31.GetSuccess(), nil
 }
 
-type FirmwareAnalyzerProcessor struct {
+type AttestationFailureAnalyzerServiceProcessor struct {
   processorMap map[string]thrift.TProcessorFunction
-  handler FirmwareAnalyzer
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *FirmwareAnalyzerProcessor) AddToProcessorMap(key string, processor thrift.TProcessorFunction) {
+func (p *AttestationFailureAnalyzerServiceProcessor) AddToProcessorMap(key string, processor thrift.TProcessorFunction) {
   p.processorMap[key] = processor
 }
 
-func (p *FirmwareAnalyzerProcessor) GetProcessorFunction(key string) (processor thrift.TProcessorFunction, ok bool) {
+func (p *AttestationFailureAnalyzerServiceProcessor) GetProcessorFunction(key string) (processor thrift.TProcessorFunction, ok bool) {
   processor, ok = p.processorMap[key]
   return processor, ok
 }
 
-func (p *FirmwareAnalyzerProcessor) ProcessorMap() map[string]thrift.TProcessorFunction {
+func (p *AttestationFailureAnalyzerServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFunction {
   return p.processorMap
 }
 
-func NewFirmwareAnalyzerProcessor(handler FirmwareAnalyzer) *FirmwareAnalyzerProcessor {
+func NewAttestationFailureAnalyzerServiceProcessor(handler AttestationFailureAnalyzerService) *AttestationFailureAnalyzerServiceProcessor {
 
-  self32 := &FirmwareAnalyzerProcessor{handler:handler, processorMap:make(map[string]thrift.TProcessorFunction)}
-  self32.processorMap["SearchFirmware"] = &firmwareAnalyzerProcessorSearchFirmware{handler:handler}
-  self32.processorMap["SearchReport"] = &firmwareAnalyzerProcessorSearchReport{handler:handler}
-  self32.processorMap["ReportHostConfiguration"] = &firmwareAnalyzerProcessorReportHostConfiguration{handler:handler}
-  self32.processorMap["Analyze"] = &firmwareAnalyzerProcessorAnalyze{handler:handler}
-  self32.processorMap["CheckFirmwareVersion"] = &firmwareAnalyzerProcessorCheckFirmwareVersion{handler:handler}
+  self32 := &AttestationFailureAnalyzerServiceProcessor{handler:handler, processorMap:make(map[string]thrift.TProcessorFunction)}
+  self32.processorMap["SearchFirmware"] = &attestationFailureAnalyzerServiceProcessorSearchFirmware{handler:handler}
+  self32.processorMap["SearchReport"] = &attestationFailureAnalyzerServiceProcessorSearchReport{handler:handler}
+  self32.processorMap["ReportHostConfiguration"] = &attestationFailureAnalyzerServiceProcessorReportHostConfiguration{handler:handler}
+  self32.processorMap["Analyze"] = &attestationFailureAnalyzerServiceProcessorAnalyze{handler:handler}
+  self32.processorMap["CheckFirmwareVersion"] = &attestationFailureAnalyzerServiceProcessorCheckFirmwareVersion{handler:handler}
 return self32
 }
 
-func (p *FirmwareAnalyzerProcessor) Process(ctx context.Context, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+func (p *AttestationFailureAnalyzerServiceProcessor) Process(ctx context.Context, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
   name, _, seqId, err2 := iprot.ReadMessageBegin(ctx)
   if err2 != nil { return false, thrift.WrapTException(err2) }
   if processor, ok := p.GetProcessorFunction(name); ok {
@@ -8302,12 +8302,12 @@ func (p *FirmwareAnalyzerProcessor) Process(ctx context.Context, iprot, oprot th
 
 }
 
-type firmwareAnalyzerProcessorSearchFirmware struct {
-  handler FirmwareAnalyzer
+type attestationFailureAnalyzerServiceProcessorSearchFirmware struct {
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *firmwareAnalyzerProcessorSearchFirmware) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-  args := FirmwareAnalyzerSearchFirmwareArgs{}
+func (p *attestationFailureAnalyzerServiceProcessorSearchFirmware) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AttestationFailureAnalyzerServiceSearchFirmwareArgs{}
   var err2 error
   if err2 = args.Read(ctx, iprot); err2 != nil {
     iprot.ReadMessageEnd(ctx)
@@ -8346,7 +8346,7 @@ func (p *firmwareAnalyzerProcessorSearchFirmware) Process(ctx context.Context, s
     }(tickerCtx, cancel)
   }
 
-  result := FirmwareAnalyzerSearchFirmwareResult{}
+  result := AttestationFailureAnalyzerServiceSearchFirmwareResult{}
   var retval *SearchFirmwareResult_
   if retval, err2 = p.handler.SearchFirmware(ctx, args.Request); err2 != nil {
     tickerCancel()
@@ -8381,12 +8381,12 @@ func (p *firmwareAnalyzerProcessorSearchFirmware) Process(ctx context.Context, s
   return true, err
 }
 
-type firmwareAnalyzerProcessorSearchReport struct {
-  handler FirmwareAnalyzer
+type attestationFailureAnalyzerServiceProcessorSearchReport struct {
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *firmwareAnalyzerProcessorSearchReport) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-  args := FirmwareAnalyzerSearchReportArgs{}
+func (p *attestationFailureAnalyzerServiceProcessorSearchReport) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AttestationFailureAnalyzerServiceSearchReportArgs{}
   var err2 error
   if err2 = args.Read(ctx, iprot); err2 != nil {
     iprot.ReadMessageEnd(ctx)
@@ -8425,7 +8425,7 @@ func (p *firmwareAnalyzerProcessorSearchReport) Process(ctx context.Context, seq
     }(tickerCtx, cancel)
   }
 
-  result := FirmwareAnalyzerSearchReportResult{}
+  result := AttestationFailureAnalyzerServiceSearchReportResult{}
   var retval *SearchReportResult_
   if retval, err2 = p.handler.SearchReport(ctx, args.Request); err2 != nil {
     tickerCancel()
@@ -8460,12 +8460,12 @@ func (p *firmwareAnalyzerProcessorSearchReport) Process(ctx context.Context, seq
   return true, err
 }
 
-type firmwareAnalyzerProcessorReportHostConfiguration struct {
-  handler FirmwareAnalyzer
+type attestationFailureAnalyzerServiceProcessorReportHostConfiguration struct {
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *firmwareAnalyzerProcessorReportHostConfiguration) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-  args := FirmwareAnalyzerReportHostConfigurationArgs{}
+func (p *attestationFailureAnalyzerServiceProcessorReportHostConfiguration) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AttestationFailureAnalyzerServiceReportHostConfigurationArgs{}
   var err2 error
   if err2 = args.Read(ctx, iprot); err2 != nil {
     iprot.ReadMessageEnd(ctx)
@@ -8504,7 +8504,7 @@ func (p *firmwareAnalyzerProcessorReportHostConfiguration) Process(ctx context.C
     }(tickerCtx, cancel)
   }
 
-  result := FirmwareAnalyzerReportHostConfigurationResult{}
+  result := AttestationFailureAnalyzerServiceReportHostConfigurationResult{}
   var retval *ReportHostConfigurationResult_
   if retval, err2 = p.handler.ReportHostConfiguration(ctx, args.Request); err2 != nil {
     tickerCancel()
@@ -8546,12 +8546,12 @@ func (p *firmwareAnalyzerProcessorReportHostConfiguration) Process(ctx context.C
   return true, err
 }
 
-type firmwareAnalyzerProcessorAnalyze struct {
-  handler FirmwareAnalyzer
+type attestationFailureAnalyzerServiceProcessorAnalyze struct {
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *firmwareAnalyzerProcessorAnalyze) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-  args := FirmwareAnalyzerAnalyzeArgs{}
+func (p *attestationFailureAnalyzerServiceProcessorAnalyze) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AttestationFailureAnalyzerServiceAnalyzeArgs{}
   var err2 error
   if err2 = args.Read(ctx, iprot); err2 != nil {
     iprot.ReadMessageEnd(ctx)
@@ -8590,7 +8590,7 @@ func (p *firmwareAnalyzerProcessorAnalyze) Process(ctx context.Context, seqId in
     }(tickerCtx, cancel)
   }
 
-  result := FirmwareAnalyzerAnalyzeResult{}
+  result := AttestationFailureAnalyzerServiceAnalyzeResult{}
   var retval *AnalyzeResult_
   if retval, err2 = p.handler.Analyze(ctx, args.Request); err2 != nil {
     tickerCancel()
@@ -8625,12 +8625,12 @@ func (p *firmwareAnalyzerProcessorAnalyze) Process(ctx context.Context, seqId in
   return true, err
 }
 
-type firmwareAnalyzerProcessorCheckFirmwareVersion struct {
-  handler FirmwareAnalyzer
+type attestationFailureAnalyzerServiceProcessorCheckFirmwareVersion struct {
+  handler AttestationFailureAnalyzerService
 }
 
-func (p *firmwareAnalyzerProcessorCheckFirmwareVersion) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-  args := FirmwareAnalyzerCheckFirmwareVersionArgs{}
+func (p *attestationFailureAnalyzerServiceProcessorCheckFirmwareVersion) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs{}
   var err2 error
   if err2 = args.Read(ctx, iprot); err2 != nil {
     iprot.ReadMessageEnd(ctx)
@@ -8669,7 +8669,7 @@ func (p *firmwareAnalyzerProcessorCheckFirmwareVersion) Process(ctx context.Cont
     }(tickerCtx, cancel)
   }
 
-  result := FirmwareAnalyzerCheckFirmwareVersionResult{}
+  result := AttestationFailureAnalyzerServiceCheckFirmwareVersionResult{}
   var retval *CheckFirmwareVersionResult_
   if retval, err2 = p.handler.CheckFirmwareVersion(ctx, args.Request); err2 != nil {
     tickerCancel()
@@ -8709,26 +8709,26 @@ func (p *firmwareAnalyzerProcessorCheckFirmwareVersion) Process(ctx context.Cont
 
 // Attributes:
 //  - Request
-type FirmwareAnalyzerSearchFirmwareArgs struct {
+type AttestationFailureAnalyzerServiceSearchFirmwareArgs struct {
   Request *SearchFirmwareRequest `thrift:"request,1" db:"request" json:"request"`
 }
 
-func NewFirmwareAnalyzerSearchFirmwareArgs() *FirmwareAnalyzerSearchFirmwareArgs {
-  return &FirmwareAnalyzerSearchFirmwareArgs{}
+func NewAttestationFailureAnalyzerServiceSearchFirmwareArgs() *AttestationFailureAnalyzerServiceSearchFirmwareArgs {
+  return &AttestationFailureAnalyzerServiceSearchFirmwareArgs{}
 }
 
-var FirmwareAnalyzerSearchFirmwareArgs_Request_DEFAULT *SearchFirmwareRequest
-func (p *FirmwareAnalyzerSearchFirmwareArgs) GetRequest() *SearchFirmwareRequest {
+var AttestationFailureAnalyzerServiceSearchFirmwareArgs_Request_DEFAULT *SearchFirmwareRequest
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) GetRequest() *SearchFirmwareRequest {
   if !p.IsSetRequest() {
-    return FirmwareAnalyzerSearchFirmwareArgs_Request_DEFAULT
+    return AttestationFailureAnalyzerServiceSearchFirmwareArgs_Request_DEFAULT
   }
 return p.Request
 }
-func (p *FirmwareAnalyzerSearchFirmwareArgs) IsSetRequest() bool {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) IsSetRequest() bool {
   return p.Request != nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -8766,7 +8766,7 @@ func (p *FirmwareAnalyzerSearchFirmwareArgs) Read(ctx context.Context, iprot thr
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.Request = &SearchFirmwareRequest{}
   if err := p.Request.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Request), err)
@@ -8774,7 +8774,7 @@ func (p *FirmwareAnalyzerSearchFirmwareArgs)  ReadField1(ctx context.Context, ip
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "SearchFirmware_args"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -8787,7 +8787,7 @@ func (p *FirmwareAnalyzerSearchFirmwareArgs) Write(ctx context.Context, oprot th
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if err := oprot.WriteFieldBegin(ctx, "request", thrift.STRUCT, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:request: ", p), err) }
   if err := p.Request.Write(ctx, oprot); err != nil {
@@ -8798,35 +8798,35 @@ func (p *FirmwareAnalyzerSearchFirmwareArgs) writeField1(ctx context.Context, op
   return err
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareArgs) String() string {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareArgs) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerSearchFirmwareArgs(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceSearchFirmwareArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type FirmwareAnalyzerSearchFirmwareResult struct {
+type AttestationFailureAnalyzerServiceSearchFirmwareResult struct {
   Success *SearchFirmwareResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
 }
 
-func NewFirmwareAnalyzerSearchFirmwareResult() *FirmwareAnalyzerSearchFirmwareResult {
-  return &FirmwareAnalyzerSearchFirmwareResult{}
+func NewAttestationFailureAnalyzerServiceSearchFirmwareResult() *AttestationFailureAnalyzerServiceSearchFirmwareResult {
+  return &AttestationFailureAnalyzerServiceSearchFirmwareResult{}
 }
 
-var FirmwareAnalyzerSearchFirmwareResult_Success_DEFAULT *SearchFirmwareResult_
-func (p *FirmwareAnalyzerSearchFirmwareResult) GetSuccess() *SearchFirmwareResult_ {
+var AttestationFailureAnalyzerServiceSearchFirmwareResult_Success_DEFAULT *SearchFirmwareResult_
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) GetSuccess() *SearchFirmwareResult_ {
   if !p.IsSetSuccess() {
-    return FirmwareAnalyzerSearchFirmwareResult_Success_DEFAULT
+    return AttestationFailureAnalyzerServiceSearchFirmwareResult_Success_DEFAULT
   }
 return p.Success
 }
-func (p *FirmwareAnalyzerSearchFirmwareResult) IsSetSuccess() bool {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) IsSetSuccess() bool {
   return p.Success != nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -8864,7 +8864,7 @@ func (p *FirmwareAnalyzerSearchFirmwareResult) Read(ctx context.Context, iprot t
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
   p.Success = &SearchFirmwareResult_{}
   if err := p.Success.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
@@ -8872,7 +8872,7 @@ func (p *FirmwareAnalyzerSearchFirmwareResult)  ReadField0(ctx context.Context, 
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "SearchFirmware_result"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -8885,7 +8885,7 @@ func (p *FirmwareAnalyzerSearchFirmwareResult) Write(ctx context.Context, oprot 
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetSuccess() {
     if err := oprot.WriteFieldBegin(ctx, "success", thrift.STRUCT, 0); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err) }
@@ -8898,35 +8898,35 @@ func (p *FirmwareAnalyzerSearchFirmwareResult) writeField0(ctx context.Context, 
   return err
 }
 
-func (p *FirmwareAnalyzerSearchFirmwareResult) String() string {
+func (p *AttestationFailureAnalyzerServiceSearchFirmwareResult) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerSearchFirmwareResult(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceSearchFirmwareResult(%+v)", *p)
 }
 
 // Attributes:
 //  - Request
-type FirmwareAnalyzerSearchReportArgs struct {
+type AttestationFailureAnalyzerServiceSearchReportArgs struct {
   Request *SearchReportRequest `thrift:"request,1" db:"request" json:"request"`
 }
 
-func NewFirmwareAnalyzerSearchReportArgs() *FirmwareAnalyzerSearchReportArgs {
-  return &FirmwareAnalyzerSearchReportArgs{}
+func NewAttestationFailureAnalyzerServiceSearchReportArgs() *AttestationFailureAnalyzerServiceSearchReportArgs {
+  return &AttestationFailureAnalyzerServiceSearchReportArgs{}
 }
 
-var FirmwareAnalyzerSearchReportArgs_Request_DEFAULT *SearchReportRequest
-func (p *FirmwareAnalyzerSearchReportArgs) GetRequest() *SearchReportRequest {
+var AttestationFailureAnalyzerServiceSearchReportArgs_Request_DEFAULT *SearchReportRequest
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) GetRequest() *SearchReportRequest {
   if !p.IsSetRequest() {
-    return FirmwareAnalyzerSearchReportArgs_Request_DEFAULT
+    return AttestationFailureAnalyzerServiceSearchReportArgs_Request_DEFAULT
   }
 return p.Request
 }
-func (p *FirmwareAnalyzerSearchReportArgs) IsSetRequest() bool {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) IsSetRequest() bool {
   return p.Request != nil
 }
 
-func (p *FirmwareAnalyzerSearchReportArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -8964,7 +8964,7 @@ func (p *FirmwareAnalyzerSearchReportArgs) Read(ctx context.Context, iprot thrif
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.Request = &SearchReportRequest{}
   if err := p.Request.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Request), err)
@@ -8972,7 +8972,7 @@ func (p *FirmwareAnalyzerSearchReportArgs)  ReadField1(ctx context.Context, ipro
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "SearchReport_args"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -8985,7 +8985,7 @@ func (p *FirmwareAnalyzerSearchReportArgs) Write(ctx context.Context, oprot thri
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if err := oprot.WriteFieldBegin(ctx, "request", thrift.STRUCT, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:request: ", p), err) }
   if err := p.Request.Write(ctx, oprot); err != nil {
@@ -8996,35 +8996,35 @@ func (p *FirmwareAnalyzerSearchReportArgs) writeField1(ctx context.Context, opro
   return err
 }
 
-func (p *FirmwareAnalyzerSearchReportArgs) String() string {
+func (p *AttestationFailureAnalyzerServiceSearchReportArgs) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerSearchReportArgs(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceSearchReportArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type FirmwareAnalyzerSearchReportResult struct {
+type AttestationFailureAnalyzerServiceSearchReportResult struct {
   Success *SearchReportResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
 }
 
-func NewFirmwareAnalyzerSearchReportResult() *FirmwareAnalyzerSearchReportResult {
-  return &FirmwareAnalyzerSearchReportResult{}
+func NewAttestationFailureAnalyzerServiceSearchReportResult() *AttestationFailureAnalyzerServiceSearchReportResult {
+  return &AttestationFailureAnalyzerServiceSearchReportResult{}
 }
 
-var FirmwareAnalyzerSearchReportResult_Success_DEFAULT *SearchReportResult_
-func (p *FirmwareAnalyzerSearchReportResult) GetSuccess() *SearchReportResult_ {
+var AttestationFailureAnalyzerServiceSearchReportResult_Success_DEFAULT *SearchReportResult_
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) GetSuccess() *SearchReportResult_ {
   if !p.IsSetSuccess() {
-    return FirmwareAnalyzerSearchReportResult_Success_DEFAULT
+    return AttestationFailureAnalyzerServiceSearchReportResult_Success_DEFAULT
   }
 return p.Success
 }
-func (p *FirmwareAnalyzerSearchReportResult) IsSetSuccess() bool {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) IsSetSuccess() bool {
   return p.Success != nil
 }
 
-func (p *FirmwareAnalyzerSearchReportResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9062,7 +9062,7 @@ func (p *FirmwareAnalyzerSearchReportResult) Read(ctx context.Context, iprot thr
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
   p.Success = &SearchReportResult_{}
   if err := p.Success.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
@@ -9070,7 +9070,7 @@ func (p *FirmwareAnalyzerSearchReportResult)  ReadField0(ctx context.Context, ip
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "SearchReport_result"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9083,7 +9083,7 @@ func (p *FirmwareAnalyzerSearchReportResult) Write(ctx context.Context, oprot th
   return nil
 }
 
-func (p *FirmwareAnalyzerSearchReportResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetSuccess() {
     if err := oprot.WriteFieldBegin(ctx, "success", thrift.STRUCT, 0); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err) }
@@ -9096,35 +9096,35 @@ func (p *FirmwareAnalyzerSearchReportResult) writeField0(ctx context.Context, op
   return err
 }
 
-func (p *FirmwareAnalyzerSearchReportResult) String() string {
+func (p *AttestationFailureAnalyzerServiceSearchReportResult) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerSearchReportResult(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceSearchReportResult(%+v)", *p)
 }
 
 // Attributes:
 //  - Request
-type FirmwareAnalyzerReportHostConfigurationArgs struct {
+type AttestationFailureAnalyzerServiceReportHostConfigurationArgs struct {
   Request *ReportHostConfigurationRequest `thrift:"request,1" db:"request" json:"request"`
 }
 
-func NewFirmwareAnalyzerReportHostConfigurationArgs() *FirmwareAnalyzerReportHostConfigurationArgs {
-  return &FirmwareAnalyzerReportHostConfigurationArgs{}
+func NewAttestationFailureAnalyzerServiceReportHostConfigurationArgs() *AttestationFailureAnalyzerServiceReportHostConfigurationArgs {
+  return &AttestationFailureAnalyzerServiceReportHostConfigurationArgs{}
 }
 
-var FirmwareAnalyzerReportHostConfigurationArgs_Request_DEFAULT *ReportHostConfigurationRequest
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) GetRequest() *ReportHostConfigurationRequest {
+var AttestationFailureAnalyzerServiceReportHostConfigurationArgs_Request_DEFAULT *ReportHostConfigurationRequest
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) GetRequest() *ReportHostConfigurationRequest {
   if !p.IsSetRequest() {
-    return FirmwareAnalyzerReportHostConfigurationArgs_Request_DEFAULT
+    return AttestationFailureAnalyzerServiceReportHostConfigurationArgs_Request_DEFAULT
   }
 return p.Request
 }
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) IsSetRequest() bool {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) IsSetRequest() bool {
   return p.Request != nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9162,7 +9162,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationArgs) Read(ctx context.Context, 
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.Request = &ReportHostConfigurationRequest{}
   if err := p.Request.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Request), err)
@@ -9170,7 +9170,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationArgs)  ReadField1(ctx context.Co
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "ReportHostConfiguration_args"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9183,7 +9183,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationArgs) Write(ctx context.Context,
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if err := oprot.WriteFieldBegin(ctx, "request", thrift.STRUCT, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:request: ", p), err) }
   if err := p.Request.Write(ctx, oprot); err != nil {
@@ -9194,61 +9194,61 @@ func (p *FirmwareAnalyzerReportHostConfigurationArgs) writeField1(ctx context.Co
   return err
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationArgs) String() string {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationArgs) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerReportHostConfigurationArgs(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceReportHostConfigurationArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
 //  - UnableToGetOriginalFirmware
 //  - IncorrectHostConfiguration
-type FirmwareAnalyzerReportHostConfigurationResult struct {
+type AttestationFailureAnalyzerServiceReportHostConfigurationResult struct {
   Success *ReportHostConfigurationResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
   UnableToGetOriginalFirmware *UnableToGetOriginalFirmware `thrift:"unableToGetOriginalFirmware,1" db:"unableToGetOriginalFirmware" json:"unableToGetOriginalFirmware,omitempty"`
   IncorrectHostConfiguration *IncorrectHostConfiguration `thrift:"incorrectHostConfiguration,2" db:"incorrectHostConfiguration" json:"incorrectHostConfiguration,omitempty"`
 }
 
-func NewFirmwareAnalyzerReportHostConfigurationResult() *FirmwareAnalyzerReportHostConfigurationResult {
-  return &FirmwareAnalyzerReportHostConfigurationResult{}
+func NewAttestationFailureAnalyzerServiceReportHostConfigurationResult() *AttestationFailureAnalyzerServiceReportHostConfigurationResult {
+  return &AttestationFailureAnalyzerServiceReportHostConfigurationResult{}
 }
 
-var FirmwareAnalyzerReportHostConfigurationResult_Success_DEFAULT *ReportHostConfigurationResult_
-func (p *FirmwareAnalyzerReportHostConfigurationResult) GetSuccess() *ReportHostConfigurationResult_ {
+var AttestationFailureAnalyzerServiceReportHostConfigurationResult_Success_DEFAULT *ReportHostConfigurationResult_
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) GetSuccess() *ReportHostConfigurationResult_ {
   if !p.IsSetSuccess() {
-    return FirmwareAnalyzerReportHostConfigurationResult_Success_DEFAULT
+    return AttestationFailureAnalyzerServiceReportHostConfigurationResult_Success_DEFAULT
   }
 return p.Success
 }
-var FirmwareAnalyzerReportHostConfigurationResult_UnableToGetOriginalFirmware_DEFAULT *UnableToGetOriginalFirmware
-func (p *FirmwareAnalyzerReportHostConfigurationResult) GetUnableToGetOriginalFirmware() *UnableToGetOriginalFirmware {
+var AttestationFailureAnalyzerServiceReportHostConfigurationResult_UnableToGetOriginalFirmware_DEFAULT *UnableToGetOriginalFirmware
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) GetUnableToGetOriginalFirmware() *UnableToGetOriginalFirmware {
   if !p.IsSetUnableToGetOriginalFirmware() {
-    return FirmwareAnalyzerReportHostConfigurationResult_UnableToGetOriginalFirmware_DEFAULT
+    return AttestationFailureAnalyzerServiceReportHostConfigurationResult_UnableToGetOriginalFirmware_DEFAULT
   }
 return p.UnableToGetOriginalFirmware
 }
-var FirmwareAnalyzerReportHostConfigurationResult_IncorrectHostConfiguration_DEFAULT *IncorrectHostConfiguration
-func (p *FirmwareAnalyzerReportHostConfigurationResult) GetIncorrectHostConfiguration() *IncorrectHostConfiguration {
+var AttestationFailureAnalyzerServiceReportHostConfigurationResult_IncorrectHostConfiguration_DEFAULT *IncorrectHostConfiguration
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) GetIncorrectHostConfiguration() *IncorrectHostConfiguration {
   if !p.IsSetIncorrectHostConfiguration() {
-    return FirmwareAnalyzerReportHostConfigurationResult_IncorrectHostConfiguration_DEFAULT
+    return AttestationFailureAnalyzerServiceReportHostConfigurationResult_IncorrectHostConfiguration_DEFAULT
   }
 return p.IncorrectHostConfiguration
 }
-func (p *FirmwareAnalyzerReportHostConfigurationResult) IsSetSuccess() bool {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) IsSetSuccess() bool {
   return p.Success != nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) IsSetUnableToGetOriginalFirmware() bool {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) IsSetUnableToGetOriginalFirmware() bool {
   return p.UnableToGetOriginalFirmware != nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) IsSetIncorrectHostConfiguration() bool {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) IsSetIncorrectHostConfiguration() bool {
   return p.IncorrectHostConfiguration != nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9306,7 +9306,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult) Read(ctx context.Context
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
   p.Success = &ReportHostConfigurationResult_{}
   if err := p.Success.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
@@ -9314,7 +9314,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField0(ctx context.
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.UnableToGetOriginalFirmware = &UnableToGetOriginalFirmware{}
   if err := p.UnableToGetOriginalFirmware.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.UnableToGetOriginalFirmware), err)
@@ -9322,7 +9322,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField1(ctx context.
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
   p.IncorrectHostConfiguration = &IncorrectHostConfiguration{}
   if err := p.IncorrectHostConfiguration.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.IncorrectHostConfiguration), err)
@@ -9330,7 +9330,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult)  ReadField2(ctx context.
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "ReportHostConfiguration_result"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9345,7 +9345,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult) Write(ctx context.Contex
   return nil
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetSuccess() {
     if err := oprot.WriteFieldBegin(ctx, "success", thrift.STRUCT, 0); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err) }
@@ -9358,7 +9358,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField0(ctx context.
   return err
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetUnableToGetOriginalFirmware() {
     if err := oprot.WriteFieldBegin(ctx, "unableToGetOriginalFirmware", thrift.STRUCT, 1); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:unableToGetOriginalFirmware: ", p), err) }
@@ -9371,7 +9371,7 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField1(ctx context.
   return err
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetIncorrectHostConfiguration() {
     if err := oprot.WriteFieldBegin(ctx, "incorrectHostConfiguration", thrift.STRUCT, 2); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:incorrectHostConfiguration: ", p), err) }
@@ -9384,35 +9384,35 @@ func (p *FirmwareAnalyzerReportHostConfigurationResult) writeField2(ctx context.
   return err
 }
 
-func (p *FirmwareAnalyzerReportHostConfigurationResult) String() string {
+func (p *AttestationFailureAnalyzerServiceReportHostConfigurationResult) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerReportHostConfigurationResult(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceReportHostConfigurationResult(%+v)", *p)
 }
 
 // Attributes:
 //  - Request
-type FirmwareAnalyzerAnalyzeArgs struct {
+type AttestationFailureAnalyzerServiceAnalyzeArgs struct {
   Request *AnalyzeRequest `thrift:"request,1" db:"request" json:"request"`
 }
 
-func NewFirmwareAnalyzerAnalyzeArgs() *FirmwareAnalyzerAnalyzeArgs {
-  return &FirmwareAnalyzerAnalyzeArgs{}
+func NewAttestationFailureAnalyzerServiceAnalyzeArgs() *AttestationFailureAnalyzerServiceAnalyzeArgs {
+  return &AttestationFailureAnalyzerServiceAnalyzeArgs{}
 }
 
-var FirmwareAnalyzerAnalyzeArgs_Request_DEFAULT *AnalyzeRequest
-func (p *FirmwareAnalyzerAnalyzeArgs) GetRequest() *AnalyzeRequest {
+var AttestationFailureAnalyzerServiceAnalyzeArgs_Request_DEFAULT *AnalyzeRequest
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) GetRequest() *AnalyzeRequest {
   if !p.IsSetRequest() {
-    return FirmwareAnalyzerAnalyzeArgs_Request_DEFAULT
+    return AttestationFailureAnalyzerServiceAnalyzeArgs_Request_DEFAULT
   }
 return p.Request
 }
-func (p *FirmwareAnalyzerAnalyzeArgs) IsSetRequest() bool {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) IsSetRequest() bool {
   return p.Request != nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9450,7 +9450,7 @@ func (p *FirmwareAnalyzerAnalyzeArgs) Read(ctx context.Context, iprot thrift.TPr
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.Request = &AnalyzeRequest{}
   if err := p.Request.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Request), err)
@@ -9458,7 +9458,7 @@ func (p *FirmwareAnalyzerAnalyzeArgs)  ReadField1(ctx context.Context, iprot thr
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "Analyze_args"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9471,7 +9471,7 @@ func (p *FirmwareAnalyzerAnalyzeArgs) Write(ctx context.Context, oprot thrift.TP
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if err := oprot.WriteFieldBegin(ctx, "request", thrift.STRUCT, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:request: ", p), err) }
   if err := p.Request.Write(ctx, oprot); err != nil {
@@ -9482,35 +9482,35 @@ func (p *FirmwareAnalyzerAnalyzeArgs) writeField1(ctx context.Context, oprot thr
   return err
 }
 
-func (p *FirmwareAnalyzerAnalyzeArgs) String() string {
+func (p *AttestationFailureAnalyzerServiceAnalyzeArgs) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerAnalyzeArgs(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceAnalyzeArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type FirmwareAnalyzerAnalyzeResult struct {
+type AttestationFailureAnalyzerServiceAnalyzeResult struct {
   Success *AnalyzeResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
 }
 
-func NewFirmwareAnalyzerAnalyzeResult() *FirmwareAnalyzerAnalyzeResult {
-  return &FirmwareAnalyzerAnalyzeResult{}
+func NewAttestationFailureAnalyzerServiceAnalyzeResult() *AttestationFailureAnalyzerServiceAnalyzeResult {
+  return &AttestationFailureAnalyzerServiceAnalyzeResult{}
 }
 
-var FirmwareAnalyzerAnalyzeResult_Success_DEFAULT *AnalyzeResult_
-func (p *FirmwareAnalyzerAnalyzeResult) GetSuccess() *AnalyzeResult_ {
+var AttestationFailureAnalyzerServiceAnalyzeResult_Success_DEFAULT *AnalyzeResult_
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) GetSuccess() *AnalyzeResult_ {
   if !p.IsSetSuccess() {
-    return FirmwareAnalyzerAnalyzeResult_Success_DEFAULT
+    return AttestationFailureAnalyzerServiceAnalyzeResult_Success_DEFAULT
   }
 return p.Success
 }
-func (p *FirmwareAnalyzerAnalyzeResult) IsSetSuccess() bool {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) IsSetSuccess() bool {
   return p.Success != nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9548,7 +9548,7 @@ func (p *FirmwareAnalyzerAnalyzeResult) Read(ctx context.Context, iprot thrift.T
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
   p.Success = &AnalyzeResult_{}
   if err := p.Success.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
@@ -9556,7 +9556,7 @@ func (p *FirmwareAnalyzerAnalyzeResult)  ReadField0(ctx context.Context, iprot t
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "Analyze_result"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9569,7 +9569,7 @@ func (p *FirmwareAnalyzerAnalyzeResult) Write(ctx context.Context, oprot thrift.
   return nil
 }
 
-func (p *FirmwareAnalyzerAnalyzeResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetSuccess() {
     if err := oprot.WriteFieldBegin(ctx, "success", thrift.STRUCT, 0); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err) }
@@ -9582,35 +9582,35 @@ func (p *FirmwareAnalyzerAnalyzeResult) writeField0(ctx context.Context, oprot t
   return err
 }
 
-func (p *FirmwareAnalyzerAnalyzeResult) String() string {
+func (p *AttestationFailureAnalyzerServiceAnalyzeResult) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerAnalyzeResult(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceAnalyzeResult(%+v)", *p)
 }
 
 // Attributes:
 //  - Request
-type FirmwareAnalyzerCheckFirmwareVersionArgs struct {
+type AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs struct {
   Request *CheckFirmwareVersionRequest `thrift:"request,1" db:"request" json:"request"`
 }
 
-func NewFirmwareAnalyzerCheckFirmwareVersionArgs() *FirmwareAnalyzerCheckFirmwareVersionArgs {
-  return &FirmwareAnalyzerCheckFirmwareVersionArgs{}
+func NewAttestationFailureAnalyzerServiceCheckFirmwareVersionArgs() *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs {
+  return &AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs{}
 }
 
-var FirmwareAnalyzerCheckFirmwareVersionArgs_Request_DEFAULT *CheckFirmwareVersionRequest
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) GetRequest() *CheckFirmwareVersionRequest {
+var AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs_Request_DEFAULT *CheckFirmwareVersionRequest
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) GetRequest() *CheckFirmwareVersionRequest {
   if !p.IsSetRequest() {
-    return FirmwareAnalyzerCheckFirmwareVersionArgs_Request_DEFAULT
+    return AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs_Request_DEFAULT
   }
 return p.Request
 }
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) IsSetRequest() bool {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) IsSetRequest() bool {
   return p.Request != nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9648,7 +9648,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) Read(ctx context.Context, ipr
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.Request = &CheckFirmwareVersionRequest{}
   if err := p.Request.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Request), err)
@@ -9656,7 +9656,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionArgs)  ReadField1(ctx context.Conte
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "CheckFirmwareVersion_args"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9669,7 +9669,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) Write(ctx context.Context, op
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if err := oprot.WriteFieldBegin(ctx, "request", thrift.STRUCT, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:request: ", p), err) }
   if err := p.Request.Write(ctx, oprot); err != nil {
@@ -9680,35 +9680,35 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) writeField1(ctx context.Conte
   return err
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionArgs) String() string {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerCheckFirmwareVersionArgs(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceCheckFirmwareVersionArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type FirmwareAnalyzerCheckFirmwareVersionResult struct {
+type AttestationFailureAnalyzerServiceCheckFirmwareVersionResult struct {
   Success *CheckFirmwareVersionResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
 }
 
-func NewFirmwareAnalyzerCheckFirmwareVersionResult() *FirmwareAnalyzerCheckFirmwareVersionResult {
-  return &FirmwareAnalyzerCheckFirmwareVersionResult{}
+func NewAttestationFailureAnalyzerServiceCheckFirmwareVersionResult() *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult {
+  return &AttestationFailureAnalyzerServiceCheckFirmwareVersionResult{}
 }
 
-var FirmwareAnalyzerCheckFirmwareVersionResult_Success_DEFAULT *CheckFirmwareVersionResult_
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) GetSuccess() *CheckFirmwareVersionResult_ {
+var AttestationFailureAnalyzerServiceCheckFirmwareVersionResult_Success_DEFAULT *CheckFirmwareVersionResult_
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) GetSuccess() *CheckFirmwareVersionResult_ {
   if !p.IsSetSuccess() {
-    return FirmwareAnalyzerCheckFirmwareVersionResult_Success_DEFAULT
+    return AttestationFailureAnalyzerServiceCheckFirmwareVersionResult_Success_DEFAULT
   }
 return p.Success
 }
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) IsSetSuccess() bool {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) IsSetSuccess() bool {
   return p.Success != nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
   }
@@ -9746,7 +9746,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionResult) Read(ctx context.Context, i
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult)  ReadField0(ctx context.Context, iprot thrift.TProtocol) error {
   p.Success = &CheckFirmwareVersionResult_{}
   if err := p.Success.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
@@ -9754,7 +9754,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionResult)  ReadField0(ctx context.Con
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "CheckFirmwareVersion_result"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
@@ -9767,7 +9767,7 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionResult) Write(ctx context.Context, 
   return nil
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) writeField0(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetSuccess() {
     if err := oprot.WriteFieldBegin(ctx, "success", thrift.STRUCT, 0); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err) }
@@ -9780,11 +9780,11 @@ func (p *FirmwareAnalyzerCheckFirmwareVersionResult) writeField0(ctx context.Con
   return err
 }
 
-func (p *FirmwareAnalyzerCheckFirmwareVersionResult) String() string {
+func (p *AttestationFailureAnalyzerServiceCheckFirmwareVersionResult) String() string {
   if p == nil {
     return "<nil>"
   }
-  return fmt.Sprintf("FirmwareAnalyzerCheckFirmwareVersionResult(%+v)", *p)
+  return fmt.Sprintf("AttestationFailureAnalyzerServiceCheckFirmwareVersionResult(%+v)", *p)
 }
 
 

@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/helpers"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 
@@ -42,7 +42,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	// It is called "Address" instead of "Tier" to add support of direct thrift
 	// addresses in future (it will be determined by presence of a port, so
 	// for direct addresses the format is: host:port)
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+fasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
+	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
 
 	cmd.eventLog = flag.String("event-log", "/sys/kernel/security/tpm0/binary_bios_measurements", "path to the binary EventLog")
 	cmd.localPCR0SHA1 = flag.String("local-pcr0-sha1", "", "the value of local pcr0 sha1 value (allowed formats: binary, base64, hex)")

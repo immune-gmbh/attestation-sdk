@@ -13,20 +13,19 @@ import (
 	"os"
 	"sort"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/analyze"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/display_eventlog"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/display_info"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/display_tpm"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/dump"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/dump_registers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/fetch"
-	pcr0sum "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/pcr0_sum"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/report_host_configuration"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/search"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/search_report"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/txt_status"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/display_eventlog"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/display_info"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/display_tpm"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/dump"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/dump_registers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/fetch"
+	pcr0sum "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/pcr0_sum"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/report_host_configuration"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/search"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/search_report"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/txt_status"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/consts"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 
@@ -95,9 +94,9 @@ func setupFlag() (*flag.FlagSet, *flags) {
 	// Some packages leaves garbage in global `flag` without asking anybody,
 	// so we have to use a separate flag set to do no display that garbage
 	// in PrintDefaults().
-	flagSet := flag.NewFlagSet("fwtool", flag.ExitOnError)
+	flagSet := flag.NewFlagSet("afascli", flag.ExitOnError)
 	flagSet.Usage = func() {
-		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "syntax: fwtool <command> [options] {arguments}\n")
+		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "syntax: afascli <command> [options] {arguments}\n")
 		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "\nPossible commands:\n")
 
 		// sort commands
@@ -110,7 +109,7 @@ func setupFlag() (*flag.FlagSet, *flags) {
 		// display commands
 		for _, commandName := range commandList {
 			command := knownCommands[commandName]
-			_, _ = fmt.Fprintf(flag.CommandLine.Output(), "    fwtool %-36s %s\n",
+			_, _ = fmt.Fprintf(flag.CommandLine.Output(), "    afascli %-36s %s\n",
 				fmt.Sprintf("%s %s", commandName, command.Usage()), command.Description())
 		}
 		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "\n")
@@ -163,7 +162,6 @@ func main() {
 	ctx = observability.WithBelt(
 		ctx,
 		flags.loggingLevel,
-		consts.ScubaLoggingDataset, "", consts.ScubaTracingDataset,
 		*flags.tracePrefix,
 		true,
 	)
@@ -206,7 +204,7 @@ func main() {
 
 	flagSet = flag.NewFlagSet(commandName, flag.ExitOnError)
 	flagSet.Usage = func() {
-		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "syntax: fwtool %s [options] %s\n\nOptions:\n",
+		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "syntax: afascli %s [options] %s\n\nOptions:\n",
 			commandName, command.Usage())
 		flagSet.PrintDefaults()
 		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "\n")

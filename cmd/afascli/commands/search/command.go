@@ -6,9 +6,9 @@ import (
 	"flag"
 	"fmt"
 
-	fasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/helpers"
+	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 )
@@ -34,7 +34,7 @@ func (cmd Command) Description() string {
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	// for "firmwareAnalysisAddress" see the comment in ../verify/command.go
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+fasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
+	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
 
 	cmd.imageID = flag.String("image-id", "", "ImageID to filter the reports by")
 	cmd.version = flag.String("version", "", "firmware version")

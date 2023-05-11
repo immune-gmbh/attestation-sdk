@@ -5,7 +5,7 @@ import (
 )
 
 // Command is an interface of implementations of command verbs
-// (like "dump", "verify" etc of "fwtool dump"/"fwtool verify")
+// (like "dump", "verify" etc of "afascli dump"/"afascli verify")
 type Command interface {
 	// Description explains what this verb commands to do
 	Description() string

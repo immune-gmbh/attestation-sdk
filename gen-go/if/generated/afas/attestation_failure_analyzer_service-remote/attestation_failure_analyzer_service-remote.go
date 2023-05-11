@@ -153,7 +153,7 @@ func main() {
   }
   iprot := protocolFactory.GetProtocol(trans)
   oprot := protocolFactory.GetProtocol(trans)
-  client := afas.NewFirmwareAnalyzerClient(thrift.NewTStandardClient(iprot, oprot))
+  client := afas.NewAttestationFailureAnalyzerServiceClient(thrift.NewTStandardClient(iprot, oprot))
   if err := trans.Open(); err != nil {
     fmt.Fprintln(os.Stderr, "Error opening socket to ", host, ":", port, " ", err)
     os.Exit(1)

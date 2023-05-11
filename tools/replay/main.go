@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/client/commands/analyze/format"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
