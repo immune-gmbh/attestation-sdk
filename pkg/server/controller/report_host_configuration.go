@@ -148,7 +148,7 @@ func (ctrl *Controller) ReportHostConfiguration(
 	}
 
 	reportToScuba(resultPCRSHA1, resultPCRSHA256)
-	if ctrl.checkReportConfigGate(hostInfo) {
+	if ctrl.checkReportConfigGate(hostInfo) {\
 		log.Debugf("passed sysprov/gating/ramdisk_attestation_report_config, inserting pcr0")
 		ctrl.insertPCR0(ctx, firmware, firmwareVersion, firmwareDate, modelFamilyID, evaluationStatus, flows.ToOld(resultFlow), regs, resultPCRSHA1, resultPCRSHA256)
 	} else {

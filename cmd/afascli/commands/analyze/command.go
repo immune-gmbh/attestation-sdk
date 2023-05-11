@@ -19,8 +19,8 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
 	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
@@ -300,6 +300,7 @@ func (cmd Command) FirmwarewandOptions() []firmwarewand.Option {
 //	while "analyze" should send the gathered info for analysis.
 //	Otherwise "afascli analyze" is trying to cover too many too different use cases and becomes overloaded.
 func (cmd Command) buildAnalyzeRequest(
+	ctx context.Context,
 	cfg commands.Config,
 	fwWand *firmwarewand.FirmwareWand,
 	args []string,
@@ -326,7 +327,6 @@ func (cmd Command) buildAnalyzeRequest(
 		}
 	}
 
-	ctx := cfg.Context
 	var (
 		actualFirmware     []byte
 		actualFirmwareMeta *afas.FirmwareImageMetadata
@@ -339,7 +339,7 @@ func (cmd Command) buildAnalyzeRequest(
 			return nil, fmt.Errorf("failed to read file '%s': %w", actualFirmware, err)
 		}
 	} else if *cmd.localhostRequest {
-		actualFirmware, err = fwWand.Dump()
+		actualFirmware, err = fwWand.Dump(ctx)
 		if err != nil {
 			logger.FromCtx(ctx).Errorf("Failed to dump local firmware: %v", err)
 		}
@@ -347,7 +347,7 @@ func (cmd Command) buildAnalyzeRequest(
 	}
 
 	if len(actualFirmware) > 0 {
-		actualFirmwareMeta = fwWand.FindImage(actualFirmware)
+		actualFirmwareMeta = fwWand.FindImage(ctx, actualFirmware)
 	}
 
 	firmwareVersions, err := cmd.FirmwareVersionDate(ctx, actualFirmware, actualFirmwareMeta)
@@ -424,12 +424,12 @@ func (cmd Command) buildAnalyzeRequest(
 
 	var actualImage afas.FirmwareImage
 	if len(*cmd.firmwareRTPFilename) > 0 {
-		actualImage.SetFilename(cmd.firmwareRTPFilename)
+		actualImage.Filename = cmd.firmwareRTPFilename
 	} else if len(*cmd.firmwareEverstoreHandle) > 0 {
-		actualImage.SetEverstoreHandle(cmd.firmwareEverstoreHandle)
+		actualImage.EverstoreHandle = cmd.firmwareEverstoreHandle
 	} else if actualFirmwareMeta != nil && len(actualFirmwareMeta.ImageID) > 0 {
 		logger.FromCtx(ctx).Infof("Use manifold image ID: %X", actualFirmwareMeta.ImageID)
-		actualImage.SetManifoldID(actualFirmwareMeta.ImageID)
+		actualImage.ManifoldID = actualFirmwareMeta.ImageID
 	} else if len(actualFirmware) > 0 {
 		compressedImage, err := compressXZ(actualFirmware)
 		// this should not happen as all images should be compressed. Treat as a fatal error
@@ -437,10 +437,10 @@ func (cmd Command) buildAnalyzeRequest(
 			logger.FromCtx(ctx).Errorf("Failed to compress actual firmware image: %v", err)
 			return nil, err
 		}
-		actualImage.SetBlob(&afas.CompressedBlob{
+		actualImage.Blob = &afas.CompressedBlob{
 			Blob:        compressedImage,
 			Compression: afas.CompressionType_XZ,
-		})
+		}
 	}
 
 	var originalImage *afas.FirmwareImage
@@ -564,7 +564,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		return err
 	}
 
-	fwWand, err := firmwarewand.New(cfg.Context, append(cfg.FirmwareWandOptions, cmd.FirmwarewandOptions()...)...)
+	fwWand, err := firmwarewand.New(ctx, append(cfg.FirmwareWandOptions, cmd.FirmwarewandOptions()...)...)
 	if err != nil {
 		return fmt.Errorf("unable to initialize a firmwarewand: %w", err)
 	}
@@ -579,7 +579,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		return commands.ErrArgs{Err: fmt.Errorf("unable to parse the -use-request flag: %w", err)}
 	}
 	if request == nil {
-		request, err = cmd.buildAnalyzeRequest(cfg, fwWand, args)
+		request, err = cmd.buildAnalyzeRequest(ctx, cfg, fwWand, args)
 		if err != nil {
 			return err
 		}
@@ -605,7 +605,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 			return fmt.Errorf("unsupported request dump format: '%s'", dumpRequestFormat)
 		}
 	} else {
-		result, err := fwWand.Analyze(cfg.Context, request)
+		result, err := fwWand.Analyze(ctx, request)
 		if err != nil {
 			return fmt.Errorf("analyze request failed: %w", err)
 		}
@@ -625,7 +625,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 			}
 			err = outputTemplate.Execute(os.Stdout, outputData{
 				Result:   result,
-				TraceIDs: beltctx.TraceIDs(cfg.Context),
+				TraceIDs: beltctx.TraceIDs(ctx),
 			})
 			if err != nil {
 				return fmt.Errorf("failed to format the result: %w", err)

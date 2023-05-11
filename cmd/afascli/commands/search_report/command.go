@@ -112,7 +112,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		}
 	}
 
-	fwWand, err := firmwarewand.New(cfg.Context, append(cfg.FirmwareWandOptions, cmd.firmwarewandOptions()...)...)
+	fwWand, err := firmwarewand.New(ctx, append(cfg.FirmwareWandOptions, cmd.firmwarewandOptions()...)...)
 	if err != nil {
 		return fmt.Errorf("unable to initialize a firmwarewand: %w", err)
 	}

@@ -12,15 +12,15 @@ import (
 	"github.com/google/uuid"
 	pkgbytes "github.com/linuxboot/fiano/pkg/bytes"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/analyzerreport"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types"
 	"github.com/linuxboot/fiano/pkg/amd/apcb"
 )
 

@@ -60,7 +60,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		return fmt.Errorf("unable to read to original image '%s': %w", origImagePath, err)
 	}
 
-	if err := testCase.Setup(cfg.Context, image); err != nil {
+	if err := testCase.Setup(ctx, image); err != nil {
 		return fmt.Errorf("unable to setup the test case '%s': %w", testCaseName, err)
 	}
 

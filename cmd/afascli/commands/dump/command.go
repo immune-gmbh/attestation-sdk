@@ -80,12 +80,12 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 	}
 	outputPath := args[0]
 
-	imageBytes, err := flashrom.Dump(cfg.Context, cmd.FlashromOptions()...)
+	imageBytes, err := flashrom.Dump(ctx, cmd.FlashromOptions()...)
 	if err != nil {
 		return fmt.Errorf("unable to dump a firmware image: %w", err)
 	}
 
-	span, _ := tracer.StartChildSpanFromCtx(cfg.Context, "writeFile")
+	span, _ := tracer.StartChildSpanFromCtx(ctx, "writeFile")
 	defer span.Finish()
 	err = ioutil.WriteFile(outputPath, imageBytes, 0440)
 	if err != nil {

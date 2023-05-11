@@ -22,6 +22,6 @@ type Command struct {
 func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	// TODO: make pcr0tool compatible with "commands.Config" and use it directly
 	log.SetOutput(os.Stdout)
-	cmd.Command.Execute(cfg.Context, args)
+	cmd.Command.Execute(ctx, args)
 	return nil
 }

@@ -118,7 +118,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		options = append(options, types.OptionForceSELEvents(sels))
 	}
 
-	err = testCase.Validate(cfg.Context, image, options...)
+	err = testCase.Validate(ctx, image, options...)
 	if err != nil {
 		return ErrTest{
 			TestCase: testCase,
