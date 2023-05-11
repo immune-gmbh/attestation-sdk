@@ -1,0 +1,201 @@
+package typeconv
+
+import (
+	"fmt"
+
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/measurements"
+	thrift_tpm "github.com/immune-gmbh/AttestationFailureAnalysisService/if/tpm"
+
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
+	"github.com/9elements/converged-security-suite/v2/pkg/errors"
+	pcr_types "github.com/9elements/converged-security-suite/v2/pkg/pcr/types"
+	"github.com/9elements/converged-security-suite/v2/pkg/registers"
+	"github.com/9elements/converged-security-suite/v2/pkg/tpmdetection"
+	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
+)
+
+// FromThriftFlow converts firmware analysis service Flow to pcr0tool Flow
+func FromThriftFlow(flow measurements.Flow) (types.Flow, error) {
+	switch flow {
+	case measurements.Flow_AUTO:
+		return flows.Root, nil
+	case measurements.Flow_INTEL_LEGACY_TXT_DISABLED:
+		return flows.IntelLegacyTXTDisabled, nil
+	case measurements.Flow_INTEL_LEGACY_TXT_ENABLED:
+		return flows.IntelLegacyTXTEnabled, nil
+	case measurements.Flow_INTEL_LEGACY_TPM12_TXT_ENABLED:
+		return flows.IntelLegacyTXTEnabledTPM12, nil
+	case measurements.Flow_INTEL_CBNT0T:
+		return flows.IntelCBnT, nil
+	case measurements.Flow_AMD_MILAN_LEGACY_LOCALITY_0:
+		return flows.AMDMilanLegacyLocality0, nil
+	case measurements.Flow_AMD_MILAN_LEGACY_LOCALITY_3:
+		return flows.AMDMilanLegacyLocality3, nil
+	case measurements.Flow_AMD_MILAN_LOCALITY_0:
+		return flows.AMDMilanLocality0, nil
+	case measurements.Flow_AMD_MILAN_LOCALITY_3:
+		return flows.AMDMilanLocality3, nil
+	case measurements.Flow_AMD_GENOA_LOCALITY_0:
+		return flows.AMDGenoaLocality0, nil
+	case measurements.Flow_AMD_GENOA_LOCALITY_3:
+		return flows.AMDGenoaLocality3, nil
+	}
+	return flows.Root, fmt.Errorf("unknown flow: %d", flow)
+}
+
+// ToThriftFlow converts pcr0tool Flow to firmware analysis service Flow
+func ToThriftFlow(flow types.Flow) (measurements.Flow, error) {
+	switch flow.Name {
+	case flows.Root.Name:
+		return measurements.Flow_AUTO, nil
+	case flows.IntelLegacyTXTDisabled.Name:
+		return measurements.Flow_INTEL_LEGACY_TXT_DISABLED, nil
+	case flows.IntelLegacyTXTEnabled.Name:
+		return measurements.Flow_INTEL_LEGACY_TXT_ENABLED, nil
+	case flows.IntelLegacyTXTEnabledTPM12.Name:
+		return measurements.Flow_INTEL_LEGACY_TPM12_TXT_ENABLED, nil
+	case flows.IntelCBnT.Name:
+		return measurements.Flow_INTEL_CBNT0T, nil
+	case flows.AMDMilanLegacyLocality0.Name:
+		return measurements.Flow_AMD_MILAN_LEGACY_LOCALITY_0, nil
+	case flows.AMDMilanLegacyLocality3.Name:
+		return measurements.Flow_AMD_MILAN_LEGACY_LOCALITY_3, nil
+	case flows.AMDMilanLocality0.Name:
+		return measurements.Flow_AMD_MILAN_LOCALITY_0, nil
+	case flows.AMDMilanLocality3.Name:
+		return measurements.Flow_AMD_MILAN_LOCALITY_3, nil
+	case flows.AMDGenoaLocality0.Name:
+		return measurements.Flow_AMD_GENOA_LOCALITY_0, nil
+	case flows.AMDGenoaLocality3.Name:
+		return measurements.Flow_AMD_GENOA_LOCALITY_3, nil
+	}
+	return measurements.Flow_AUTO, fmt.Errorf("unknown flow: '%s'", flow.Name)
+}
+
+// ToThriftTPMType converts pcr0tool TPMType to firmware analysis service TPMType
+func ToThriftTPMType(tpmType tpmdetection.Type) (afas.TPMType, error) {
+	switch tpmType {
+	case tpmdetection.TypeNoTPM:
+		return afas.TPMType_UNKNOWN, nil
+	case tpmdetection.TypeTPM12:
+		return afas.TPMType_TPM12, nil
+	case tpmdetection.TypeTPM20:
+		return afas.TPMType_TPM20, nil
+	}
+	return afas.TPMType_UNKNOWN, fmt.Errorf("unknown tpm type: %d", tpmType)
+}
+
+// FromThriftTPMType converts firmware analysis service TPMType to pcr0tool TPMType
+func FromThriftTPMType(tpmType afas.TPMType) (tpmdetection.Type, error) {
+	switch tpmType {
+	case afas.TPMType_UNKNOWN:
+		return tpmdetection.TypeNoTPM, nil
+	case afas.TPMType_TPM12:
+		return tpmdetection.TypeTPM12, nil
+	case afas.TPMType_TPM20:
+		return tpmdetection.TypeTPM20, nil
+	}
+	return tpmdetection.TypeNoTPM, fmt.Errorf("unknown tpm type: %d", tpmType)
+}
+
+// FromThriftRegisters converts firmware analysis status registers to pcr0tool registers
+func FromThriftRegisters(statusRegisters []*afas.StatusRegister) (registers.Registers, error) {
+	if statusRegisters == nil {
+		return nil, nil
+	}
+
+	var resultErr errors.MultiError
+	result := make(registers.Registers, 0, len(statusRegisters))
+	for _, statusRegister := range statusRegisters {
+		reg, err := registers.ValueFromBytes(registers.RegisterID(statusRegister.Id), statusRegister.Value)
+		if err != nil {
+			resultErr.Add(fmt.Errorf("unable to decode register <%v:%v>: %w", statusRegister.Id, statusRegister.Value, err))
+			continue
+		}
+		result = append(result, reg)
+	}
+	return result, resultErr.ReturnValue()
+}
+
+// ToThriftRegisters converts pcr0tool registers to firmware analysis status registers
+func ToThriftRegisters(statusRegisters registers.Registers) ([]*afas.StatusRegister, error) {
+	if statusRegisters == nil {
+		return nil, nil
+	}
+
+	var resultErr errors.MultiError
+	result := make([]*afas.StatusRegister, 0, len(statusRegisters))
+	for _, statusRegister := range statusRegisters {
+		b, err := registers.ValueBytes(statusRegister)
+		if err != nil {
+			resultErr.Add(fmt.Errorf("unable to encode register %v", statusRegister.ID()))
+			continue
+		}
+		result = append(result, &afas.StatusRegister{
+			Id:    string(statusRegister.ID()),
+			Value: b,
+		})
+	}
+	return result, resultErr.ReturnValue()
+}
+
+// ToThriftTPMEventLog converts pcr0tool TPMEventLog to the firmware analysis service format.
+func ToThriftTPMEventLog(in *tpmeventlog.TPMEventLog) *thrift_tpm.EventLog {
+	if in == nil {
+		return nil
+	}
+
+	out := &thrift_tpm.EventLog{
+		Events: make([]*thrift_tpm.Event, 0, len(in.Events)),
+	}
+	for _, event := range in.Events {
+		var digest *thrift_tpm.Digest_
+		if event.Digest != nil {
+			digest = &thrift_tpm.Digest_{
+				HashAlgo: thrift_tpm.Algo(event.Digest.HashAlgo),
+				Digest:   event.Digest.Digest,
+			}
+		}
+
+		out.Events = append(out.Events, &thrift_tpm.Event{
+			PCRIndex: int64(event.PCRIndex),
+			Type:     int64(event.Type),
+			Data:     event.Data,
+			Digest:   digest,
+		})
+	}
+
+	return out
+}
+
+// FromThriftTPMEventLog converts firmware analysis service TPMEventLog to the converged security suite format.
+func FromThriftTPMEventLog(in *thrift_tpm.EventLog) *tpmeventlog.TPMEventLog {
+	if in == nil {
+		return nil
+	}
+
+	out := &tpmeventlog.TPMEventLog{
+		Events: make([]*tpmeventlog.Event, 0, len(in.Events)),
+	}
+	for _, event := range in.Events {
+		var digest *tpmeventlog.Digest
+		if event.Digest != nil {
+			digest = &tpmeventlog.Digest{
+				HashAlgo: tpmeventlog.TPMAlgorithm(event.Digest.HashAlgo),
+				Digest:   event.Digest.Digest,
+			}
+		}
+
+		out.Events = append(out.Events, &tpmeventlog.Event{
+			PCRIndex: pcr_types.ID(event.PCRIndex),
+			Type:     tpmeventlog.EventType(event.Type),
+			Data:     event.Data,
+			Digest:   digest,
+		})
+	}
+
+	return out
+}
