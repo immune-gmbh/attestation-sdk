@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 	pkgbytes "github.com/linuxboot/fiano/pkg/bytes"
 	"github.com/steakknife/hamming"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 )
 
 // Diagnose provides the diagnosis how to interpret an image corruption.

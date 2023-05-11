@@ -3,7 +3,7 @@ package hostinfo
 import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 )
 
 const (

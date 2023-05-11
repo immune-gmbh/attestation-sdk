@@ -1,12 +1,13 @@
 package dump_registers
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 
-	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
+	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
 
 	css_helpers "github.com/9elements/converged-security-suite/v2/cmd/pcr0tool/commands/dumpregisters/helpers"
 )
@@ -41,7 +42,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	if len(args) > 0 {
 		return commands.ErrArgs{Err: fmt.Errorf("error: too many parameters")}
 	}

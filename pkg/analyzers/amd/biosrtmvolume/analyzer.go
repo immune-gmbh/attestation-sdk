@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
 	"github.com/facebookincubator/go-belt/tool/logger"

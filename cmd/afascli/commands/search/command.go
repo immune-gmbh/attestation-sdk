@@ -1,14 +1,15 @@
 package search
 
 import (
+	"context"
 	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
 
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 )
@@ -56,7 +57,7 @@ func (cmd Command) flagImageID() ([]byte, error) {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	if len(args) != 0 {
 		return commands.ErrArgs{Err: fmt.Errorf("error: too many arguments")}
 	}

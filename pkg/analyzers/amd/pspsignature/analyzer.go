@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/conv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/psptypes"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
@@ -101,7 +101,7 @@ func (analyzer *PSPSignature) Analyze(ctx context.Context, in Input) (*analysis.
 // We will have a whitelist of items that should be signed and will keep analyzer that checks that all firmware types are known to us
 var checkedPSPEntries = []uint32{
 	uint32(amd_manifest.PSPBootloaderFirmwareEntry),
-	uint32(psb.PSPRecoveryBootlader),
+	uint32(psb.PSPRecoveryBootloader),
 	uint32(psb.SMUOffChipFirmwareEntry),
 	uint32(psb.SMUOffChipFirmware2Entry),
 	uint32(psb.UnlockDebugImageEntry),

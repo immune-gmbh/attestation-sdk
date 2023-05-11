@@ -7,14 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/subsystems/trustchains/tpm"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/subsystems/trustchains/tpm/pcrbruteforcer"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/systemartifacts/biosimage"
@@ -26,6 +20,12 @@ import (
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/google/go-tpm/tpm2"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
 	// TODO: delete this:
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"

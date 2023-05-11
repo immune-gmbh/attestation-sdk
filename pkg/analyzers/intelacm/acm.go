@@ -3,9 +3,9 @@ package intelacm
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
-
 	"github.com/linuxboot/fiano/pkg/intel/metadata/fit"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
 )
 
 // GetACMInfo tries to parse ACM information from a firmware image

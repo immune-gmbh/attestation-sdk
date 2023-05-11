@@ -21,7 +21,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/dump_registers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/fetch"
 	pcr0sum "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/pcr0_sum"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/report_host_configuration"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/search"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/search_report"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/txt_status"
@@ -38,18 +37,17 @@ import (
 
 var (
 	knownCommands = map[string]commands.Command{
-		"analyze":            &analyze.Command{},
-		"report_host_config": &report_host_configuration.Command{},
-		"display_eventlog":   &display_eventlog.Command{},
-		"display_info":       &display_info.Command{},
-		"display_tpm":        &display_tpm.Command{},
-		"dump":               &dump.Command{},
-		"dump_registers":     &dump_registers.Command{},
-		"fetch":              &fetch.Command{},
-		"pcr0_sum":           &pcr0sum.Command{},
-		"search":             &search.Command{},
-		"search_report":      &search_report.Command{},
-		"txt_status":         &txt_status.Command{},
+		"analyze":          &analyze.Command{},
+		"display_eventlog": &display_eventlog.Command{},
+		"display_info":     &display_info.Command{},
+		"display_tpm":      &display_tpm.Command{},
+		"dump":             &dump.Command{},
+		"dump_registers":   &dump_registers.Command{},
+		"fetch":            &fetch.Command{},
+		"pcr0_sum":         &pcr0sum.Command{},
+		"search":           &search.Command{},
+		"search_report":    &search_report.Command{},
+		"txt_status":       &txt_status.Command{},
 	}
 	exitCode = 0
 )
@@ -181,7 +179,6 @@ func main() {
 
 	cfg := commands.Config{
 		IsQuiet: *flags.isQuiet,
-		Context: ctx,
 	}
 
 	cfg.FirmwareWandOptions = append(cfg.FirmwareWandOptions, firmwarewand.OptionRemoteLogLevel(flags.remoteLoggingLevel))
@@ -214,7 +211,7 @@ func main() {
 
 	command.SetupFlagSet(flagSet)
 	_ = flagSet.Parse(args)
-	err := command.Execute(cfg, flagSet.Args())
+	err := command.Execute(ctx, cfg, flagSet.Args())
 
 	// Process the error
 	if err == nil {

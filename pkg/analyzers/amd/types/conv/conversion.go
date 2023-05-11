@@ -3,7 +3,7 @@ package conv
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/psptypes"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"

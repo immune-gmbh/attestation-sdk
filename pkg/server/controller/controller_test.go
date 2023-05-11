@@ -7,16 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
-	gatingMocks "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/gating/mocks"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpfw"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 func TestControllerCreation(t *testing.T) {

@@ -5,14 +5,8 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"facebook/core_systems/server/device"
-	"facebook/infrasec/authorization/acl"
-	"libfb/go/identity"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpfw"
-	"thrift/lib/go/thrift"
 )
 
 // ExtractHostnameFromCtx extracts hostname from provided thrift context
@@ -42,7 +36,7 @@ func getClientSeRFDevice(
 	ctx context.Context,
 	serf serfInterface,
 	hostInfo *afas.HostInfo,
-) (dev *device.Device, isVerified bool) {
+) (dev sdf /* *device.Device */, isVerified bool) {
 	if hostInfo == nil {
 		return nil, false
 	}
@@ -77,7 +71,7 @@ func getClientSeRFDevice(
 	return
 }
 
-func enrichHostInfo(ctx context.Context, serfDevice *device.Device, isVerified bool, hostInfo *afas.HostInfo) {
+func enrichHostInfo(ctx context.Context, serfDevice sdf /* *device.Device */, isVerified bool, hostInfo *afas.HostInfo) {
 	if serfDevice != nil {
 		hostInfo.IsVerified = isVerified
 		if isVerified || serfDevice.Name != nil {
@@ -96,7 +90,7 @@ func enrichHostInfo(ctx context.Context, serfDevice *device.Device, isVerified b
 	}
 }
 
-func getRTPEvaluationStatus(ctx context.Context, serfDevice *device.Device) rtp.EvaluationStatus {
+func getRTPEvaluationStatus(ctx context.Context, serfDevice sdf /* *device.Device */) sdf /*rtp.EvaluationStatus*/ {
 	evaluationStatus := rtpfw.EvaluationStatusMostProductionReady
 	log := logger.FromCtx(ctx)
 	if serfDevice != nil {

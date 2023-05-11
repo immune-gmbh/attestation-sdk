@@ -7,10 +7,10 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
-
 	"github.com/facebookincubator/go-belt/tool/logger"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
 )
 
 func init() {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 
 	"github.com/ulikunitz/xz"
 )

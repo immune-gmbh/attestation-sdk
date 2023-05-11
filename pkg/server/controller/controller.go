@@ -11,26 +11,6 @@ import (
 	"time"
 	"unsafe"
 
-	"facebook/core_systems/server/device"
-	"libfb/go/manifold"
-	"libfb/go/rfe"
-	"libfb/go/scuba"
-	"libfb/go/tag"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/gating"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpdb"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpfw"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/serf"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types"
-
 	"lukechampine.com/blake3"
 
 	css_errors "github.com/9elements/converged-security-suite/v2/pkg/errors"
@@ -39,6 +19,16 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	lru "github.com/hashicorp/golang-lru"
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
+
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 func init() {
@@ -55,50 +45,28 @@ func init() {
 
 // Controller implement the high-level logic of the firmware-analysis service.
 type Controller struct {
-	FBID                   int64
 	Context                context.Context
 	ContextCancel          context.CancelFunc
 	Storage                storageInterface
-	SeRF                   serfInterface
 	FirmwareStorage        originalFirmwareStorage
-	diffScuba              scubaInterface
-	diffScubaDataset       string
-	RFE                    rfeInterface
-	rtpfw                  rtpfwInterface
-	rtpDB                  rtpDBInterface
-	gateChecker            gating.GateChecker
-	hostConfigScuba        scubaInterface
 	analyzersRegistry      *analyzers.Registry
 	analysisDataCalculator analysisDataCalculatorInterface
 
 	DiffFirmwareCache     *lru.TwoQueueCache
 	DiffFirmwareCacheLock *lockmap.LockMap
 	UEFIParseLock         *lockmap.LockMap
-	ReportHostConfigCache *lru.TwoQueueCache
-	ReportHostConfigLock  *lockmap.LockMap
 
 	activeGoroutinesWG sync.WaitGroup
-}
-
-func getManifoldClient(manifoldBucket, manifoldAPIKey string) (*manifold.Client, error) {
-	manifoldOpts := manifold.DefaultOptions()
-	manifoldOpts.APIKey = manifoldAPIKey
-	manifoldOpts.Bucket = manifoldBucket
-	return manifold.NewClient(manifoldOpts)
 }
 
 // New returns an instance of Controller.
 func New(
 	ctx context.Context,
-	fbid int64,
-	rtpfwCacheSize int,
-	rtpfwCacheEvictionTimeout time.Duration,
 	apiCachePurgeTimeout time.Duration,
 	storageCacheSize uint64,
 	diffFirmwareCacheSize int,
-	reportHostConfigCacheSize int,
 	dataCalcCacheSize int,
-	rdbmsURL, tierSeRF, diffScubaDataset, hostsConfigDataset, manifoldBucket, manifoldAPIKey string,
+	rdbmsURL string,
 ) (*Controller, error) {
 	log := logger.FromCtx(ctx)
 	manifoldClient, err := getManifoldClient(manifoldBucket, manifoldAPIKey)
@@ -153,43 +121,23 @@ func New(
 
 	return newInternal(
 		ctx,
-		fbid,
 		stor,
-		serfClient,
 		firmwareStorage,
-		rfeClient,
 		rtpfw,
 		newRTPDBReader(rtpDB),
 		dataCalculator,
-		gating.NewGateChecker(false, log),
-		scuba.New(diffScubaDataset),
-		diffScubaDataset,
-		scuba.New(hostsConfigDataset),
-		rtpfwCacheEvictionTimeout,
 		apiCachePurgeTimeout,
 		diffFirmwareCacheSize,
-		reportHostConfigCacheSize,
 	)
 }
 
 func newInternal(
 	ctx context.Context,
-	fbid int64,
 	storage storageInterface,
-	serfClient serfInterface,
 	firmwareStorage originalFirmwareStorage,
-	rfeClient rfeInterface,
-	rtpfw rtpfwInterface,
-	rtpDB rtpDBInterface,
 	analysisDataCalculator analysisDataCalculatorInterface,
-	gateChecker gating.GateChecker,
-	diffScuba scubaInterface,
-	diffScubaDataset string,
-	hostConfigScuba scubaInterface,
-	rtpfwCacheEvictionTimeout time.Duration,
 	apiCachePurgeTimeout time.Duration,
 	diffFirmwareCacheSize int,
-	reportHostConfigCacheSize int,
 ) (*Controller, error) {
 	if apiCachePurgeTimeout > rtpfwCacheEvictionTimeout {
 		return nil, fmt.Errorf("API cache purge timeout '%v' is larger than rtp firmware cache timeout'%v'",
@@ -216,30 +164,19 @@ func newInternal(
 	}
 
 	ctrl := &Controller{
-		FBID:                   fbid,
 		Storage:                storage,
-		SeRF:                   serfClient,
 		FirmwareStorage:        firmwareStorage,
-		diffScuba:              diffScuba,
-		diffScubaDataset:       diffScubaDataset,
-		RFE:                    rfeClient,
-		rtpfw:                  rtpfw,
-		rtpDB:                  rtpDB,
-		gateChecker:            gateChecker,
-		hostConfigScuba:        hostConfigScuba,
 		analyzersRegistry:      analyzersRegistry,
 		analysisDataCalculator: analysisDataCalculator,
 
 		DiffFirmwareCache:     diffFirmwareCache,
 		DiffFirmwareCacheLock: lockmap.NewLockMap(),
 		UEFIParseLock:         lockmap.NewLockMap(),
-		ReportHostConfigCache: reportHostConfigCache,
-		ReportHostConfigLock:  lockmap.NewLockMap(),
 	}
 	ctrl.Context, ctrl.ContextCancel = context.WithCancel(ctx)
 
 	ctrl.launchAsync(ctrl.Context, func(ctx context.Context) {
-		ctrl.updateCacheLoop(ctx, apiCachePurgeTimeout, rtpfwCacheEvictionTimeout)
+		ctrl.updateCacheLoop(ctx, apiCachePurgeTimeout)
 	})
 	return ctrl, nil
 }
@@ -306,7 +243,7 @@ func getRTPFirmware(
 	rtpFW rtpfwInterface,
 	firmwareVersion, firmwareDateString string,
 	modelFamilyID *uint64,
-	expectedEvaluationStatus rtp.EvaluationStatus,
+	expectedEvaluationStatus sdf, //rtp.EvaluationStatus,
 	cachingPolicy types.CachingPolicy,
 ) (rtpfw.Firmware, error) {
 	log := logger.FromCtx(ctx)
@@ -352,7 +289,7 @@ func getRTPFirmware(
 func (ctrl *Controller) getHostInfo(
 	ctx context.Context,
 	requestHostInfo *afas.HostInfo,
-) (*afas.HostInfo, *device.Device) {
+) (*afas.HostInfo, sdf /* *device.Device */) {
 	if requestHostInfo == nil {
 		return nil, nil
 	}
@@ -360,7 +297,7 @@ func (ctrl *Controller) getHostInfo(
 	log := logger.FromCtx(ctx)
 
 	resultHostInfo := *requestHostInfo
-	serfDevice := func() *device.Device {
+	serfDevice := func() sdf /* *device.Device */ {
 		if resultHostInfo.IsClientHostAnalyzed {
 			hostname, _ := ExtractHostnameFromCtx(ctx)
 			if len(hostname) > 0 {
@@ -399,10 +336,10 @@ func (ctrl *Controller) getHostInfo(
 // rejoin.
 //
 // Invariants:
-//  1) Close will wait for goroutines to rejoin before invalidating any state
-//  2) After Close has been called, launchAsync will fail with context.Canceled
-//  3) Goroutines MUST NOT call Close
-//  4) Goroutines MUST return promptly when their context is cancelled
+//  1. Close will wait for goroutines to rejoin before invalidating any state
+//  2. After Close has been called, launchAsync will fail with context.Canceled
+//  3. Goroutines MUST NOT call Close
+//  4. Goroutines MUST return promptly when their context is cancelled
 func (ctrl *Controller) Close() error {
 	ctrl.ContextCancel()
 	ctrl.activeGoroutinesWG.Wait()
@@ -410,10 +347,6 @@ func (ctrl *Controller) Close() error {
 	err := css_errors.MultiError{}
 	err.Add(
 		ctrl.Storage.Close(),
-		ctrl.SeRF.Close(),
-		ctrl.diffScuba.Close(),
-		ctrl.rtpDB.Close(),
-		ctrl.hostConfigScuba.Close(),
 	)
 	return err.ReturnValue()
 }

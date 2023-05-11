@@ -1,6 +1,7 @@
 package pcr0sum
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -18,7 +19,7 @@ type Command struct {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	// TODO: make pcr0tool compatible with "commands.Config" and use it directly
 	log.SetOutput(os.Stdout)
 	cmd.Command.Execute(cfg.Context, args)

@@ -4,21 +4,9 @@ import (
 	"context"
 	"io"
 
-	// external
-	// TODO: remove this abstraction leak from here:
 	"github.com/jmoiron/sqlx"
 
-	// meta
-	"facebook/core_systems/server/device"
-	"libfb/go/rfe"
-	"rfe/RockfortExpress"
-
-	// internal
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpdb"
-	rtpdb_models "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpdb/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpfw"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"

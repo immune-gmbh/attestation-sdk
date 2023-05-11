@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 // SearchFirmwareResult is the metadata information about firmwares which fits
-//// into requested select/search filters.
+// // into requested select/search filters.
 type SearchFirmwareResult = afas.SearchFirmwareResult_
 
 // SearchFirmware returns metadata information about firmwares which fits

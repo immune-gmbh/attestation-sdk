@@ -7,13 +7,10 @@ import (
 	"sort"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/rtpfw"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/scubareport"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
@@ -101,7 +98,7 @@ func (ctrl *Controller) ReportHostConfiguration(
 
 	modelFamilyID := ctrl.getModelFamilyID(ctx, &hostInfo)
 
-	firmware, err := getRTPFirmware(ctx, ctrl.rtpfw, firmwareVersion, firmwareDate, modelFamilyID, evaluationStatus, types.CachingPolicyDefault)
+	firmware, err := asd //getRTPFirmware(ctx, ctrl.rtpfw, firmwareVersion, firmwareDate, modelFamilyID, evaluationStatus, types.CachingPolicyDefault)
 	if err != nil {
 		return HostConfigurationPCRs{}, NewErrFetchOrigFirmware(firmwareVersion, firmwareDate, err)
 	}
@@ -263,10 +260,10 @@ func (ctrl *Controller) logHostConfigurationToScuba(ctx context.Context, hostInf
 
 func (ctrl *Controller) insertPCR0(
 	ctx context.Context,
-	firmware rtpfw.Firmware,
+	firmware sdf, //rtpfw.Firmware,
 	firmwareVersion, firmwareDate string,
 	modelFamilyID *uint64,
-	evaluationStatus rtp.EvaluationStatus,
+	evaluationStatus sdf, // rtp.EvaluationStatus,
 	resultFlow pcr.Flow, regs registers.Registers,
 	resultPCRSHA1, resultPCRSHA256 []byte,
 ) {
@@ -283,7 +280,7 @@ func (ctrl *Controller) insertPCR0(
 	}
 	log.Infof("result properties: '%v'", props)
 
-	var insertedPCRs rtpfw.PCRValues
+	var insertedPCRs sdf // rtpfw.PCRValues
 	if len(resultPCRSHA1) > 0 {
 		insertedPCRs = append(insertedPCRs, types.NewPCRValue(0, resultPCRSHA1, props...))
 	}
@@ -303,7 +300,7 @@ func (ctrl *Controller) insertPCR0(
 
 func getReportHostConfigurationCacheKey(
 	firmwareVersion, firmwareDate string,
-	evaluationStatus rtp.EvaluationStatus,
+	evaluationStatus sdf, //rtp.EvaluationStatus,
 	tpmDevice tpmdetection.Type,
 	statusRegisters []*afas.StatusRegister,
 	eventLog *tpmeventlog.TPMEventLog,

@@ -10,8 +10,6 @@ import (
 	"os"
 	"strings"
 
-	"thrift/lib/go/thrift"
-
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
 )

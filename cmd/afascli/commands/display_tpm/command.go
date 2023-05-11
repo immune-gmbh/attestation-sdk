@@ -1,6 +1,7 @@
 package display_tpm
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
@@ -31,7 +32,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	localTPM, err := tpmdetection.Local()
 	if err != nil {
 		fmt.Printf("Failed to detect local TPM, err: %v", err)

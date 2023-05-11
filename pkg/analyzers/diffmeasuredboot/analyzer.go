@@ -6,7 +6,7 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 

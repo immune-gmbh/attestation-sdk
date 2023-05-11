@@ -1,6 +1,7 @@
 package fetch
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/hex"
 	"flag"
@@ -11,9 +12,9 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 )
@@ -51,7 +52,7 @@ func (cmd Command) firmwarewandOptions() []firmwarewand.Option {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	if len(args) < 1 {
 		return commands.ErrArgs{Err: fmt.Errorf("error: no image ID is specified")}
 	}
@@ -80,6 +81,7 @@ func (cmd Command) Execute(cfg commands.Config, args []string) error {
 	}
 
 	entries, err := fwWand.Search(
+		cfg.Context,
 		afas.SearchFirmwareFilters{ImageID: imageID},
 		true,
 	)

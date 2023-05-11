@@ -10,18 +10,17 @@ import (
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/analyzerinput"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types"
 )
 
 // AnalyzerFirmwareAccessor implements analysis.Blob, but it is
@@ -49,7 +48,7 @@ type AnalyzerFirmwaresAccessor struct {
 	originalFirmwareStorage          originalFirmwareStorage
 	imageSaverAsync                  imageSaverAsync
 	targetModelFamilyID              *uint64
-	firmwareExpectedEvaluationStatus rtp.EvaluationStatus
+	firmwareExpectedEvaluationStatus sdf //rtp.EvaluationStatus
 	cache                            map[objhash.ObjHash]analyzerFirmwaresAccessorResult
 	cacheLocker                      sync.Mutex
 	cacheSingleOp                    *lockmap.LockMap
@@ -70,7 +69,7 @@ func NewAnalyzerFirmwaresAccessor(
 	originalFirmwareStorage originalFirmwareStorage,
 	imageSaverAsync imageSaverAsync,
 	targetModelFamilyID *uint64,
-	firmwareExpectedEvaluationStatus rtp.EvaluationStatus,
+	firmwareExpectedEvaluationStatus sdf, //rtp.EvaluationStatus,
 ) *AnalyzerFirmwaresAccessor {
 	return &AnalyzerFirmwaresAccessor{
 		storage:                          storage,

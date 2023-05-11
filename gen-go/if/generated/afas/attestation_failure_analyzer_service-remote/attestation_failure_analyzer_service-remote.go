@@ -36,7 +36,6 @@ func Usage() {
   fmt.Fprintln(os.Stderr, "\nFunctions:")
   fmt.Fprintln(os.Stderr, "  SearchFirmwareResult SearchFirmware(SearchFirmwareRequest request)")
   fmt.Fprintln(os.Stderr, "  SearchReportResult SearchReport(SearchReportRequest request)")
-  fmt.Fprintln(os.Stderr, "  ReportHostConfigurationResult ReportHostConfiguration(ReportHostConfigurationRequest request)")
   fmt.Fprintln(os.Stderr, "  AnalyzeResult Analyze(AnalyzeRequest request)")
   fmt.Fprintln(os.Stderr, "  CheckFirmwareVersionResult CheckFirmwareVersion(CheckFirmwareVersionRequest request)")
   fmt.Fprintln(os.Stderr)
@@ -165,19 +164,19 @@ func main() {
       fmt.Fprintln(os.Stderr, "SearchFirmware requires 1 args")
       flag.Usage()
     }
-    arg34 := flag.Arg(1)
-    mbTrans35 := thrift.NewTMemoryBufferLen(len(arg34))
-    defer mbTrans35.Close()
-    _, err36 := mbTrans35.WriteString(arg34)
-    if err36 != nil {
+    arg30 := flag.Arg(1)
+    mbTrans31 := thrift.NewTMemoryBufferLen(len(arg30))
+    defer mbTrans31.Close()
+    _, err32 := mbTrans31.WriteString(arg30)
+    if err32 != nil {
       Usage()
       return
     }
-    factory37 := thrift.NewTJSONProtocolFactory()
-    jsProt38 := factory37.GetProtocol(mbTrans35)
+    factory33 := thrift.NewTJSONProtocolFactory()
+    jsProt34 := factory33.GetProtocol(mbTrans31)
     argvalue0 := afas.NewSearchFirmwareRequest()
-    err39 := argvalue0.Read(context.Background(), jsProt38)
-    if err39 != nil {
+    err35 := argvalue0.Read(context.Background(), jsProt34)
+    if err35 != nil {
       Usage()
       return
     }
@@ -190,19 +189,19 @@ func main() {
       fmt.Fprintln(os.Stderr, "SearchReport requires 1 args")
       flag.Usage()
     }
-    arg40 := flag.Arg(1)
-    mbTrans41 := thrift.NewTMemoryBufferLen(len(arg40))
-    defer mbTrans41.Close()
-    _, err42 := mbTrans41.WriteString(arg40)
-    if err42 != nil {
+    arg36 := flag.Arg(1)
+    mbTrans37 := thrift.NewTMemoryBufferLen(len(arg36))
+    defer mbTrans37.Close()
+    _, err38 := mbTrans37.WriteString(arg36)
+    if err38 != nil {
       Usage()
       return
     }
-    factory43 := thrift.NewTJSONProtocolFactory()
-    jsProt44 := factory43.GetProtocol(mbTrans41)
+    factory39 := thrift.NewTJSONProtocolFactory()
+    jsProt40 := factory39.GetProtocol(mbTrans37)
     argvalue0 := afas.NewSearchReportRequest()
-    err45 := argvalue0.Read(context.Background(), jsProt44)
-    if err45 != nil {
+    err41 := argvalue0.Read(context.Background(), jsProt40)
+    if err41 != nil {
       Usage()
       return
     }
@@ -210,49 +209,24 @@ func main() {
     fmt.Print(client.SearchReport(context.Background(), value0))
     fmt.Print("\n")
     break
-  case "ReportHostConfiguration":
-    if flag.NArg() - 1 != 1 {
-      fmt.Fprintln(os.Stderr, "ReportHostConfiguration requires 1 args")
-      flag.Usage()
-    }
-    arg46 := flag.Arg(1)
-    mbTrans47 := thrift.NewTMemoryBufferLen(len(arg46))
-    defer mbTrans47.Close()
-    _, err48 := mbTrans47.WriteString(arg46)
-    if err48 != nil {
-      Usage()
-      return
-    }
-    factory49 := thrift.NewTJSONProtocolFactory()
-    jsProt50 := factory49.GetProtocol(mbTrans47)
-    argvalue0 := afas.NewReportHostConfigurationRequest()
-    err51 := argvalue0.Read(context.Background(), jsProt50)
-    if err51 != nil {
-      Usage()
-      return
-    }
-    value0 := argvalue0
-    fmt.Print(client.ReportHostConfiguration(context.Background(), value0))
-    fmt.Print("\n")
-    break
   case "Analyze":
     if flag.NArg() - 1 != 1 {
       fmt.Fprintln(os.Stderr, "Analyze requires 1 args")
       flag.Usage()
     }
-    arg52 := flag.Arg(1)
-    mbTrans53 := thrift.NewTMemoryBufferLen(len(arg52))
-    defer mbTrans53.Close()
-    _, err54 := mbTrans53.WriteString(arg52)
-    if err54 != nil {
+    arg42 := flag.Arg(1)
+    mbTrans43 := thrift.NewTMemoryBufferLen(len(arg42))
+    defer mbTrans43.Close()
+    _, err44 := mbTrans43.WriteString(arg42)
+    if err44 != nil {
       Usage()
       return
     }
-    factory55 := thrift.NewTJSONProtocolFactory()
-    jsProt56 := factory55.GetProtocol(mbTrans53)
+    factory45 := thrift.NewTJSONProtocolFactory()
+    jsProt46 := factory45.GetProtocol(mbTrans43)
     argvalue0 := afas.NewAnalyzeRequest()
-    err57 := argvalue0.Read(context.Background(), jsProt56)
-    if err57 != nil {
+    err47 := argvalue0.Read(context.Background(), jsProt46)
+    if err47 != nil {
       Usage()
       return
     }
@@ -265,19 +239,19 @@ func main() {
       fmt.Fprintln(os.Stderr, "CheckFirmwareVersion requires 1 args")
       flag.Usage()
     }
-    arg58 := flag.Arg(1)
-    mbTrans59 := thrift.NewTMemoryBufferLen(len(arg58))
-    defer mbTrans59.Close()
-    _, err60 := mbTrans59.WriteString(arg58)
-    if err60 != nil {
+    arg48 := flag.Arg(1)
+    mbTrans49 := thrift.NewTMemoryBufferLen(len(arg48))
+    defer mbTrans49.Close()
+    _, err50 := mbTrans49.WriteString(arg48)
+    if err50 != nil {
       Usage()
       return
     }
-    factory61 := thrift.NewTJSONProtocolFactory()
-    jsProt62 := factory61.GetProtocol(mbTrans59)
+    factory51 := thrift.NewTJSONProtocolFactory()
+    jsProt52 := factory51.GetProtocol(mbTrans49)
     argvalue0 := afas.NewCheckFirmwareVersionRequest()
-    err63 := argvalue0.Read(context.Background(), jsProt62)
-    if err63 != nil {
+    err53 := argvalue0.Read(context.Background(), jsProt52)
+    if err53 != nil {
       Usage()
       return
     }

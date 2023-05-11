@@ -1,17 +1,18 @@
 package search_report
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
 
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 // Command is the implementation of `commands.Command`.
@@ -86,7 +87,7 @@ func (cmd Command) flagLimit() uint64 {
 // start the execution of the command.
 //
 // `args` are the arguments left unused by verb itself and options.
-func (cmd Command) Execute(cfg commands.Config, args []string) error {
+func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	if len(args) > 0 {
 		return commands.ErrArgs{Err: fmt.Errorf("an extra parameter found")}
 	}

@@ -11,7 +11,7 @@ import (
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
@@ -21,10 +21,10 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
+	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/errors"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/analyzerinput"
-	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/errors"
 )
 
 // Analyze provides fimware analysis by specified algorithms

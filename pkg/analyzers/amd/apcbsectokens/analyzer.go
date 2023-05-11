@@ -8,7 +8,7 @@ import (
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"

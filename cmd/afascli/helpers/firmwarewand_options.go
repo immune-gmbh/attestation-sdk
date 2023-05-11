@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/client"
+	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
-	"syseng/yard/attestation/lib/yard"
 )
 
 // FirmwarewandOptions returns firmwarewand.Option-s should be use to initialize
