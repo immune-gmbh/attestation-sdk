@@ -108,10 +108,6 @@ func (p * Algo) Value() (driver.Value, error) {
   }
 return int64(*p), nil
 }
-type EventType int64
-
-func EventTypePtr(v EventType) *EventType { return &v }
-
 // Attributes:
 //  - Events
 type EventLog struct {
@@ -243,8 +239,8 @@ func (p *EventLog) String() string {
 //  - Data
 //  - Digest
 type Event struct {
-  PCRIndex int64 `thrift:"PCRIndex,1" db:"PCRIndex" json:"PCRIndex"`
-  Type int64 `thrift:"Type,2" db:"Type" json:"Type"`
+  PCRIndex int8 `thrift:"PCRIndex,1" db:"PCRIndex" json:"PCRIndex"`
+  Type int32 `thrift:"Type,2" db:"Type" json:"Type"`
   Data []byte `thrift:"Data,3" db:"Data" json:"Data"`
   Digest *Digest_ `thrift:"Digest,4" db:"Digest" json:"Digest"`
 }
@@ -254,11 +250,11 @@ func NewEvent() *Event {
 }
 
 
-func (p *Event) GetPCRIndex() int64 {
+func (p *Event) GetPCRIndex() int8 {
   return p.PCRIndex
 }
 
-func (p *Event) GetType() int64 {
+func (p *Event) GetType() int32 {
   return p.Type
 }
 
@@ -290,7 +286,7 @@ func (p *Event) Read(ctx context.Context, iprot thrift.TProtocol) error {
     if fieldTypeId == thrift.STOP { break; }
     switch fieldId {
     case 1:
-      if fieldTypeId == thrift.I64 {
+      if fieldTypeId == thrift.BYTE {
         if err := p.ReadField1(ctx, iprot); err != nil {
           return err
         }
@@ -300,7 +296,7 @@ func (p *Event) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 2:
-      if fieldTypeId == thrift.I64 {
+      if fieldTypeId == thrift.I32 {
         if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
@@ -345,20 +341,20 @@ func (p *Event) Read(ctx context.Context, iprot thrift.TProtocol) error {
 }
 
 func (p *Event)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI64(ctx); err != nil {
+  if v, err := iprot.ReadByte(ctx); err != nil {
   return thrift.PrependError("error reading field 1: ", err)
 } else {
-  p.PCRIndex = v
+  temp := int8(v)
+  p.PCRIndex = temp
 }
   return nil
 }
 
 func (p *Event)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI64(ctx); err != nil {
+  if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 2: ", err)
 } else {
-  temp := EventType(v)
-  p.Type = temp
+  p.Type = v
 }
   return nil
 }
@@ -397,9 +393,9 @@ func (p *Event) Write(ctx context.Context, oprot thrift.TProtocol) error {
 }
 
 func (p *Event) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "PCRIndex", thrift.I64, 1); err != nil {
+  if err := oprot.WriteFieldBegin(ctx, "PCRIndex", thrift.BYTE, 1); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:PCRIndex: ", p), err) }
-  if err := oprot.WriteI64(ctx, int64(p.PCRIndex)); err != nil {
+  if err := oprot.WriteByte(ctx, int8(p.PCRIndex)); err != nil {
   return thrift.PrependError(fmt.Sprintf("%T.PCRIndex (1) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 1:PCRIndex: ", p), err) }
@@ -407,9 +403,9 @@ func (p *Event) writeField1(ctx context.Context, oprot thrift.TProtocol) (err er
 }
 
 func (p *Event) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Type", thrift.I64, 2); err != nil {
+  if err := oprot.WriteFieldBegin(ctx, "Type", thrift.I32, 2); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Type: ", p), err) }
-  if err := oprot.WriteI64(ctx, int64(p.Type)); err != nil {
+  if err := oprot.WriteI32(ctx, int32(p.Type)); err != nil {
   return thrift.PrependError(fmt.Sprintf("%T.Type (2) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Type: ", p), err) }

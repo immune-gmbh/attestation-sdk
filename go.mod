@@ -37,6 +37,7 @@ require (
 
 require (
 	github.com/DataDog/gostackparse v0.6.0 // indirect
+	github.com/apache/thrift v0.18.1 // indirect
 	github.com/c9s/goprocinfo v0.0.0-20210130143923-c95fcf8c64a8 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
