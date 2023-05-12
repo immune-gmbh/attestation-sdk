@@ -9,16 +9,15 @@ import (
 
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 )
 
 // Command is the implementation of `commands.Command`.
 type Command struct {
-	firmwareAnalysisAddress *string
-	imageID                 *string
-	version                 *string
+	afasEndpoint *string
+	imageID      *string
+	version      *string
 }
 
 // Usage prints the syntax of arguments for this command
@@ -34,15 +33,13 @@ func (cmd Command) Description() string {
 // SetupFlagSet is called to allow the command implementation
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
-	// for "firmwareAnalysisAddress" see the comment in ../verify/command.go
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
-
+	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
 	cmd.imageID = flag.String("image-id", "", "ImageID to filter the reports by")
 	cmd.version = flag.String("version", "", "firmware version")
 }
 
 func (cmd Command) firmwarewandOptions() []firmwarewand.Option {
-	return verbhelpers.FirmwarewandOptions(*cmd.firmwareAnalysisAddress)
+	return verbhelpers.FirmwarewandOptions(*cmd.afasEndpoint)
 }
 
 func (cmd Command) flagImageID() ([]byte, error) {
@@ -78,7 +75,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		}
 	}
 
-	entries, err := fwWand.Search(searchFilters, false)
+	entries, err := fwWand.Search(ctx, searchFilters, false)
 	if err != nil {
 		return fmt.Errorf("unable to perform a search: %w", err)
 	}

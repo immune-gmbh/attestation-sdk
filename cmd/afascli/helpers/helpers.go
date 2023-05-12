@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"bytes"
+	"context"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
+	"github.com/apache/thrift/lib/go/thrift"
 )
 
 // ParseTPMEventlog tries to path TPM eventlog located in provided path
@@ -80,32 +83,24 @@ func ParseRegisters(registersPath string) (registers.Registers, error) {
 }
 
 // DeserialiseThrift deserializes a Thrift structure from its binary form.
-func DeserialiseThrift(bytes []byte, out thrift.Struct) error {
-
-	deserializer := thrift.NewDeserializer()
-	factory := thrift.NewCompactProtocolFactory()
-	deserializer.Protocol = factory.GetProtocol(deserializer.Transport)
-
-	err := deserializer.Read(out, bytes)
-	if err != nil {
-		return fmt.Errorf("unable to deserialise bytes into object: %v", err)
-	}
-
-	return nil
+func DeserialiseThrift(
+	ctx context.Context,
+	b []byte,
+	out thrift.TStruct,
+) error {
+	transport := thrift.NewStreamTransportR(bytes.NewBuffer(b))
+	proto := thrift.NewTBinaryProtocolConf(transport, nil)
+	return out.Read(ctx, proto)
 }
 
 // SerialiseThrift serializes a Thrift structure into its binary form.
-func SerialiseThrift(in thrift.Struct) ([]byte, error) {
-
-	serializer := thrift.NewSerializer()
-	factory := thrift.NewCompactProtocolFactory()
-	serializer.Protocol = factory.GetProtocol(serializer.Transport)
-
-	bytes, err := serializer.Write(in)
-	if err != nil {
-		return nil, fmt.Errorf("unable to serialise object into bytes: %v", err)
-	}
-
-	return bytes, nil
-
+func SerialiseThrift(
+	ctx context.Context,
+	in thrift.TStruct,
+) ([]byte, error) {
+	var buf bytes.Buffer
+	transport := thrift.NewStreamTransportW(&buf)
+	proto := thrift.NewTBinaryProtocolConf(transport, nil)
+	err := in.Write(ctx, proto)
+	return buf.Bytes(), err
 }

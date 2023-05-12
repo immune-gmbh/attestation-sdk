@@ -9,7 +9,6 @@ import (
 	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
 	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	afasclient "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
@@ -17,12 +16,12 @@ import (
 
 // Command is the implementation of `commands.Command`.
 type Command struct {
-	firmwareAnalysisAddress *string
-	limit                   *uint64
-	jobID                   *string
-	assetID                 *uint64
-	imageID                 types.ImageID
-	showNotApplicable       *bool
+	afasEndpoint      *string
+	limit             *uint64
+	jobID             *string
+	assetID           *uint64
+	imageID           types.ImageID
+	showNotApplicable *bool
 }
 
 // Usage prints the syntax of arguments for this command
@@ -38,9 +37,7 @@ func (cmd Command) Description() string {
 // SetupFlagSet is called to allow the command implementation
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
-	// for "firmwareAnalysisAddress" see the comment in ../verify/command.go
-	cmd.firmwareAnalysisAddress = flag.String("firmware-analysis-addr", "", "SMC tier of the firmware analysis service (default is '"+afasclient.DefaultSMCTier+"' with fallback on endpoints from '/tmp/yard_config.json')")
-
+	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
 	cmd.limit = flag.Uint64("limit", 1, "maximal amount of entries to fetch and display (the order is reversed-chronological)")
 	cmd.jobID = flag.String("job-id", "", "JobID to filter the reports by")
 	cmd.assetID = flag.Uint64("asset-id", 0, "AssetID to filter the reports by")
@@ -49,7 +46,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 }
 
 func (cmd Command) firmwarewandOptions() []firmwarewand.Option {
-	return verbhelpers.FirmwarewandOptions(*cmd.firmwareAnalysisAddress)
+	return verbhelpers.FirmwarewandOptions(*cmd.afasEndpoint)
 }
 
 func (cmd Command) flagJobID() (*types.JobID, error) {
@@ -117,7 +114,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		return fmt.Errorf("unable to initialize a firmwarewand: %w", err)
 	}
 
-	result, err := fwWand.SearchReport(searchFilters, cmd.flagLimit())
+	result, err := fwWand.SearchReport(ctx, searchFilters, cmd.flagLimit())
 	if err != nil {
 		return fmt.Errorf("unable to perform SearchReport request: %w", err)
 	}

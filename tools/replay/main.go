@@ -33,7 +33,7 @@ func usageExit() {
 func main() {
 	logLevel := logger.LevelInfo // the default value
 	rdbmsURL := pflag.String("rdbms-url", `mysql://root:@localhost`, "RDBMS URL")
-	objectStorageURL := pflag.String("object-storage-url", `fs:///srv/firmware_images`, "URL to an object storage where the firmware images are stored")
+	objectStorageURL := pflag.String("object-storage-url", `fs:///srv/afasd`, "URL to an object storage where the firmware images are stored")
 	analyzerReportID := pflag.Int64("analyzer-report-id", 0, "")
 	pflag.Parse()
 

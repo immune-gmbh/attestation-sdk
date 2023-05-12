@@ -38,6 +38,8 @@ github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230428154108-d810ba3
 github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230428154108-d810ba315bae/go.mod h1:NJWikt0RZcBvAPJ1Lm+yxudHiYiw2Ov6t9Wqmh/XW0Q=
 github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230511191641-8c08f2b5883c h1:XU2aQnGJLO7rpo8X7Sm0y8kVPwHERchNkJED+EVap1Q=
 github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230511191641-8c08f2b5883c/go.mod h1:TPIbEMyJFg5apfnAZt8fhWIBA6BfVTJ/q4dBe1yfYPg=
+github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230512141505-f6a71d3e2098 h1:0/WOm0eNXdg6PpUgKyicUB0oBvxYuVDKnCwd1Vb1nx4=
+github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230512141505-f6a71d3e2098/go.mod h1:TPIbEMyJFg5apfnAZt8fhWIBA6BfVTJ/q4dBe1yfYPg=
 github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b h1:98V5o52v/uFUliAMAvMcol3b5e5JFMVxzj8XGlVHCm8=
 github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b/go.mod h1:NRv+EGNg4+XO4g9W9BzC/ckMg/5zgLNkRd/Hh09Nxr4=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=

@@ -66,7 +66,7 @@ type Command struct {
 	analyzers               analyzersFlag
 	eventLog                *string
 	expectPCR0              *string
-	afasAddress             *string
+	afasEndpoint            *string
 	firmwareRTPFilename     *string
 	firmwareEverstoreHandle *string
 	firmwareVersion         *string
@@ -157,7 +157,7 @@ func (cmd Command) FlagFlow() (pcr.Flow, error) {
 // FlagUseRequest parses the file defined in `-use-request` as the AnalyzeRequest to be sent.
 // Returns nil (without error) if the flag is empty.
 // TODO: consider splitting `analyze` to `scan` and `analyze`
-func (cmd Command) FlagUseRequest() (*afas.AnalyzeRequest, error) {
+func (cmd Command) FlagUseRequest(ctx context.Context) (*afas.AnalyzeRequest, error) {
 	if *cmd.useRequest == "" {
 		return nil, nil
 	}
@@ -174,7 +174,7 @@ func (cmd Command) FlagUseRequest() (*afas.AnalyzeRequest, error) {
 	}
 
 	request := afas.AnalyzeRequest{}
-	err = helpers.DeserialiseThrift(b, &request)
+	err = helpers.DeserialiseThrift(ctx, b, &request)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse an %T from file '%s': %w", request, *cmd.useRequest, err)
 	}
@@ -267,7 +267,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	cmd.dumpCommand.SetupFlagSet(flag)
 
 	flag.Var(&cmd.analyzers, "analyzer", "List of analyzers to start, values: "+knownAnalyzersArg())
-	cmd.afasAddress = flag.String("afas-endpoint", "", "")
+	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
 	cmd.firmwareVersion = flag.String("firmware-version", "", "the version of the firmware to compare with; empty value means to read SMBIOS values")
 	cmd.firmwareDate = flag.String("firmware-date", "", "the date of the firmware to compare with; empty value means to read SMBIOS values")
 	cmd.eventLog = flag.String("event-log", "", "path to the binary EventLog")
@@ -291,7 +291,7 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 // FirmwarewandOptions returns firmwarewand.Option slice
 // which should be used according to passed flags.
 func (cmd Command) FirmwarewandOptions() []firmwarewand.Option {
-	return append(helpers.FirmwarewandOptions(*cmd.afasAddress), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
+	return append(helpers.FirmwarewandOptions(*cmd.afasEndpoint), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
 }
 
 // TODO: Consider splitting "afascli analyze" to "afascli scan" and "afascli analyze".
@@ -574,7 +574,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		}
 	}()
 
-	request, err := cmd.FlagUseRequest()
+	request, err := cmd.FlagUseRequest(ctx)
 	if err != nil {
 		return commands.ErrArgs{Err: fmt.Errorf("unable to parse the -use-request flag: %w", err)}
 	}
@@ -594,7 +594,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 			}
 			fmt.Print(string(resultJSON))
 		case DumpFormatBinary:
-			serialized, err := helpers.SerialiseThrift(request)
+			serialized, err := helpers.SerialiseThrift(ctx, request)
 			if err != nil {
 				return fmt.Errorf("unable to serialize request data: %v", err)
 			}
