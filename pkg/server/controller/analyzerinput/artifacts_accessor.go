@@ -8,10 +8,10 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"

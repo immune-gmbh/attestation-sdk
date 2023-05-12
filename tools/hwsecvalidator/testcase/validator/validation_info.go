@@ -13,7 +13,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
 	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"

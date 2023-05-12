@@ -133,7 +133,6 @@ func main() {
 	// Config
 	cfg := commands.Config{
 		IsQuiet: *flags.isQuiet,
-		Context: ctx,
 	}
 	commandName := flagSet.Arg(0)
 	args := flagSet.Args()[1:]
@@ -169,7 +168,7 @@ func main() {
 
 	command.SetupFlagSet(flagSet)
 	_ = flagSet.Parse(args)
-	err := command.Execute(cfg, flagSet.Args())
+	err := command.Execute(ctx, cfg, flagSet.Args())
 
 	// Process the error
 	if err == nil {

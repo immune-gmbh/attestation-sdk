@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
@@ -40,7 +40,7 @@ func (ctrl *Controller) SearchFirmware(
 		}
 		entries, unlockFn, err := ctrl.FirmwareStorage.Find(
 			ctx,
-			storage.FindFilter{
+			firmwarestorage.FindFilter{
 				ImageID:         imageID,
 				ImageIDPrefix:   imageIDPrefix,
 				HashSHA2_512:    filter.HashSHA2_512,
@@ -50,7 +50,7 @@ func (ctrl *Controller) SearchFirmware(
 				FirmwareVersion: filter.Version,
 			},
 		)
-		if errors.As(err, &storage.ErrNotFound{}) {
+		if errors.As(err, &firmwarestorage.ErrNotFound{}) {
 			continue
 		}
 		if err != nil {

@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -8,10 +9,10 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
 )
 
 // Command is the implementation of `commands.Command`.

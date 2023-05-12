@@ -1,6 +1,7 @@
 package setup
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -8,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
 )
 
 // Command is the implementation of `commands.Command`.

@@ -13,11 +13,11 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 )

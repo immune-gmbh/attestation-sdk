@@ -1,6 +1,7 @@
 package fwinfo
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
