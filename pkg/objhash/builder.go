@@ -6,7 +6,6 @@ import (
 	"hash"
 	"math"
 	"reflect"
-	"runtime"
 	"unsafe"
 
 	"github.com/xaionaro-go/unsafetools"
@@ -29,14 +28,9 @@ func NewBuilder() *Builder {
 	}
 }
 
-// Custom allows to customise extending values into cache key
+// Custom allows to customize extending values into cache key
 type Custom interface {
 	CacheWrite(b *Builder) error
-}
-
-func implementsCusom(t reflect.Type) bool {
-	customType := reflect.TypeOf((*Custom)(nil)).Elem()
-	return t.Implements(customType)
 }
 
 func extend(h hash.Hash, in []byte) error {
@@ -77,50 +71,42 @@ func (b *Builder) extendBool(v bool) error {
 }
 
 func (b *Builder) extendUint8(u uint8) error {
-	p := &u
-	in := *(*[]byte)((unsafe.Pointer)(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(p)),
-		Len:  1,
-		Cap:  1,
-	}))
+	var in []byte
+	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&in))
+	hdr.Data = uintptr(unsafe.Pointer(&u))
+	hdr.Len = 1
+	hdr.Cap = 1
 	err := b.extendBytes(in)
-	runtime.KeepAlive(p)
 	return err
 }
 
 func (b *Builder) extendUint16(u uint16) error {
-	p := &u
-	in := *(*[]byte)((unsafe.Pointer)(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(p)),
-		Len:  2,
-		Cap:  2,
-	}))
+	var in []byte
+	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&in))
+	hdr.Data = uintptr(unsafe.Pointer(&u))
+	hdr.Len = 2
+	hdr.Cap = 2
 	err := b.extendBytes(in)
-	runtime.KeepAlive(p)
 	return err
 }
 
 func (b *Builder) extendUint32(u uint32) error {
-	p := &u
-	in := *(*[]byte)((unsafe.Pointer)(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(p)),
-		Len:  4,
-		Cap:  4,
-	}))
+	var in []byte
+	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&in))
+	hdr.Data = uintptr(unsafe.Pointer(&u))
+	hdr.Len = 4
+	hdr.Cap = 4
 	err := b.extendBytes(in)
-	runtime.KeepAlive(p)
 	return err
 }
 
 func (b *Builder) extendUint64(u uint64) error {
-	p := &u
-	in := *(*[]byte)((unsafe.Pointer)(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(p)),
-		Len:  8,
-		Cap:  8,
-	}))
+	var in []byte
+	hdr := (*reflect.SliceHeader)(unsafe.Pointer(&in))
+	hdr.Data = uintptr(unsafe.Pointer(&u))
+	hdr.Len = 8
+	hdr.Cap = 8
 	err := b.extendBytes(in)
-	runtime.KeepAlive(p)
 	return err
 }
 
@@ -156,7 +142,7 @@ func (b *Builder) Write(args ...interface{}) error {
 	for idx, arg := range args {
 		// discuss: I'm against soft logic, let's remove this soft type assertion
 		// and always do reflect.ValueOf. Otherwise it is a hidden behavior, and
-		// I find hidden behevaiors in hash functions pretty dangerous.
+		// I find hidden behaviors in hash functions pretty dangerous.
 		//
 		// Let's discuss this.
 		//
