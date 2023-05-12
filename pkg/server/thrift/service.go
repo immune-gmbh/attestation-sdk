@@ -6,9 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"libfb/go/go303"
-	"libfb/go/stats/export"
-
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 )
@@ -20,21 +17,15 @@ const (
 var _ afas.AttestationFailureAnalyzerService = &service{}
 
 type service struct {
-	*go303.Base
 	Controller *controller.Controller
-	Stats      export.Exported
 	Cache      *serviceCache
 }
 
 func newService(
-	base *go303.Base,
 	ctrl *controller.Controller,
-	stats export.Exported,
 ) *service {
 	return &service{
-		Base:       base,
 		Controller: ctrl,
-		Stats:      stats,
 		Cache:      newServiceCache(),
 	}
 }

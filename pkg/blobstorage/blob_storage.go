@@ -1,4 +1,4 @@
-package objstorage
+package blobstorage
 
 import (
 	"context"
@@ -7,14 +7,14 @@ import (
 	"net/url"
 )
 
-type ObjectStorage interface {
+type BlobStorage interface {
 	io.Closer
 
 	Get(ctx context.Context, key string) ([]byte, error)
 	Replace(ctx context.Context, key string, blob []byte) error
 }
 
-func New(urlString string) (ObjectStorage, error) {
+func New(urlString string) (BlobStorage, error) {
 	parsedURL, err := url.Parse(urlString)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse url '%s': %w", urlString, err)

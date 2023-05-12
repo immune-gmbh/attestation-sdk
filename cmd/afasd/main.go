@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarerepo"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objcache"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objstorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
@@ -86,7 +86,7 @@ func main() {
 
 	fianoLog.DefaultLogger = newFianoLogger(log.WithField("module", "fiano"))
 
-	firmwareBlobStorage, err := objstorage.New(*objectStorageURL)
+	firmwareBlobStorage, err := blobstorage.New(*objectStorageURL)
 	if err != nil {
 		log.Panic(err)
 	}

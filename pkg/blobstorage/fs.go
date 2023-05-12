@@ -1,4 +1,4 @@
-package objstorage
+package blobstorage
 
 import (
 	"context"
@@ -11,7 +11,7 @@ type FS struct {
 	RootDir string
 }
 
-var _ ObjectStorage = (*FS)(nil)
+var _ BlobStorage = (*FS)(nil)
 
 func newFS(rootDir string) (*FS, error) {
 	return &FS{
