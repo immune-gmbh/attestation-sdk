@@ -9,8 +9,7 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
 	"github.com/google/go-tpm/tpm2"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/rtp"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/tpm"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/tpm"
 )
 
 // PCRValue represents a single PCR value.
@@ -36,32 +35,6 @@ func (p PCRValue) Equals(other PCRValue) bool {
 		p.HashAlgo == other.HashAlgo &&
 		bytes.Equal(p.Value, other.Value) &&
 		p.Properties.Equals(other.Properties))
-}
-
-// PCRBankTag returns PCR tag for this PCRValue
-func (p *PCRValue) PCRBankTag() MeasurementTag {
-	determineMeasurementTag := func(idx pcr.ID, hashAlgo tpm2.Algorithm) MeasurementTag {
-		switch {
-		case idx == 0 && hashAlgo == tpm2.AlgSHA1:
-			return PCR0SHA1Tag
-		case idx == 0 && hashAlgo == tpm2.AlgSHA256:
-			return PCR0SHA256Tag
-		case idx == 1 && hashAlgo == tpm2.AlgSHA1:
-			return PCR1SHA1Tag
-		}
-		return 0
-	}
-
-	if resultTag := determineMeasurementTag(p.Index, p.HashAlgo); resultTag != 0 {
-		return resultTag
-	}
-
-	if p.HashAlgo.IsNull() {
-		if hashAlgo := DetermineHashAlgorithm(p.Value); !hashAlgo.IsNull() {
-			return determineMeasurementTag(p.Index, hashAlgo)
-		}
-	}
-	return 0
 }
 
 // NewPCRValue is a simple helper for a PCR value creation

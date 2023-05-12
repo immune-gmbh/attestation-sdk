@@ -12,9 +12,9 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )

@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
-
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
@@ -72,7 +71,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 		return fmt.Errorf("failed to convert registers to thrift format: %w", err)
 	}
 	sort.Slice(thriftRegisters, func(i, j int) bool {
-		return thriftRegisters[i].GetId() < thriftRegisters[j].GetId()
+		return thriftRegisters[i].GetID() < thriftRegisters[j].GetID()
 	})
 
 	thriftTPM, err := typeconv.ToThriftTPMType(tpmDevice)
@@ -239,7 +238,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 		return fmt.Errorf("failed to convert registers to thrift format: %w", err)
 	}
 	sort.Slice(thriftRegisters, func(i, j int) bool {
-		return thriftRegisters[i].GetId() < thriftRegisters[j].GetId()
+		return thriftRegisters[i].GetID() < thriftRegisters[j].GetID()
 	})
 
 	thriftTPM, err := typeconv.ToThriftTPMType(tpmDevice)
@@ -249,7 +248,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 
 	thriftEventlog := typeconv.ToThriftTPMEventLog(eventLog)
 
-	thriftPCRFlow, err := typeconv.ToThriftFlow(flows.FromOld(flow))
+	thriftPCRFlow, err := typeconv.ToThriftFlow(flowscompat.FromOld(flow))
 	if err != nil {
 		return fmt.Errorf("failed to convert measurements flow to thrift format: %w", err)
 	}

@@ -13,7 +13,12 @@ import (
 )
 
 func TestFlowConversion(t *testing.T) {
-	for _, flow := range measurements.FlowValues {
+	for flow := measurements.Flow(0); ; flow++ {
+		if _, err := measurements.FlowFromString(flow.String()); err != nil {
+			// reach the end of possible Flow values
+			break
+		}
+
 		fasFlow, err := FromThriftFlow(flow)
 		require.NoError(t, err)
 

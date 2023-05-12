@@ -24,8 +24,8 @@ import (
 	"libfb/go/thriftbase"
 	"thrift/lib/go/thrift"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 )
 
 type serviceInterface interface {

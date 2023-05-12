@@ -6,21 +6,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/facebookincubator/go-belt/tool/logger"
-
 	"libfb/go/go303"
 	"libfb/go/stats/export"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 )
 
 const (
 	gcInterval = time.Hour
 )
 
-var _ afas.FirmwareAnalyzer = &service{}
+var _ afas.AttestationFailureAnalyzerService = &service{}
 
 type service struct {
 	*go303.Base
@@ -78,43 +75,6 @@ func (svc *service) SearchReport(
 		uint64(request.GetLimit()),
 	)
 	return report, unwrapException(err)
-}
-
-func (svc *service) ReportHostConfiguration(
-	ctx context.Context,
-	request *afas.ReportHostConfigurationRequest,
-) (*afas.ReportHostConfigurationResult_, error) {
-	if request == nil {
-		return nil, fmt.Errorf("request == nil")
-	}
-
-	// Log entire request except TPMEventLog which could be too long
-	loggedRequest := *request
-	loggedRequest.TPMEventLog = nil
-	logger.FromCtx(ctx).Infof("ReportHostConfiguration with parameters: '%s'", loggedRequest)
-
-	hostTPM, err := typeconv.FromThriftTPMType(request.GetTpmDevice())
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert TPMType: %w", err)
-	}
-
-	pcrs, err := svc.Controller.ReportHostConfiguration(
-		ctx,
-		request.GetHostInfo(),
-		request.GetFirmwareVersion(),
-		request.GetFirmwareDateString(),
-		hostTPM,
-		request.GetStatusRegisters(),
-		typeconv.FromThriftTPMEventLog(request.GetTPMEventLog()),
-		request.GetPCRValue(),
-	)
-	if err != nil {
-		return nil, unwrapException(err)
-	}
-	return &afas.ReportHostConfigurationResult_{
-		PCR0SHA1:   pcrs.PCR0SHA1,
-		PCR0SHA256: pcrs.PCR0SHA256,
-	}, nil
 }
 
 func (svc *service) Analyze(

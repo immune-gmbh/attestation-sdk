@@ -110,9 +110,9 @@ func FromThriftRegisters(statusRegisters []*afas.StatusRegister) (registers.Regi
 	var resultErr errors.MultiError
 	result := make(registers.Registers, 0, len(statusRegisters))
 	for _, statusRegister := range statusRegisters {
-		reg, err := registers.ValueFromBytes(registers.RegisterID(statusRegister.Id), statusRegister.Value)
+		reg, err := registers.ValueFromBytes(registers.RegisterID(statusRegister.ID), statusRegister.Value)
 		if err != nil {
-			resultErr.Add(fmt.Errorf("unable to decode register <%v:%v>: %w", statusRegister.Id, statusRegister.Value, err))
+			resultErr.Add(fmt.Errorf("unable to decode register <%v:%v>: %w", statusRegister.ID, statusRegister.Value, err))
 			continue
 		}
 		result = append(result, reg)
@@ -135,7 +135,7 @@ func ToThriftRegisters(statusRegisters registers.Registers) ([]*afas.StatusRegis
 			continue
 		}
 		result = append(result, &afas.StatusRegister{
-			Id:    string(statusRegister.ID()),
+			ID:    string(statusRegister.ID()),
 			Value: b,
 		})
 	}
@@ -161,8 +161,8 @@ func ToThriftTPMEventLog(in *tpmeventlog.TPMEventLog) *thrift_tpm.EventLog {
 		}
 
 		out.Events = append(out.Events, &thrift_tpm.Event{
-			PCRIndex: int64(event.PCRIndex),
-			Type:     int64(event.Type),
+			PCRIndex: int8(event.PCRIndex),
+			Type:     int32(event.Type),
 			Data:     event.Data,
 			Digest:   digest,
 		})

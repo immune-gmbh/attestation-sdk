@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 
 	"github.com/stretchr/testify/require"
 )

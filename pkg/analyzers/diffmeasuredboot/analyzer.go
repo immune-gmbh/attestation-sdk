@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
@@ -67,7 +67,7 @@ func NewExecutorInput(
 		result.AddActualPCR0(actualPCR)
 	}
 	if enforcedMeasurementsFlow != nil {
-		result.ForceBootFlow(flows.FromOld(*enforcedMeasurementsFlow))
+		result.ForceBootFlow(flowscompat.FromOld(*enforcedMeasurementsFlow))
 	}
 	return result, nil
 }
@@ -108,12 +108,12 @@ func convDataChunk(chunk *diff.DataChunk) *diffanalysis.DataChunk {
 		Data: &diffanalysis.RangeOrForcedData{},
 	}
 	if chunk.ForceBytes != nil {
-		convChunk.Data.SetForceData(chunk.ForceBytes)
+		convChunk.Data.ForceData = chunk.ForceBytes
 	} else {
-		convChunk.Data.SetRange(&diffanalysis.Range_{
+		convChunk.Data.Range = &diffanalysis.Range_{
 			Offset: int64(chunk.Reference.Offset),
 			Length: int64(chunk.Reference.Length),
-		})
+		}
 	}
 
 	return convChunk

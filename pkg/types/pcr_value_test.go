@@ -3,11 +3,12 @@ package types
 import (
 	"crypto/sha1"
 	"crypto/sha256"
+	"reflect"
+	"testing"
+
 	"github.com/bxcodec/faker/v3"
 	"github.com/google/go-tpm/tpm2"
 	"github.com/stretchr/testify/require"
-	"reflect"
-	"testing"
 )
 
 func init() {
@@ -140,7 +141,6 @@ func TestNewPCR0Value(t *testing.T) {
 
 		pcr0 := NewPCRValue(0, value, PropertyIntelDBI(true), PropertyIntelTXT(false))
 		require.Zero(t, pcr0.Index)
-		require.Equal(t, PCR0SHA1Tag, pcr0.PCRBankTag())
 		require.Equal(t, tpm2.AlgSHA1, pcr0.HashAlgo)
 		require.Equal(t, value, pcr0.Value)
 		require.Equal(t, Properties{PropertyIntelDBI(true), PropertyIntelTXT(false)}, pcr0.Properties)
@@ -151,7 +151,6 @@ func TestNewPCR0Value(t *testing.T) {
 
 		pcr0 := NewPCRValue(0, value, PropertyIntelDBI(true), PropertyIntelTXT(false))
 		require.Zero(t, pcr0.Index)
-		require.Equal(t, PCR0SHA256Tag, pcr0.PCRBankTag())
 		require.Equal(t, tpm2.AlgSHA256, pcr0.HashAlgo)
 		require.Equal(t, value, pcr0.Value)
 		require.Equal(t, Properties{PropertyIntelDBI(true), PropertyIntelTXT(false)}, pcr0.Properties)
@@ -162,51 +161,8 @@ func TestNewPCR0Value(t *testing.T) {
 
 		pcr0 := NewPCRValue(0, value, PropertyIntelDBI(true), PropertyIntelTXT(false))
 		require.Zero(t, pcr0.Index)
-		require.Zero(t, pcr0.PCRBankTag())
 		require.Equal(t, tpm2.AlgUnknown, pcr0.HashAlgo)
 		require.Equal(t, value, pcr0.Value)
 		require.Equal(t, Properties{PropertyIntelDBI(true), PropertyIntelTXT(false)}, pcr0.Properties)
-	})
-}
-
-func TestPCR0ValueHashAlgoTag(t *testing.T) {
-	t.Run("pcr0_sha1_tag_detection", func(t *testing.T) {
-		pcr := PCRValue{
-			Index: 0,
-			Value: make([]byte, sha1.Size),
-		}
-		require.Equal(t, PCR0SHA1Tag, pcr.PCRBankTag())
-	})
-
-	t.Run("pcr0_sha256_tag_detection", func(t *testing.T) {
-		pcr := PCRValue{
-			Index: 0,
-			Value: make([]byte, sha256.Size),
-		}
-		require.Equal(t, PCR0SHA256Tag, pcr.PCRBankTag())
-	})
-
-	t.Run("pcr1_sha1_tag_detection", func(t *testing.T) {
-		pcr := PCRValue{
-			Index: 1,
-			Value: make([]byte, sha1.Size),
-		}
-		require.Equal(t, PCR1SHA1Tag, pcr.PCRBankTag())
-	})
-
-	t.Run("unknown", func(t *testing.T) {
-		pcr := PCRValue{
-			Index: 0,
-			Value: make([]byte, 2),
-		}
-		require.Zero(t, pcr.PCRBankTag())
-	})
-
-	t.Run("pcr2", func(t *testing.T) {
-		pcr := PCRValue{
-			Index: 2,
-			Value: make([]byte, sha1.Size),
-		}
-		require.Zero(t, pcr.PCRBankTag())
 	})
 }

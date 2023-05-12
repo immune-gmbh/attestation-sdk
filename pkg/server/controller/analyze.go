@@ -27,7 +27,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
-// Analyze provides fimware analysis by specified algorithms
+// Analyze provides firmware analysis by specified algorithms
 func (ctrl *Controller) Analyze(
 	ctx context.Context,
 	hostInfo *afas.HostInfo,

@@ -7,14 +7,14 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/apcbsecanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/biosrtmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/intelacmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/reproducepcranalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/errors"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/errors"
 )
 
 const (
@@ -41,11 +41,11 @@ func ToThriftAnalysisIssue(issue analysis.Issue) (*analyzerreport.Issue, error) 
 	}
 
 	if len(issue.Description) > 0 {
-		result.SetDescription(&issue.Description)
+		result.Description = &issue.Description
 	}
 
 	severity, err := ToThriftAnalysisSeverity(issue.Severity)
-	result.SetSeverity(severity)
+	result.Severity = severity
 	return &result, err
 }
 
@@ -67,7 +67,7 @@ func ToThriftAnalyzerReport(report models.AnalyzerReport) *afas.AnalyzerResult_ 
 	}
 	outcome := result.AnalyzerOutcome
 	if err := report.ExecError.Err; err != nil {
-		outcome.Err = &afas.Error_{
+		outcome.Err = &afas.Error{
 			ErrorClass:  analyzeExecErrorToClass(err),
 			Description: err.Error(),
 		}
@@ -79,32 +79,32 @@ func ToThriftAnalyzerReport(report models.AnalyzerReport) *afas.AnalyzerResult_ 
 	}
 	outcome.Report = &analyzerreport.AnalyzerReport{}
 
-	outcome.Report.SetComments(report.Report.Comments)
+	outcome.Report.Comments = report.Report.Comments
 
 	if report.Report.Custom != nil {
 		var reportInfo analyzerreport.ReportInfo
 		switch v := report.Report.Custom.(type) {
 		case diffanalysis.CustomReport:
-			reportInfo.SetDiffMeasuredBoot(&v)
+			reportInfo.DiffMeasuredBoot = &v
 		case reproducepcranalysis.CustomReport:
-			reportInfo.SetReproducePCR(&v)
+			reportInfo.ReproducePCR = &v
 		case intelacmanalysis.IntelACMDiagInfo:
-			reportInfo.SetIntelACM(&v)
+			reportInfo.IntelACM = &v
 		case pspsignanalysis.CustomReport:
-			reportInfo.SetPSPSignature(&v)
+			reportInfo.PSPSignature = &v
 		case biosrtmanalysis.CustomReport:
-			reportInfo.SetBIOSRTMVolume(&v)
+			reportInfo.BIOSRTMVolume = &v
 		case apcbsecanalysis.CustomReport:
-			reportInfo.SetAPCBSecurityTokens(&v)
+			reportInfo.APCBSecurityTokens = &v
 		default:
 			outcome.Report = nil
-			outcome.Err = &afas.Error_{
+			outcome.Err = &afas.Error{
 				ErrorClass:  afas.ErrorClass_InternalError,
 				Description: fmt.Sprintf("unknown report.Custom field's type %T", report.Report.Custom),
 			}
 			return result
 		}
-		outcome.Report.SetCustom(&reportInfo)
+		outcome.Report.Custom = &reportInfo
 	}
 
 	for _, issue := range report.Report.Issues {

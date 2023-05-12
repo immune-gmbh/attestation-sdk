@@ -1,10 +1,9 @@
 package measurements
 
 import (
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
-
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/actions/commonactions"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	bootflowtypes "github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
 )

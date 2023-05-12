@@ -48,14 +48,22 @@ func TestThriftPDPDirectoryOfLevel(t *testing.T) {
 }
 
 func TestPSPDirectoryTableEntryType(t *testing.T) {
-	for _, pspThriftEntryType := range psptypes.PSPDirectoryTableEntryTypeValues {
+	for pspThriftEntryType := psptypes.PSPDirectoryTableEntryType(0); ; pspThriftEntryType++ {
+		if _, err := psptypes.PSPDirectoryTableEntryTypeFromString(pspThriftEntryType.String()); err != nil {
+			// reach the end of available values of PSPDirectoryTableEntryType
+			break
+		}
 		pspEntryType := FromThriftPSPDirectoryTableEntryType(pspThriftEntryType)
 		require.Equal(t, pspThriftEntryType, ToThriftPSPDirectoryTableEntryType(pspEntryType))
 	}
 }
 
 func TestBIOSDirectoryTableEntryType(t *testing.T) {
-	for _, biosThriftEntryType := range psptypes.BIOSDirectoryTableEntryTypeValues {
+	for biosThriftEntryType := psptypes.BIOSDirectoryTableEntryType(0); ; biosThriftEntryType++ {
+		if _, err := psptypes.BIOSDirectoryTableEntryTypeFromString(biosThriftEntryType.String()); err != nil {
+			// reach the end of available values of BIOSDirectoryTableEntryType
+			break
+		}
 		biosEntryType := FromThriftBIOSDirectoryTableEntryType(biosThriftEntryType)
 		require.Equal(t, biosThriftEntryType, ToThriftBIOSDirectoryTableEntryType(biosEntryType))
 	}

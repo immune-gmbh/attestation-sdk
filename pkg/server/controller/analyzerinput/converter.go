@@ -7,7 +7,7 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume"
@@ -15,6 +15,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
 	bootflowtypes "github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
@@ -123,7 +124,7 @@ func NewReproducePCRInput(
 		regs,
 		tpm,
 		eventlog,
-		flows.ToOld(bootflowtypes.Flow(flow)),
+		flowscompat.ToOld(bootflowtypes.Flow(flow)),
 		expectedPCR0,
 	)
 	if err != nil {

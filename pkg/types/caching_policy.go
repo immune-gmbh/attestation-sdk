@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/caching_policy"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/caching_policy"
 )
 
 // CachingPolicy defines if a cache should be used

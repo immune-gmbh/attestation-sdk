@@ -24,6 +24,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
@@ -83,7 +84,7 @@ func NewExecutorInput(
 		result.AddTPMEventLog(eventlog)
 	}
 	if enforcedMeasurementsFlow != pcr.FlowAuto {
-		result.ForceBootFlow(flows.FromOld(enforcedMeasurementsFlow))
+		result.ForceBootFlow(flowscompat.FromOld(enforcedMeasurementsFlow))
 	}
 	return result, nil
 }
@@ -174,7 +175,7 @@ func (analyzer *ReproducePCR) Analyze(ctx context.Context, in Input) (*analysis.
 
 	// TODO: delete this, this is an intermediate code while migrating from `pcr` to `bootflow`:
 	specificFlow := in.BootFlow
-	if flows.ToOld(bootflowtypes.Flow(specificFlow)) == pcr.FlowAuto {
+	if flowscompat.ToOld(bootflowtypes.Flow(specificFlow)) == pcr.FlowAuto {
 		specificFlow = types.BootFlow(measurements.ExtractResultingBootFlow(bootResult.Log))
 	}
 	logger.FromCtx(ctx).Debugf("specific flow: '%s'", specificFlow.Name)
@@ -358,7 +359,7 @@ func (analyzer *ReproducePCR) reproduceUsingKnownFlows(
 	}
 
 	for _, tryFlow := range allFlows {
-		if flows.ToOld(tryFlow) == pcr.FlowAuto {
+		if flowscompat.ToOld(tryFlow) == pcr.FlowAuto {
 			// Try only those flows, which maps into something in the old design.
 			//
 			// This is a temporary solution.

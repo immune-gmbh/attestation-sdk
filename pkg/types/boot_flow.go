@@ -58,8 +58,12 @@ func getFlowByName(flowName string) (types.Flow, bool) {
 		return flows.IntelCBnT, true
 	case flows.IntelCBnTFailure.Name:
 		return flows.IntelCBnTFailure, true
-	case flows.IntelLegacyTXT.Name:
-		return flows.IntelLegacyTXT, true
+	case flows.IntelLegacyTXTEnabled.Name:
+		return flows.IntelLegacyTXTEnabled, true
+	case flows.IntelLegacyTXTEnabledTPM12.Name:
+		return flows.IntelLegacyTXTEnabledTPM12, true
+	case flows.IntelLegacyTXTDisabled.Name:
+		return flows.IntelLegacyTXTDisabled, true
 	case flows.PEI.Name:
 		return flows.PEI, true
 	case flows.OCPPEI.Name:

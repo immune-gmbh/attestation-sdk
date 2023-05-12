@@ -141,16 +141,16 @@ func (analyzer *Analyzer) getBIOSDirectoryTokens(
 			var value apcbsecanalysis.TokenValue
 			switch v := token.Value.(type) {
 			case bool:
-				value.SetBoolean(&v)
+				value.Boolean = &v
 			case uint8:
 				signedByte := int8(v)
-				value.SetByte(&signedByte)
+				value.Byte = &signedByte
 			case uint16:
 				signedWord := int16(v)
-				value.SetWord(&signedWord)
+				value.Word = &signedWord
 			case uint32:
 				signedDWord := int32(v)
-				value.SetDWord(&signedDWord)
+				value.DWord = &signedDWord
 			default:
 				return nil, fmt.Errorf("unknown token value type: %T", token.Value)
 			}
