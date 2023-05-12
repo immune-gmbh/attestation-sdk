@@ -63,7 +63,6 @@ func main() {
 		"defines API cache purge timeout",
 	)
 	storageCacheSize := pflag.Uint64("image-storage-cache-size", storageCacheSizeDefault, "defines the memory limit for the storage used to save images, analyzed by AFAS")
-	diffFirmwareCacheSize := pflag.Int("diff-firmware-cache-size", diffFirmwareCacheSizeDefault, "defines how many DiffFirmware reports are stored in memory")
 	dataCacheSize := pflag.Int("data-cache-size", dataCacheSizeDefault, "defines the size of the cache for internally caclulated data objects like parsed firmware, measurements flow")
 	pflag.Parse()
 	if pflag.NArg() != 0 {

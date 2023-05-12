@@ -7,8 +7,8 @@ import (
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/replay/replay"
 
