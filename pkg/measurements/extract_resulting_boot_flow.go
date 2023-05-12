@@ -1,9 +1,10 @@
 package measurements
 
 import (
+	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/actions/commonactions"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"
-	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	bootflowtypes "github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
 )
@@ -21,7 +22,7 @@ func ExtractResultingBootFlow(log bootengine.Log) bootflowtypes.Flow {
 		for _, action := range stepResult.Actions {
 			switch setFlow := action.(type) {
 			case *commonactions.SetFlowStruct:
-				r := flows.ToOld(setFlow.NextFlow)
+				r := flowscompat.ToOld(setFlow.NextFlow)
 				if r != pcr.FlowAuto && r != pcr.Flow(-1) {
 					return setFlow.NextFlow
 				}

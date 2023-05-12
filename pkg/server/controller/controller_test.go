@@ -34,7 +34,7 @@ func TestControllerCreation(t *testing.T) {
 	fakeGateChecker.On("CheckAssetID", gate, mock.Anything).Return(true)
 
 	t.Run("successfull", func(t *testing.T) {
-		controller, err := newInternal(
+		controller, err := New(
 			context.Background(),
 			0,
 			storage,
@@ -59,7 +59,7 @@ func TestControllerCreation(t *testing.T) {
 	})
 
 	t.Run("api_purge_bigger_rtpfw_timeout", func(t *testing.T) {
-		controller, err := newInternal(
+		controller, err := New(
 			context.Background(),
 			0,
 			storage,
@@ -103,7 +103,7 @@ func makeController(t *testing.T) *Controller {
 	fakeGateChecker := gatingMocks.NewFakeGateChecker()
 	fakeGateChecker.On("CheckAssetID", gate, mock.Anything).Return(true)
 
-	ctl, err := newInternal(
+	ctl, err := New(
 		ctx,
 		0,
 		storage,
@@ -224,7 +224,7 @@ func TestGetFirmwareHelper(t *testing.T) {
 		fakeGateChecker := gatingMocks.NewFakeGateChecker()
 		fakeGateChecker.On("CheckAssetID", gate, mock.Anything).Return(true)
 
-		return newInternal(
+		return New(
 			context.Background(),
 			0,
 			storage,

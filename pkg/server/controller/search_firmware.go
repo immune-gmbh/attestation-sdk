@@ -38,7 +38,7 @@ func (ctrl *Controller) SearchFirmware(
 				imageIDPrefix = filter.ImageID
 			}
 		}
-		entries, unlockFn, err := ctrl.Storage.Find(
+		entries, unlockFn, err := ctrl.FirmwareStorage.Find(
 			ctx,
 			storage.FindFilter{
 				ImageID:         imageID,
@@ -65,7 +65,7 @@ func (ctrl *Controller) SearchFirmware(
 
 			var data []byte
 			if shouldFetchContent {
-				data, err = ctrl.Storage.GetBytes(ctx, entry.ImageID)
+				data, err = ctrl.FirmwareStorage.GetBytes(ctx, entry.ImageID)
 				if err != nil {
 					return nil, fmt.Errorf("unable to fetch image data: %w", err)
 				}

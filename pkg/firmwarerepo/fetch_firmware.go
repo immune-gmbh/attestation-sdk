@@ -1,4 +1,4 @@
-package firmwarestorage
+package firmwarerepo
 
 import (
 	"context"
@@ -13,12 +13,8 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 )
 
-const (
-	everstoreURLPrefix = "everstore://"
-)
-
-// DownloadByFilename downloads a raw firmware file by its name
-func (storage *FirmwareStorage) DownloadByFilename(ctx context.Context, filename string) ([]byte, string, error) {
+// DownloadByVersion downloads a raw firmware file by its name
+func (storage *FirmwareRepo) DownloadByVersion(ctx context.Context, filename string) ([]byte, string, error) {
 	return storage.FetchFirmwareByURL(ctx, storage.baseURL+filename)
 }
 
@@ -31,23 +27,23 @@ type fetchFirmwareJob struct {
 	Image           image
 	Error           error
 	ctx             context.Context
-	firmwareStorage *FirmwareStorage
+	firmwareStorage *FirmwareRepo
 	url             string
 	doneChan        chan struct{}
 }
 
 // FetchFirmwareByURL returns a firmware image by URL.
-func (storage *FirmwareStorage) FetchFirmwareByURL(
+func (fwRepo *FirmwareRepo) FetchFirmwareByURL(
 	ctx context.Context,
 	url string,
 ) (imageBytes []byte, filename string, err error) {
-	job := storage.fetchFirmware(ctx, url)
+	job := fwRepo.fetchFirmware(ctx, url)
 	<-job.Done()
 	logger.FromCtx(ctx).Debugf("fetch-firmware received results: len:%d, name:%s, err:%v", len(job.Image.Bytes), job.Image.Filename, job.Error)
 	return job.Image.Bytes, job.Image.Filename, job.Error
 }
 
-func (storage *FirmwareStorage) fetchFirmware(ctx context.Context, url string) *fetchFirmwareJob {
+func (fwRepo *FirmwareRepo) fetchFirmware(ctx context.Context, url string) *fetchFirmwareJob {
 
 	// The high-level logic of this code:
 	//
@@ -60,27 +56,27 @@ func (storage *FirmwareStorage) fetchFirmware(ctx context.Context, url string) *
 	defer span.Finish()
 	log := logger.FromCtx(ctx)
 
-	storage.fetchFirmwareJobsMutex.Lock()
-	defer storage.fetchFirmwareJobsMutex.Unlock()
+	fwRepo.fetchFirmwareJobsMutex.Lock()
+	defer fwRepo.fetchFirmwareJobsMutex.Unlock()
 
-	job := storage.fetchFirmwareJobs[url]
+	job := fwRepo.fetchFirmwareJobs[url]
 	if job != nil {
 		return job
 	}
 
 	log.Debugf("creating a new firmware-fetch for '%s'", url)
-	job = storage.newFetchFirmwareJob(ctx, url, func(image image) {
+	job = fwRepo.newFetchFirmwareJob(ctx, url, func(image image) {
 		log.Debugf("finished downloading the image for '%s'", url)
 
-		storage.fetchFirmwareJobsMutex.Lock()
-		storage.fetchFirmwareJobs[url] = nil
-		storage.fetchFirmwareJobsMutex.Unlock()
+		fwRepo.fetchFirmwareJobsMutex.Lock()
+		fwRepo.fetchFirmwareJobs[url] = nil
+		fwRepo.fetchFirmwareJobsMutex.Unlock()
 	})
-	storage.fetchFirmwareJobs[url] = job
+	fwRepo.fetchFirmwareJobs[url] = job
 	return job
 }
 
-func (storage *FirmwareStorage) newFetchFirmwareJob(
+func (fwRepo *FirmwareRepo) newFetchFirmwareJob(
 	ctx context.Context,
 	url string,
 	onSuccess func(image),
@@ -93,7 +89,7 @@ func (storage *FirmwareStorage) newFetchFirmwareJob(
 	job = &fetchFirmwareJob{
 		ctx:             beltctx.WithField(ctx, "fetchFirmwareJob", url),
 		url:             url,
-		firmwareStorage: storage,
+		firmwareStorage: fwRepo,
 		doneChan:        make(chan struct{}),
 	}
 	go func() {
@@ -128,10 +124,20 @@ func (job *fetchFirmwareJob) fetchFromURL() ([]byte, string, error) {
 	if err != nil {
 		return nil, "", ErrParseURL{Err: err, URL: job.url}
 	}
-	pathParts := strings.Split(parsedURL.Path, "/")
-	filename := pathParts[len(pathParts)-1]
 
-	imageBytes, err := job.httpFetch()
+	var (
+		imageBytes []byte
+		filename   string
+	)
+
+	switch parsedURL.Scheme {
+	case "http", "https":
+		pathParts := strings.Split(parsedURL.Path, "/")
+		filename = pathParts[len(pathParts)-1]
+		imageBytes, err = job.httpFetch()
+	default:
+		return nil, "", fmt.Errorf("unknown scheme: '%s'", parsedURL.Scheme)
+	}
 	return imageBytes, filename, err
 }
 

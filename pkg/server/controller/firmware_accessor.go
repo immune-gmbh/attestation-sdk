@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
@@ -28,7 +29,7 @@ func (fw *FirmwareAccessor) Bytes() []byte {
 }
 
 // Init initializes the FirmwareAccessor after it was deserialized.
-func (fw *FirmwareAccessor) Init(ctx context.Context, storage storageInterface) error {
+func (fw *FirmwareAccessor) Init(ctx context.Context, storage FirmwareStorage) error {
 	content, err := storage.GetBytes(ctx, fw.ImageID)
 	fw.downloadedContent = content
 	return err

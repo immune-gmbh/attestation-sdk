@@ -49,7 +49,7 @@ func (ctrl *Controller) Analyze(
 		}()
 		span, ctx := tracer.StartChildSpanFromCtx(ctx, "saveAnalyzerReport")
 		defer span.Finish()
-		if err := ctrl.Storage.InsertAnalyzeReport(ctx, report); err != nil {
+		if err := ctrl.FirmwareStorage.InsertAnalyzeReport(ctx, report); err != nil {
 			log.Errorf("unable to save the report: %v", err)
 		} else {
 			log.Debugf("successfully saved the AnalyzeReport: %#+v", report)
@@ -57,30 +57,6 @@ func (ctrl *Controller) Analyze(
 	}()
 
 	return typeconv.ToThriftAnalyzeReport(report), nil
-}
-
-func (ctrl *Controller) getModelFamilyID(
-	ctx context.Context,
-	hostInfo *afas.HostInfo,
-) *uint64 {
-	log := logger.FromCtx(ctx)
-	if hostInfo == nil {
-		log.Debugf("unable to get model family ID because hostInfo is not set")
-		return nil
-	}
-
-	if hostInfo.ModelID == nil {
-		log.Debugf("unable to get model family ID because ModelID is not set")
-		return nil
-	}
-
-	modelFamily, err := ctrl.rtpDB.GetModelFamilyByModel(ctx, uint64(*hostInfo.ModelID))
-	if err != nil || modelFamily == nil {
-		log.Errorf("unable to get model family by model ID %d, err == %v", uint64(*hostInfo.ModelID), err)
-		return nil
-	}
-
-	return &modelFamily.ID
 }
 
 func (ctrl *Controller) getAnalyzeReport(
@@ -93,7 +69,7 @@ func (ctrl *Controller) getAnalyzeReport(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "getAnalyzeReport")
 	defer span.Finish()
 
-	hostInfo, serfDevice := ctrl.getHostInfo(ctx, _hostInfo)
+	hostInfo, device := ctrl.getHostInfo(ctx, _hostInfo)
 
 	report := &models.AnalyzeReport{
 		Timestamp:       time.Now(),
@@ -103,23 +79,19 @@ func (ctrl *Controller) getAnalyzeReport(
 	if hostInfo != nil {
 		report.AssetID = hostInfo.AssetID
 	}
-	evaluationStatus := getRTPEvaluationStatus(ctx, serfDevice)
 	ctx = beltctx.WithField(ctx, "assetID", hostInfo.GetAssetID())
-	ctx = beltctx.WithField(ctx, "evaluationStatus", evaluationStatus)
 	log := logger.FromCtx(ctx)
 	log.Infof("new Analyze job")
 
-	modelFamilyID := ctrl.getModelFamilyID(ctx, hostInfo)
-
 	artifactsAccessor, err := analyzerinput.NewArtifactsAccessor(
 		artifacts,
-		NewAnalyzerFirmwaresAccessor(ctrl.Storage, ctrl.rtpfw, ctrl.FirmwareStorage, ctrl, modelFamilyID, evaluationStatus),
+		NewAnalyzerFirmwaresAccessor(ctrl.FirmwareStorage, ctrl.rtpfw, ctrl.OriginalFWImageRepository, ctrl, modelFamilyID, evaluationStatus),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create artifacts accessor: %w", err)
 	}
 
-	// scopeCache helps to share all calculated results between all analysers without putting restrictions of consuming identical set of artifacts
+	// scopeCache helps to share all calculated results between all analyzers without putting restrictions of consuming identical set of artifacts
 	scopeCache := analysis.NewDataCache()
 	var (
 		wg          sync.WaitGroup

@@ -57,7 +57,7 @@ func (ctrl *Controller) SearchReport(
 		findFilter.ActualFirmware.HashStable = requestFilter.ActualFirmware.HashStable
 	}
 
-	reports, err := ctrl.Storage.FindAnalyzeReports(ctx, findFilter, nil, uint(limit))
+	reports, err := ctrl.FirmwareStorage.FindAnalyzeReports(ctx, findFilter, nil, uint(limit))
 	if err != nil {
 		return nil, fmt.Errorf("unable to find the report: %w", err)
 	}

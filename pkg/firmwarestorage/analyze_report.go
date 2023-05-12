@@ -1,19 +1,17 @@
-package storage
+package firmwarestorage
 
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
-	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
@@ -26,10 +24,11 @@ import (
 // * `report.Reports` are also saved and: `ID` and `AnalyzerReportID` are also set.
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
-//       management of metadata in MySQL and data in Manifold for firmware images. All the rest
-//       entities should not be accessed through Storage. Otherwise locking, transactions and other
-//       usual stuff is pretty cludgy.
-func (stor *Storage) InsertAnalyzeReport(ctx context.Context, report *models.AnalyzeReport) (retErr error) {
+//
+//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	entities should not be accessed through Storage. Otherwise locking, transactions and other
+//	usual stuff is pretty cludgy.
+func (fwStor *FirmwareStorage) InsertAnalyzeReport(ctx context.Context, report *models.AnalyzeReport) (retErr error) {
 	log := logger.FromCtx(ctx)
 	log.Debugf("saving the Analyzer report...")
 	defer func() {
@@ -49,7 +48,7 @@ func (stor *Storage) InsertAnalyzeReport(ctx context.Context, report *models.Ana
 		return fmt.Errorf("unable to get query parameters: %w", err)
 	}
 
-	tx, err := stor.DB.BeginTx(ctx, nil)
+	tx, err := fwStor.startTransaction(ctx)
 	if err != nil {
 		return fmt.Errorf("unable to start transaction: %w", err)
 	}
@@ -86,7 +85,7 @@ func (stor *Storage) InsertAnalyzeReport(ctx context.Context, report *models.Ana
 	for idx := range report.AnalyzerReports {
 		analyzerReport := &report.AnalyzerReports[idx]
 		analyzerReport.AnalyzeReportID = report.ID
-		err := stor.insertAnalyzerReport(tx, analyzerReport)
+		err := fwStor.insertAnalyzerReport(tx.Tx, analyzerReport)
 		if err != nil {
 			return fmt.Errorf("unable to insert analyzer report #%d: %w", idx, err)
 		}
@@ -95,7 +94,7 @@ func (stor *Storage) InsertAnalyzeReport(ctx context.Context, report *models.Ana
 	return nil
 }
 
-func (stor *Storage) insertAnalyzerReport(tx *sql.Tx, report *models.AnalyzerReport) error {
+func (fwStor *FirmwareStorage) insertAnalyzerReport(tx *sql.Tx, report *models.AnalyzerReport) error {
 	values, columns, err := helpers.GetValuesAndColumns(report, func(fieldName string, value interface{}) bool {
 		return fieldName == "ID"
 	})
@@ -114,7 +113,7 @@ func (stor *Storage) insertAnalyzerReport(tx *sql.Tx, report *models.AnalyzerRep
 	}
 
 	report.ID = uint64(lastID)
-	err = stor.aoscWorkaroundBuildAnalyzerReportIndexes(tx, report)
+	err = fwStor.aoscWorkaroundBuildAnalyzerReportIndexes(tx, report)
 	if err != nil {
 		return fmt.Errorf("unable to build indexes: %w", err)
 	}
@@ -149,10 +148,11 @@ type analyzeReportFindFilter struct {
 // the transaction.
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
-//       management of metadata in MySQL and data in Manifold for firmware images. All the rest
-//       entities should not be accessed through Storage. Otherwise locking, transactions and other
-//       usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (stor *Storage) FindAnalyzeReports(
+//
+//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	entities should not be accessed through Storage. Otherwise locking, transactions and other
+//	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
+func (fwStor *FirmwareStorage) FindAnalyzeReports(
 	ctx context.Context,
 	filterInput AnalyzeReportFindFilter,
 	tx *sqlx.Tx,
@@ -181,7 +181,7 @@ func (stor *Storage) FindAnalyzeReports(
 	}
 
 	if !filterInput.ActualFirmware.IsEmpty() {
-		imageMetas, unlockFn, err := stor.Find(ctx, filterInput.ActualFirmware)
+		imageMetas, unlockFn, err := fwStor.Find(ctx, filterInput.ActualFirmware)
 		if err != nil {
 			return nil, fmt.Errorf("unable to find image references given filter %#+v: %w", filterInput.ActualFirmware, err)
 		}
@@ -192,14 +192,14 @@ func (stor *Storage) FindAnalyzeReports(
 		}
 	}
 
-	result, err := stor.findAnalyzeReports(ctx, tx, filter, limit)
+	result, err := fwStor.findAnalyzeReports(ctx, tx, filter, limit)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get the analyze report by filter %#+v: %w", filter, err)
 	}
 
 	for _, report := range result {
 		// TODO: fetch all analyzer reports at once, instead of by one for each AnalyzeReport
-		report.AnalyzerReports, err = stor.findAnalyzerReportsByAnalyzeReportID(ctx, tx, report.ID)
+		report.AnalyzerReports, err = fwStor.findAnalyzerReportsByAnalyzeReportID(ctx, tx, report.ID)
 		if err != nil {
 			return nil, fmt.Errorf("unable to get the reports of analyzers by analyze ID %d: %w", report.ID, err)
 		}
@@ -208,29 +208,7 @@ func (stor *Storage) FindAnalyzeReports(
 	return result, nil
 }
 
-func (stor *Storage) newTx() (*sqlx.Tx, context.CancelFunc, error) {
-	tx, err := stor.DB.Beginx()
-	if err != nil {
-		return nil, nil, ErrSelect{Err: err}
-	}
-	// In the SELECT below we lock the rows, and in this "defer" we handle the lock.
-	return tx, func() {
-		errRollback := tx.Rollback()
-		if errRollback == nil {
-			return
-		}
-		if errors.Is(errRollback, mysql.ErrInvalidConn) {
-			// Lost connection, therefore the transaction will be reset
-			// automatically.
-			return
-		}
-		// To do not leave a transaction which could hang other workers we panic,
-		// it with disconnect from MySQL and force-release the transaction.
-		panic(fmt.Errorf("unable to commit the transaction and do not how to remediate: %w", errRollback))
-	}, nil
-}
-
-func (stor *Storage) findAnalyzeReports(
+func (fwStor *FirmwareStorage) findAnalyzeReports(
 	ctx context.Context,
 	tx *sqlx.Tx,
 	filter *analyzeReportFindFilter,
@@ -320,7 +298,7 @@ func (stor *Storage) findAnalyzeReports(
 
 	logger.FromCtx(ctx).Debugf("query: <%s>; args: %v", query, whereArgs)
 	var _reports []models.AnalyzeReport
-	if err := sqlx.Select(stor.querier(tx), &_reports, query, whereArgs...); err != nil {
+	if err := sqlx.Select(fwStor.querier(tx), &_reports, query, whereArgs...); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
@@ -335,14 +313,14 @@ func (stor *Storage) findAnalyzeReports(
 	return reports, nil
 }
 
-func (stor *Storage) querier(tx *sqlx.Tx) sqlx.Queryer {
+func (fwStor *FirmwareStorage) querier(tx *sqlx.Tx) sqlx.Queryer {
 	if tx != nil {
 		return tx
 	}
-	return stor.DB
+	return fwStor.DB
 }
 
-func (stor *Storage) findAnalyzerReportsByAnalyzeReportID(
+func (fwStor *FirmwareStorage) findAnalyzerReportsByAnalyzeReportID(
 	ctx context.Context,
 	tx *sqlx.Tx,
 	analyzeReportID uint64,
@@ -362,7 +340,7 @@ func (stor *Storage) findAnalyzerReportsByAnalyzeReportID(
 		query += " FOR UPDATE"
 	}
 	logger.FromCtx(ctx).Debugf("query: %s; analyzeReportID==%d", query, analyzeReportID)
-	if err := sqlx.Select(stor.querier(tx), &reports, query, analyzeReportID); err != nil {
+	if err := sqlx.Select(fwStor.querier(tx), &reports, query, analyzeReportID); err != nil {
 		return nil, fmt.Errorf("unable to query analyzer reports by analyze report ID %d: %w", analyzeReportID, err)
 	}
 
@@ -375,10 +353,11 @@ func (stor *Storage) findAnalyzerReportsByAnalyzeReportID(
 // the transaction.
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
-//       management of metadata in MySQL and data in Manifold for firmware images. All the rest
-//       entities should not be accessed through Storage. Otherwise locking, transactions and other
-//       usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (stor *Storage) FindAnalyzerReport(
+//
+//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	entities should not be accessed through Storage. Otherwise locking, transactions and other
+//	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
+func (fwStor *FirmwareStorage) FindAnalyzerReport(
 	tx *sqlx.Tx,
 	analyzerReportID int64,
 ) (*models.AnalyzerReport, error) {
@@ -393,7 +372,7 @@ func (stor *Storage) FindAnalyzerReport(
 	)
 
 	var report models.AnalyzerReport
-	if err := sqlx.Get(stor.querier(tx), &report, query, analyzerReportID); err != nil {
+	if err := sqlx.Get(fwStor.querier(tx), &report, query, analyzerReportID); err != nil {
 		return nil, fmt.Errorf("unable to query analyzer reports by analyzer report ID %d: %w", analyzerReportID, err)
 	}
 

@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/thrift"
@@ -80,18 +81,13 @@ func main() {
 	fianoLog.DefaultLogger = newFianoLogger(log.WithField("module", "fiano"))
 
 	ctrl, err := controller.New(ctx,
-		*fbid,
-		*rtpfwCacheSize,
-		*rtpfwCacheEvictionTimeout,
+		*objectStorageURL,
 		*apiCachePurgeTimeout,
 		*storageCacheSize,
 		*diffFirmwareCacheSize,
-		*reportHostConfigurationCacheSize,
 		*dataCacheSize,
-		*rdbmsURL, *tierSeRF,
-		"firmware_measurements",
-		"attestation_hosts_configurations",
-		*manifoldBucket, *manifoldAPIKey,
+		*rdbmsURL,
+		devicegetter.DummyDeviceGetter{},
 	)
 	assertNoError(ctx, err)
 	log.Debugf("created a controller")

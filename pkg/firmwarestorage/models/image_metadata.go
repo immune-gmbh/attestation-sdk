@@ -8,12 +8,12 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 // ImageMetadata is a metadata of a stored firmware image.
-//noinspection GoSnakeCaseUsage
+// noinspection GoSnakeCaseUsage
 type ImageMetadata struct {
 	ImageID            types.ImageID   `db:"image_id,pk"`
 	FirmwareVersion    sql.NullString  `db:"firmware_version"`
@@ -108,7 +108,7 @@ func (meta ImageMetadata) ManifoldPath() string {
 }
 
 // ToThrift converts ImageMetadata to the structure defined in the Thrift model.
-//noinspection GoSnakeCaseUsage
+// noinspection GoSnakeCaseUsage
 func (meta *ImageMetadata) ToThrift() *afas.FirmwareImageMetadata {
 	result := &afas.FirmwareImageMetadata{
 		ImageID:        meta.ImageID[:],

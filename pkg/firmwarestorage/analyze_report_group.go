@@ -1,4 +1,4 @@
-package storage
+package firmwarestorage
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 )
 
 // GetAnalyzeReportGroup finds and locks an existing AnalyzeReportGroup.
@@ -22,10 +22,11 @@ import (
 // Returns (nil, nil) if such group is was not found.
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
-//       management of metadata in MySQL and data in Manifold for firmware images. All the rest
-//       entities should not be accessed through Storage. Otherwise locking, transactions and other
-//       usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (stor *Storage) GetAnalyzeReportGroup(
+//
+//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	entities should not be accessed through Storage. Otherwise locking, transactions and other
+//	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
+func (fwStor *FirmwareStorage) GetAnalyzeReportGroup(
 	ctx context.Context,
 	key models.AnalyzeReportGroupKey,
 	tx *sqlx.Tx,
@@ -68,10 +69,11 @@ func (stor *Storage) GetAnalyzeReportGroup(
 // the transaction.
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
-//       management of metadata in MySQL and data in Manifold for firmware images. All the rest
-//       entities should not be accessed through Storage. Otherwise locking, transactions and other
-//       usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (stor *Storage) GetOrCreateAnalyzeReportGroup(
+//
+//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	entities should not be accessed through Storage. Otherwise locking, transactions and other
+//	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
+func (fwStor *FirmwareStorage) GetOrCreateAnalyzeReportGroup(
 	ctx context.Context,
 	key models.AnalyzeReportGroupKey,
 	tx *sqlx.Tx,
@@ -84,7 +86,7 @@ func (stor *Storage) GetOrCreateAnalyzeReportGroup(
 		return nil, fmt.Errorf("the provided key is the zero value")
 	}
 
-	group, err := stor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
+	group, err := fwStor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
 	if err != nil {
 		return nil, fmt.Errorf("unable to try to fetch an existing analyze report group: %w", err)
 	}
@@ -98,7 +100,7 @@ func (stor *Storage) GetOrCreateAnalyzeReportGroup(
 		return nil, fmt.Errorf("unable to create an analyzer reports group with key %s using query '%s': %w", key, query, err)
 	}
 
-	group, err = stor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
+	group, err = fwStor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch back the analyze report group: %w", err)
 	}

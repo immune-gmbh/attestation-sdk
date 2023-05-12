@@ -2,52 +2,106 @@ package firmwarestorage
 
 import (
 	"fmt"
+
+	"github.com/go-sql-driver/mysql"
 )
 
-// ErrHTTPGet implements "error", for the description see Error.
-type ErrHTTPGet struct {
+// ErrInitMySQL implements "error", for the description see Error.
+type ErrInitMySQL struct {
 	Err error
-	URL string
 }
 
-func (err ErrHTTPGet) Error() string {
-	return fmt.Sprintf("unable to GET a HTTP resource '%s': %v",
-		err.URL, err.Err)
+func (err ErrInitMySQL) Error() string {
+	return fmt.Sprintf("unable to initialize a MySQL client: %v", err.Err)
 }
 
-func (err ErrHTTPGet) Unwrap() error {
+func (err ErrInitMySQL) Unwrap() error {
 	return err.Err
 }
 
-// ErrHTTPGetBody implements "error", for the description see Error.
-type ErrHTTPGetBody struct {
+// ErrMySQLPing implements "error", for the description see Error.
+type ErrMySQLPing struct {
 	Err error
-	URL string
 }
 
-func (err ErrHTTPGetBody) Error() string {
-	return fmt.Sprintf("unable to read body of HTTP GET-resource '%s': %v",
-		err.URL, err.Err)
+func (err ErrMySQLPing) Error() string {
+	return fmt.Sprintf("unable to ping the MySQL server: %v", err.Err)
 }
 
-func (err ErrHTTPGetBody) Unwrap() error {
+func (err ErrMySQLPing) Unwrap() error {
 	return err.Err
 }
 
-// ErrUnknownFirmwareImage represents situation when firmware image has unknown format
-type ErrUnknownFirmwareImage struct {
+// ErrUnableToUpload implements "error", for the description see Error.
+type ErrUnableToUpload struct {
+	Path string
+	Err  error
 }
 
-func (err ErrUnknownFirmwareImage) Error() string {
-	return "unable to parse firmware image"
+func (err ErrUnableToUpload) Error() string {
+	return fmt.Sprintf("unable to upload file '%s': %v", err.Path, err.Err)
 }
 
-// ErrNoFirmwareFoundInTarGZ implements "error", for the description see Error.
-type ErrNoFirmwareFoundInTarGZ struct {
+func (err ErrUnableToUpload) Unwrap() error {
+	return err.Err
 }
 
-func (err ErrNoFirmwareFoundInTarGZ) Error() string {
-	return "nothing in the tar.gz looks like a firmware image"
+// ErrUnableToUpdate implements "error", for the description see Error.
+type ErrUnableToUpdate struct {
+	insertedValue string
+	Err           error
+}
+
+func (err ErrUnableToUpdate) Error() string {
+	return fmt.Sprintf("unable to insert '%s' to the metadata table: %v",
+		err.insertedValue, err.Err)
+}
+
+func (err ErrUnableToUpdate) Unwrap() error {
+	return err.Err
+}
+
+// ErrUnableToInsert implements "error", for the description see Error.
+type ErrUnableToInsert struct {
+	insertedValue string
+	Err           error
+}
+
+func (err ErrUnableToInsert) Error() string {
+	return fmt.Sprintf("unable to insert '%s' to the metadata table: %v",
+		err.insertedValue, err.Err)
+}
+
+func (err ErrUnableToInsert) Unwrap() error {
+	return err.Err
+}
+
+// ErrAlreadyExists implements "error", for the description see Error.
+type ErrAlreadyExists struct {
+	insertedValue string
+	Err           *mysql.MySQLError
+}
+
+func (err ErrAlreadyExists) Error() string {
+	return fmt.Sprintf("image '%s' is already inserted to the metadata table: %v",
+		err.insertedValue, err.Err)
+}
+
+func (err ErrAlreadyExists) Unwrap() error {
+	return err.Err
+}
+
+// ErrUnableToUpdateMetadata implements "error", for the description see Error.
+type ErrUnableToUpdateMetadata struct {
+	Err error
+}
+
+func (err ErrUnableToUpdateMetadata) Error() string {
+	return fmt.Sprintf("unable to update metadata record: %v", err.Err)
+}
+
+func (err ErrUnableToUpdateMetadata) Unwrap() error {
+	return err.Err
 }
 
 // ErrGetMeta implements "error", for the description see Error.
@@ -63,30 +117,67 @@ func (err ErrGetMeta) Unwrap() error {
 	return err.Err
 }
 
-// ErrHTTPMakeRequest implements "error", for the description see Error.
-type ErrHTTPMakeRequest struct {
+// ErrGetData implements "error", for the description see Error.
+type ErrGetData struct {
 	Err error
-	URL string
 }
 
-func (err ErrHTTPMakeRequest) Error() string {
-	return fmt.Sprintf("unable to make an HTTP request to '%s': %v", err.URL, err.Err)
+func (err ErrGetData) Error() string {
+	return fmt.Sprintf("unable to get the data: %v", err.Err)
 }
 
-func (err ErrHTTPMakeRequest) Unwrap() error {
+func (err ErrGetData) Unwrap() error {
 	return err.Err
 }
 
-// ErrParseURL implements "error", for the description see Error.
-type ErrParseURL struct {
+// ErrSelect implements "error", for the description see Error.
+type ErrSelect struct {
 	Err error
-	URL string
 }
 
-func (err ErrParseURL) Error() string {
-	return fmt.Sprintf("unable to parse '%s' as URL: %v", err.URL, err.Err)
+func (err ErrSelect) Error() string {
+	return fmt.Sprintf("unable to select rows from MySQL: %v", err.Err)
 }
 
-func (err ErrParseURL) Unwrap() error {
+func (err ErrSelect) Unwrap() error {
 	return err.Err
+}
+
+// ErrNotFound implements "error", for the description see Error.
+type ErrNotFound struct {
+	Query string
+}
+
+func (err ErrNotFound) Error() string {
+	return fmt.Sprintf("not found (query: %s)", err.Query)
+}
+
+// ErrTooManyEntries implements "error", for the description see Error.
+type ErrTooManyEntries struct {
+	Count uint
+}
+
+func (err ErrTooManyEntries) Error() string {
+	return fmt.Sprintf("too many entries: %d", err.Count)
+}
+
+// ErrDownload implements "error", for the description see Error.
+type ErrDownload struct {
+	Err error
+}
+
+func (err ErrDownload) Error() string {
+	return fmt.Sprintf("unable to download: %v", err.Err)
+}
+
+func (err ErrDownload) Unwrap() error {
+	return err.Err
+}
+
+// ErrEmptyFilters signals that search filters are empty and effectively
+// the request requires to select all the data, which is forbidden.
+type ErrEmptyFilters struct{}
+
+func (err ErrEmptyFilters) Error() string {
+	return "empty filters"
 }

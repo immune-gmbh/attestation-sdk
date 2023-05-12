@@ -17,7 +17,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
@@ -43,9 +42,9 @@ type imageSaverAsync interface {
 
 // AnalyzerFirmwaresAccessor implements analyzerinput.FirmwaresAccessor for a Controller
 type AnalyzerFirmwaresAccessor struct {
-	storage                          storageInterface
+	storage                          FirmwareStorage
 	rtpFW                            rtpfwInterface
-	originalFirmwareStorage          originalFirmwareStorage
+	originalFirmwareStorage          originalFWImageRepository
 	imageSaverAsync                  imageSaverAsync
 	targetModelFamilyID              *uint64
 	firmwareExpectedEvaluationStatus sdf //rtp.EvaluationStatus
@@ -64,9 +63,9 @@ var _ analyzerinput.FirmwaresAccessor = (*AnalyzerFirmwaresAccessor)(nil)
 //
 // TODO: try to polish-up function signature (for example, consider merging rtpFW and firmwareEvaluationStatus)
 func NewAnalyzerFirmwaresAccessor(
-	storage storageInterface,
+	storage FirmwareStorage,
 	rtpFW rtpfwInterface,
-	originalFirmwareStorage originalFirmwareStorage,
+	originalFirmwareStorage originalFWImageRepository,
 	imageSaverAsync imageSaverAsync,
 	targetModelFamilyID *uint64,
 	firmwareExpectedEvaluationStatus sdf, //rtp.EvaluationStatus,
@@ -156,7 +155,7 @@ func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "trySetFWVersionAndDate")
 	defer span.Finish()
 	log := logger.FromCtx(ctx)
-	_meta, releaseFn, _ := a.storage.FindOne(ctx, storage.FindFilter{
+	_meta, releaseFn, _ := a.storage.FindOne(ctx, firmwarestorage.FindFilter{
 		ImageID: &meta.ImageID,
 	})
 	if releaseFn != nil {

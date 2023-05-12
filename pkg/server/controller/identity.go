@@ -6,7 +6,7 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/identity"
 )
 
 // ExtractHostnameFromCtx extracts hostname from provided thrift context
@@ -17,18 +17,10 @@ func ExtractHostnameFromCtx(ctx context.Context) (hostname string, isVerified bo
 	}
 
 	for _, clientIdentity := range clientIdentities {
-		if clientIdentity.GetIdType() == acl.MACHINE {
-			hostname = clientIdentity.GetIdData()
-			break
-		}
+		hostname = clientIdentity.TLSChain()[0].DNSNames[0]
 	}
 
-	cinfo, ok := thrift.ConnInfoFromContext(ctx)
-	if !ok {
-		return
-	}
-
-	isVerified = len(cinfo.TLS().VerifiedChains) > 0
+	// set isVerified to true if TLSChain is valid
 	return
 }
 
@@ -88,18 +80,4 @@ func enrichHostInfo(ctx context.Context, serfDevice sdf /* *device.Device */, is
 		}
 		logger.FromCtx(ctx).Warnf("AssetID is nil. Hostname: '%v'", hostname)
 	}
-}
-
-func getRTPEvaluationStatus(ctx context.Context, serfDevice sdf /* *device.Device */) sdf /*rtp.EvaluationStatus*/ {
-	evaluationStatus := rtpfw.EvaluationStatusMostProductionReady
-	log := logger.FromCtx(ctx)
-	if serfDevice != nil {
-		if v, err := typeconv.FromSERFToThriftEvaluationStatus(serfDevice.EvaluationStatus); err != nil {
-			log.Errorf("Failed to convert evaluation status: %v", err)
-		} else {
-			evaluationStatus = v
-		}
-	}
-	log.Infof("Evaluation status: '%s'", evaluationStatus)
-	return evaluationStatus
 }

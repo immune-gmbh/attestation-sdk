@@ -21,12 +21,9 @@ import (
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
@@ -39,40 +36,45 @@ func init() {
 	// so we can enable an appropriate optimization.
 	fianoUEFI.DisableDecompression = true
 
-	// Ignore "erase polarity conflict" error to be able to parse Zion-2S images.
+	// Ignore "erase polarity conflict" error.
 	fianoUEFI.SuppressErasePolarityError = true
 }
 
+type noCopy sync.Locker
+
 // Controller implement the high-level logic of the firmware-analysis service.
 type Controller struct {
-	Context                context.Context
-	ContextCancel          context.CancelFunc
-	Storage                storageInterface
-	FirmwareStorage        originalFirmwareStorage
-	analyzersRegistry      *analyzers.Registry
-	analysisDataCalculator analysisDataCalculatorInterface
+	noCopy noCopy
+
+	Context                   context.Context
+	ContextCancel             context.CancelFunc
+	ObjectStorage             ObjectStorage
+	FirmwareStorage           FirmwareStorage
+	OriginalFWImageRepository originalFWImageRepository
+	analyzersRegistry         *analyzers.Registry
+	analysisDataCalculator    analysisDataCalculatorInterface
 
 	DiffFirmwareCache     *lru.TwoQueueCache
 	DiffFirmwareCacheLock *lockmap.LockMap
 	UEFIParseLock         *lockmap.LockMap
 
+	closedSignal       chan struct{}
 	activeGoroutinesWG sync.WaitGroup
 }
 
+/*
 // New returns an instance of Controller.
 func New(
 	ctx context.Context,
+	objectStorage ObjectStorage,
 	apiCachePurgeTimeout time.Duration,
 	storageCacheSize uint64,
 	diffFirmwareCacheSize int,
 	dataCalcCacheSize int,
 	rdbmsURL string,
+	deviceGetter DeviceGetter,
 ) (*Controller, error) {
 	log := logger.FromCtx(ctx)
-	manifoldClient, err := getManifoldClient(manifoldBucket, manifoldAPIKey)
-	if err != nil {
-		return nil, ErrInitStorage{Err: fmt.Errorf("unable to initialize manifold client: %w", err)}
-	}
 
 	storCache, err := newStorageCache(storageCacheSize)
 	if err != nil {
@@ -89,11 +91,6 @@ func New(
 		return nil, ErrInitSeRFClient{Err: err}
 	}
 
-	tagStoreClient, err := tag.NewClient()
-	if err != nil {
-		return nil, ErrGetTagStore{Err: err}
-	}
-
 	rtpDB, err := rtpdb.GetDBRW()
 	if err != nil {
 		return nil, fmt.Errorf("unable to get a DB-client to RTP table: %w", err)
@@ -106,11 +103,6 @@ func New(
 	)
 	if err != nil {
 		return nil, ErrInitRTPFW{Err: err}
-	}
-
-	rfeClient, err := rfe.New()
-	if err != nil {
-		return nil, ErrInitRFE{Err: err}
 	}
 
 	dataCalculator, err := analysis.NewDataCalculator(dataCalcCacheSize)
@@ -130,32 +122,21 @@ func New(
 		diffFirmwareCacheSize,
 	)
 }
+*/
 
-func newInternal(
+func New(
 	ctx context.Context,
-	storage storageInterface,
-	firmwareStorage originalFirmwareStorage,
+	firmwareStorage FirmwareStorage,
+	origFirmwareRepo originalFWImageRepository,
 	analysisDataCalculator analysisDataCalculatorInterface,
 	apiCachePurgeTimeout time.Duration,
 	diffFirmwareCacheSize int,
 ) (*Controller, error) {
-	if apiCachePurgeTimeout > rtpfwCacheEvictionTimeout {
-		return nil, fmt.Errorf("API cache purge timeout '%v' is larger than rtp firmware cache timeout'%v'",
-			apiCachePurgeTimeout,
-			rtpfwCacheEvictionTimeout,
-		)
-	}
-
 	ctx = beltctx.WithField(ctx, "module", "controller")
 
 	diffFirmwareCache, err := lru.New2Q(diffFirmwareCacheSize)
 	if err != nil {
 		return nil, ErrInitCache{For: "DiffFirmware", Err: err}
-	}
-
-	reportHostConfigCache, err := lru.New2Q(reportHostConfigCacheSize)
-	if err != nil {
-		return nil, ErrInitCache{For: "ReportHostConfigCache", Err: err}
 	}
 
 	analyzersRegistry, err := analyzers.NewRegistryWithKnownAnalyzers()
@@ -164,14 +145,15 @@ func newInternal(
 	}
 
 	ctrl := &Controller{
-		Storage:                storage,
-		FirmwareStorage:        firmwareStorage,
-		analyzersRegistry:      analyzersRegistry,
-		analysisDataCalculator: analysisDataCalculator,
+		FirmwareStorage:           firmwareStorage,
+		OriginalFWImageRepository: origFirmwareRepo,
+		analyzersRegistry:         analyzersRegistry,
+		analysisDataCalculator:    analysisDataCalculator,
 
 		DiffFirmwareCache:     diffFirmwareCache,
 		DiffFirmwareCacheLock: lockmap.NewLockMap(),
 		UEFIParseLock:         lockmap.NewLockMap(),
+		closedSignal:          make(chan struct{}),
 	}
 	ctrl.Context, ctrl.ContextCancel = context.WithCancel(ctx)
 
@@ -289,7 +271,7 @@ func getRTPFirmware(
 func (ctrl *Controller) getHostInfo(
 	ctx context.Context,
 	requestHostInfo *afas.HostInfo,
-) (*afas.HostInfo, sdf /* *device.Device */) {
+) (*afas.HostInfo, *device.Device) {
 	if requestHostInfo == nil {
 		return nil, nil
 	}
@@ -297,12 +279,12 @@ func (ctrl *Controller) getHostInfo(
 	log := logger.FromCtx(ctx)
 
 	resultHostInfo := *requestHostInfo
-	serfDevice := func() sdf /* *device.Device */ {
+	serfDevice := func() *device.Device {
 		if resultHostInfo.IsClientHostAnalyzed {
 			hostname, _ := ExtractHostnameFromCtx(ctx)
 			if len(hostname) > 0 {
 				log.Debugf("detected TLS identity hostname: %s", hostname)
-				device, err := ctrl.SeRF.GetDeviceByName(hostname)
+				device, err := ctrl.DeviceGetter.GetDeviceByHostname(hostname)
 				if err == nil {
 					return device
 				}
@@ -310,7 +292,7 @@ func (ctrl *Controller) getHostInfo(
 			}
 		}
 		if resultHostInfo.AssetID != nil {
-			device, err := ctrl.SeRF.GetDeviceById(*resultHostInfo.AssetID)
+			device, err := ctrl.DeviceGetter.GetDeviceByAssetID(*resultHostInfo.AssetID)
 			if err == nil {
 				return device
 			}
@@ -318,7 +300,7 @@ func (ctrl *Controller) getHostInfo(
 		}
 
 		if resultHostInfo.Hostname != nil {
-			device, err := ctrl.SeRF.GetDeviceByName(*resultHostInfo.Hostname)
+			device, err := ctrl.DeviceGetter.GetDeviceByHostname(*resultHostInfo.Hostname)
 			if err == nil {
 				return device
 			}
@@ -346,7 +328,7 @@ func (ctrl *Controller) Close() error {
 
 	err := css_errors.MultiError{}
 	err.Add(
-		ctrl.Storage.Close(),
+		ctrl.FirmwareStorage.Close(),
 	)
 	return err.ReturnValue()
 }

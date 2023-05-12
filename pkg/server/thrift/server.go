@@ -10,19 +10,7 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/xaionaro-go/cpuload"
 
-	"assistant/knowledge/fbutil/thwork"
-	"libfb/go/stats/sysstat"
-
-	fb303if "common/fb303/if/fb303"
-	aclif "facebook/infrasec/authorization/acl"
-	"libfb/go/aclchecker"
 	"libfb/go/experimental/go-belt/thriftadapter/serverinterceptors"
-	xmetrics "libfb/go/experimental/go-belt/tool/metrics"
-	"libfb/go/go303"
-	"libfb/go/stats/export"
-	"libfb/go/stats/thriftstat"
-	"libfb/go/thriftbase"
-	"thrift/lib/go/thrift"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
@@ -96,7 +84,6 @@ func NewServer(
 	ctx context.Context,
 	numWorkers, hardConcurrentRequestsLimit uint,
 	maxCPULoad float64,
-	smcTier, hipsterACL string,
 	ctrl *controller.Controller,
 ) (*Server, error) {
 

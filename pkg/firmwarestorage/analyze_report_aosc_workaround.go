@@ -1,4 +1,4 @@
-package storage
+package firmwarestorage
 
 import (
 	"database/sql"
@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 )
 
 // AOSC does not support neither VIRTUAL columns nor `DEFAULT (..stuff-here..)` column properties,
@@ -20,7 +20,7 @@ import (
 // This all function is an abstraction leak. But until AOSC is fixed I see no other simple way.
 // Package `storage` should not depend on `controllertypes` and should not know anything about
 // internals of analysis.Input.
-func (stor *Storage) aoscWorkaroundBuildAnalyzerReportIndexes(tx *sql.Tx, report *models.AnalyzerReport) error {
+func (fwStor *FirmwareStorage) aoscWorkaroundBuildAnalyzerReportIndexes(tx *sql.Tx, report *models.AnalyzerReport) error {
 	if report.ID == 0 {
 		return fmt.Errorf("report.ID == 0")
 	}

@@ -1,4 +1,4 @@
-package storage
+package firmwarestorage
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -41,7 +41,7 @@ func asMySQLError(err error, errNo uint16) *mysql.MySQLError {
 }
 
 // UpsertReproducedPCRs inserts ReproducedPCRs or updates reproduced pcr values if item already exists structure
-func (stor *Storage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs models.ReproducedPCRs) error {
+func (fwStor *FirmwareStorage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs models.ReproducedPCRs) error {
 	values, columns, err := helpers.GetValuesAndColumns(&reproducedPCRs, func(fieldName string, value interface{}) bool {
 		return fieldName == "ID"
 	})
@@ -52,13 +52,13 @@ func (stor *Storage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs mo
 	columnsStr := "`" + strings.Join(columns, "`,`") + "`"
 	placeholders := constructPlaceholders(len(columns))
 
-	_, err = stor.DB.Exec("INSERT INTO `reproduced_pcrs` ("+columnsStr+") VALUES ("+placeholders+")", values...)
+	_, err = fwStor.DB.Exec("INSERT INTO `reproduced_pcrs` ("+columnsStr+") VALUES ("+placeholders+")", values...)
 	if err == nil {
 		return nil
 	}
 	if asMySQLError(err, 1062) != nil {
 		// already inserted -> update pcr0 value
-		res, err := stor.DB.Exec(
+		res, err := fwStor.DB.Exec(
 			"UPDATE `reproduced_pcrs` SET `pcr0_sha1` = ?, `pcr0_sha256` = ? WHERE `hash_stable` = ? AND `registers_sha512` = ? AND `tpm_device` = ?",
 			reproducedPCRs.PCR0SHA1,
 			reproducedPCRs.PCR0SHA256,
@@ -86,7 +86,7 @@ func (stor *Storage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs mo
 }
 
 // Insert adds an image to the storage (saves the images itself and it's metadata).
-func (stor *Storage) Insert(ctx context.Context, imageMeta models.ImageMetadata, imageData []byte) (err error) {
+func (fwStor *FirmwareStorage) Insert(ctx context.Context, imageMeta models.ImageMetadata, imageData []byte) (err error) {
 	// Here we insert metadata to MySQL and data to ManifoldClient.
 	//
 	// However it's a problem to process errors correctly if there will
@@ -97,7 +97,7 @@ func (stor *Storage) Insert(ctx context.Context, imageMeta models.ImageMetadata,
 	// with specific ID. The easiest way to do that is through MySQL. Thereby
 	// we do the MySQL INSERT first.
 
-	tx, err := stor.DB.Begin()
+	tx, err := fwStor.startTransaction(ctx)
 	if err != nil {
 		return ErrUnableToInsert{insertedValue: imageMeta.ImageID.String(), Err: fmt.Errorf("unable to start a transaction: %w", err)}
 	}
@@ -164,27 +164,26 @@ func (stor *Storage) Insert(ctx context.Context, imageMeta models.ImageMetadata,
 		// "ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction: Timeout on record in index"
 		// so we just retry the transaction (as the error message says).
 
-		if tryCount >= stor.insertTriesLimit {
-			stor.Logger.Errorf("reached the limit of tries to insert the metadata (%#+v), error: %v", imageMeta, err)
+		if tryCount >= fwStor.insertTriesLimit {
+			fwStor.Logger.Errorf("reached the limit of tries to insert the metadata (%#+v), error: %v", imageMeta, err)
 			return ErrUnableToInsert{insertedValue: imageMeta.ImageID.String(), Err: err}
 		}
-		stor.Logger.Warnf("insert timeout (%v), retrying the transaction...", err)
+		fwStor.Logger.Warnf("insert timeout (%v), retrying the transaction...", err)
 		err = tx.Rollback()
 		if err != nil {
 			// To do not leave a transaction which could hang other workers we panic,
 			// it with disconnect from MySQL and force-release the transaction.
 			panic(fmt.Errorf("unable to rollback the transaction (to re-start it) and do not how to remediate: %w", err))
 		}
-		tx, err = stor.DB.Begin()
+		tx, err = fwStor.startTransaction(ctx)
 		if err != nil {
 			return ErrUnableToInsert{insertedValue: imageMeta.ImageID.String(), Err: fmt.Errorf("unable to re-start a transaction: %w", err)}
 		}
 	}
 
 	// Uploading the image to ManifoldClient.
-	err = stor.retryLoop(func() (err error) {
-		_, err = stor.Manifold.Replace(imageMeta.ManifoldPath(), imageData)
-		return
+	err = fwStor.retryLoop(func() error {
+		return fwStor.BlobStorage.Replace(ctx, imageMeta.ManifoldPath(), imageData)
 	})
 	if err != nil {
 		return ErrUnableToUpload{Path: imageMeta.ManifoldPath(), Err: err}

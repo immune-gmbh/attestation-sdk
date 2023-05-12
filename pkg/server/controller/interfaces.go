@@ -6,13 +6,14 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
-type storageInterface interface {
+type FirmwareStorage interface {
 	io.Closer
 
 	// Image
@@ -26,23 +27,6 @@ type storageInterface interface {
 	// AnalyzeReport
 	InsertAnalyzeReport(ctx context.Context, report *models.AnalyzeReport) error
 	FindAnalyzeReports(ctx context.Context, filterInput storage.AnalyzeReportFindFilter, tx *sqlx.Tx, limit uint) ([]*models.AnalyzeReport, error)
-}
-
-type scubaInterface interface {
-	io.Closer
-
-	Log(v interface{}) error
-}
-
-type serfInterface interface {
-	io.Closer
-
-	GetDeviceByName(hostname string) (*device.Device, error)
-	GetDeviceById(assetID int64) (*device.Device, error)
-}
-
-type rfeInterface interface {
-	SQL(table string, query string, opts ...rfe.QueryOpt) (*RockfortExpress.SQLQueryResult_, error)
 }
 
 type rtpDBReader struct {
@@ -80,21 +64,15 @@ type rtpfwInterface interface {
 		evaluationStatus rtp.EvaluationStatus,
 		cachingPolicy types.CachingPolicy,
 	) (rtpfw.Firmware, error)
-	UpsertPCRs(
-		ctx context.Context,
-		controlPCR []byte,
-		firmwareVersion, firmwareDateString string,
-		modelFamilyID *uint64,
-		evaluationStatus rtp.EvaluationStatus,
-		pcrs rtpfw.PCRValues,
-		updateTags bool,
-		forcedTags ...types.MeasurementTag,
-	) error
+}
+
+type DeviceGetter interface {
+	GetDeviceByHostname(hostname string) (*device.Device, error)
+	GetDeviceByAssetID(assetID int64) (*device.Device, error)
 }
 
 type analysisDataCalculatorInterface = analysis.DataCalculatorInterface
 
-type originalFirmwareStorage interface {
-	DownloadByFilename(ctx context.Context, filename string) ([]byte, string, error)
-	DownloadByEverstoreHandle(ctx context.Context, handle string) ([]byte, string, error)
+type originalFWImageRepository interface {
+	DownloadByVersion(ctx context.Context, version string) ([]byte, string, error)
 }

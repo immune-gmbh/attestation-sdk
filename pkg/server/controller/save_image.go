@@ -88,7 +88,7 @@ func (job *saveImageJob) Execute(ctx context.Context) (*types.ImageID, error) {
 	job.FirmwareMeta.CalcMissingInfo(ctx, job.FirmwareContent)
 	job.FirmwareMeta.TSAdd = time.Now()
 
-	if err := job.Storage.Insert(ctx, job.FirmwareMeta, job.FirmwareContent); err != nil {
+	if err := job.FirmwareStorage.Insert(ctx, job.FirmwareMeta, job.FirmwareContent); err != nil {
 		return nil, fmt.Errorf("unable to save image '%s': %w", job.FirmwareMeta.ImageID, err)
 	}
 

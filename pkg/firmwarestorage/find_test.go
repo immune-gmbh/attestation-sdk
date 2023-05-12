@@ -1,10 +1,10 @@
-package storage
+package firmwarestorage
 
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCompileWhereConds(t *testing.T) {

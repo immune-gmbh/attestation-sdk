@@ -1,4 +1,4 @@
-package firmwarestorage
+package firmwarerepo
 
 import (
 	"archive/tar"
