@@ -1,14 +1,17 @@
-package objectstorage
+package objstorage
 
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/url"
 )
 
 type ObjectStorage interface {
+	io.Closer
+
 	Get(ctx context.Context, key string) ([]byte, error)
-	Store(ctx, key string, blob []byte) error
+	Replace(ctx context.Context, key string, blob []byte) error
 }
 
 func New(urlString string) (ObjectStorage, error) {

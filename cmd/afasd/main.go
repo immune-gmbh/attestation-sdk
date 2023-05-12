@@ -8,9 +8,15 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarerepo"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objcache"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objstorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
+	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/thrift"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
@@ -46,6 +52,7 @@ func main() {
 	netPprofAddr := pflag.String("net-pprof-addr", "", "if non-empty then listens with net/http/pprof")
 	thriftBindAddr := pflag.String("thrift-bind-addr", `:17545`, "the address to listen by thrift")
 	rdbmsURL := pflag.String("rdbms-url", `mysql://root@localhost`, "")
+	firmwareImageReportBaseURL := pflag.String("firmware-image-repo-baseurl", "http://localhost/", "")
 	objectStorageURL := pflag.String("object-storage-url", "fs:///srv/afasd", "")
 	amountOfWorkers := pflag.Uint("workers", uint(runtime.NumCPU()), "amount of concurrent workers")
 	workersQueue := pflag.Uint("workers-queue", uint(runtime.NumCPU())*10000, "maximal amount of requests permitted in the queue")
@@ -80,14 +87,35 @@ func main() {
 
 	fianoLog.DefaultLogger = newFianoLogger(log.WithField("module", "fiano"))
 
+	firmwareBlobStorage, err := objstorage.New(*objectStorageURL)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	firmwareBlobCache, err := objcache.New(*storageCacheSize)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	firmwareStorage, err := firmwarestorage.New(*rdbmsURL, firmwareBlobStorage, firmwareBlobCache, log)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	origFirmwareRepo := firmwarerepo.New(*firmwareImageReportBaseURL, "FirmwareAnalyzer")
+
+	dataCalculator, err := analysis.NewDataCalculator(*dataCacheSize)
+	if err != nil {
+		log.Panic(err)
+	}
+	controllertypes.OverrideValueCalculators(dataCalculator)
+
 	ctrl, err := controller.New(ctx,
-		*objectStorageURL,
-		*apiCachePurgeTimeout,
-		*storageCacheSize,
-		*diffFirmwareCacheSize,
-		*dataCacheSize,
-		*rdbmsURL,
+		firmwareStorage,
+		origFirmwareRepo,
+		dataCalculator,
 		devicegetter.DummyDeviceGetter{},
+		*apiCachePurgeTimeout,
 	)
 	assertNoError(ctx, err)
 	log.Debugf("created a controller")

@@ -48,15 +48,12 @@ type Controller struct {
 
 	Context                   context.Context
 	ContextCancel             context.CancelFunc
-	ObjectStorage             ObjectStorage
 	FirmwareStorage           FirmwareStorage
 	OriginalFWImageRepository originalFWImageRepository
 	analyzersRegistry         *analyzers.Registry
 	analysisDataCalculator    analysisDataCalculatorInterface
 
-	DiffFirmwareCache     *lru.TwoQueueCache
-	DiffFirmwareCacheLock *lockmap.LockMap
-	UEFIParseLock         *lockmap.LockMap
+	UEFIParseLock *lockmap.LockMap
 
 	closedSignal       chan struct{}
 	activeGoroutinesWG sync.WaitGroup
@@ -129,15 +126,10 @@ func New(
 	firmwareStorage FirmwareStorage,
 	origFirmwareRepo originalFWImageRepository,
 	analysisDataCalculator analysisDataCalculatorInterface,
+	deviceGetter DeviceGetter,
 	apiCachePurgeTimeout time.Duration,
-	diffFirmwareCacheSize int,
 ) (*Controller, error) {
 	ctx = beltctx.WithField(ctx, "module", "controller")
-
-	diffFirmwareCache, err := lru.New2Q(diffFirmwareCacheSize)
-	if err != nil {
-		return nil, ErrInitCache{For: "DiffFirmware", Err: err}
-	}
 
 	analyzersRegistry, err := analyzers.NewRegistryWithKnownAnalyzers()
 	if err != nil {
@@ -150,10 +142,8 @@ func New(
 		analyzersRegistry:         analyzersRegistry,
 		analysisDataCalculator:    analysisDataCalculator,
 
-		DiffFirmwareCache:     diffFirmwareCache,
-		DiffFirmwareCacheLock: lockmap.NewLockMap(),
-		UEFIParseLock:         lockmap.NewLockMap(),
-		closedSignal:          make(chan struct{}),
+		UEFIParseLock: lockmap.NewLockMap(),
+		closedSignal:  make(chan struct{}),
 	}
 	ctrl.Context, ctrl.ContextCancel = context.WithCancel(ctx)
 
@@ -163,10 +153,10 @@ func New(
 	return ctrl, nil
 }
 
-func (ctrl *Controller) updateCacheLoop(ctx context.Context, apiCachePurgeTimeout time.Duration, rtpCacheUpdateTimeout time.Duration) {
-	rtpUpdateTicker := time.NewTicker(rtpCacheUpdateTimeout)
-	defer rtpUpdateTicker.Stop()
-
+func (ctrl *Controller) updateCacheLoop(
+	ctx context.Context,
+	apiCachePurgeTimeout time.Duration,
+) {
 	apiCachePurgeTicker := time.NewTicker(apiCachePurgeTimeout)
 	defer apiCachePurgeTicker.Stop()
 
@@ -176,8 +166,6 @@ func (ctrl *Controller) updateCacheLoop(ctx context.Context, apiCachePurgeTimeou
 			return
 		case <-apiCachePurgeTicker.C:
 			ctrl.purgeAPICache()
-		case <-rtpUpdateTicker.C:
-			ctrl.updateRTPFWCache()
 		}
 	}
 }
