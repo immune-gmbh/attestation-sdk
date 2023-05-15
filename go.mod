@@ -5,12 +5,10 @@ go 1.20
 require (
 	github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230512141505-f6a71d3e2098
 	github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b
-	github.com/bxcodec/faker/v3 v3.8.1
+	github.com/apache/thrift v0.18.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e
-	github.com/dlclark/regexp2 v1.9.0
-	github.com/elliotchance/phpserialize v1.3.3
 	github.com/facebookincubator/go-belt v0.0.0-20230119144706-62080641a285
 	github.com/fatih/color v1.7.0
 	github.com/go-sql-driver/mysql v1.6.0
@@ -30,15 +28,12 @@ require (
 	github.com/tidwall/gjson v1.14.4
 	github.com/ulikunitz/xz v0.5.11
 	github.com/xaionaro-facebook/go-dmidecode v0.0.0-20220413144237-c42d5bef2498
-	github.com/xaionaro-go/cpuload v0.0.0-20210916104328-5057152097da
 	github.com/xaionaro-go/unsafetools v0.0.0-20210722164218-75ba48cf7b3c
 	lukechampine.com/blake3 v1.1.7
 )
 
 require (
 	github.com/DataDog/gostackparse v0.6.0 // indirect
-	github.com/apache/thrift v0.18.1 // indirect
-	github.com/c9s/goprocinfo v0.0.0-20210130143923-c95fcf8c64a8 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
@@ -63,7 +58,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
