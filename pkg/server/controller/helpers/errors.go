@@ -29,7 +29,7 @@ type ErrUnableToFindBIOSRegion struct {
 }
 
 func (err ErrUnableToFindBIOSRegion) Error() string {
-	return fmt.Sprintf("unable to find BIOS region: %v", err)
+	return fmt.Sprintf("unable to find BIOS region: %v", err.Err)
 }
 
 func (err ErrUnableToFindBIOSRegion) Unwrap() error {

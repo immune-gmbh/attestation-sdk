@@ -15,11 +15,11 @@ func TestFilterWhereCond(t *testing.T) {
 	}
 
 	t.Run("FilterVersion", func(t *testing.T) {
-		assertQuery(FilterVersion("some-version"), "`fw_version` = ?", "some-version")
+		assertQuery(FilterVersion("some-version"), "`version` = ?", "some-version")
 	})
 
 	t.Run("FilterTypes", func(t *testing.T) {
-		assertQuery(FilterTypes{models.FirmwareTypeBIOS}, `firmware_type IN ("BIOS")`)
+		assertQuery(FilterTypes{models.FirmwareTypeBIOS}, `type IN ("BIOS")`)
 	})
 
 	t.Run("FilterNot", func(t *testing.T) {

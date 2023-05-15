@@ -28,7 +28,7 @@ type FilterVersion string
 
 // WhereCond implements Filter.
 func (f FilterVersion) WhereCond() (string, []interface{}) {
-	return "`fw_version` = ?", []interface{}{string(f)}
+	return "`version` = ?", []interface{}{string(f)}
 }
 
 // Match implements Filter.
@@ -49,7 +49,7 @@ func (f FilterTypes) WhereCond() (string, []interface{}) {
 	}
 	s := make([]string, 0, len(f))
 	for _, t := range f {
-		s = append(s, t.String())
+		s = append(s, fmt.Sprintf("%q", t.String()))
 	}
 	return fmt.Sprintf("type IN (%s)", strings.Join(s, ",")), nil
 }
