@@ -11,6 +11,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/firmwaredbsql"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarerepo"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objcache"
@@ -51,7 +52,8 @@ func main() {
 	pflag.Var(&logLevel, "log-level", "logging level")
 	netPprofAddr := pflag.String("net-pprof-addr", "", "if non-empty then listens with net/http/pprof")
 	thriftBindAddr := pflag.String("thrift-bind-addr", `:17545`, "the address to listen by thrift")
-	rdbmsURL := pflag.String("rdbms-url", `mysql://root@localhost`, "")
+	rdbmsURLOrigFW := pflag.String("rdbms-url-fw-orig", `mysql://root@localhost`, "")
+	rdbmsURLInternal := pflag.String("rdbms-url-internal", `mysql://root@localhost`, "")
 	firmwareImageReportBaseURL := pflag.String("firmware-image-repo-baseurl", "http://localhost/", "")
 	objectStorageURL := pflag.String("object-storage-url", "fs:///srv/afasd", "")
 	amountOfWorkers := pflag.Uint("workers", uint(runtime.NumCPU()), "amount of concurrent workers")
@@ -63,7 +65,7 @@ func main() {
 		"defines API cache purge timeout",
 	)
 	storageCacheSize := pflag.Uint64("image-storage-cache-size", storageCacheSizeDefault, "defines the memory limit for the storage used to save images, analyzed by AFAS")
-	dataCacheSize := pflag.Int("data-cache-size", dataCacheSizeDefault, "defines the size of the cache for internally caclulated data objects like parsed firmware, measurements flow")
+	dataCacheSize := pflag.Int("data-cache-size", dataCacheSizeDefault, "defines the size of the cache for internally calculated data objects like parsed firmware, measurements flow")
 	pflag.Parse()
 	if pflag.NArg() != 0 {
 		usageExit()
@@ -96,7 +98,12 @@ func main() {
 		log.Panic(err)
 	}
 
-	firmwareStorage, err := firmwarestorage.New(*rdbmsURL, firmwareBlobStorage, firmwareBlobCache, log)
+	firmwareStorage, err := firmwarestorage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	origFirmwareDB, err := firmwaredbsql.New(*rdbmsURLOrigFW)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -111,6 +118,7 @@ func main() {
 
 	ctrl, err := controller.New(ctx,
 		firmwareStorage,
+		origFirmwareDB,
 		origFirmwareRepo,
 		dataCalculator,
 		devicegetter.DummyDeviceGetter{},
