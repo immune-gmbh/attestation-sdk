@@ -5,56 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"libfb/go/ephemdb"
-	"libfb/go/fbmysql"
-	"privatecore/firmware/analyzer/if/rtp"
-	"privatecore/firmware/analyzer/pkg/rtpdb/models"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-func TestDateStringConvertion(t *testing.T) {
-	tests := []struct {
-		FWDate       string
-		FirmwareDate uint64
-		Expected     string
-	}{
-		{
-			FWDate:       "08/16/2017",
-			FirmwareDate: 1502866800,
-			Expected:     "08/16/2017",
-		},
-		{
-			FWDate:       "",
-			FirmwareDate: 1502866800,
-			Expected:     "08/16/2017",
-		},
-		{
-			FWDate:       "",
-			FirmwareDate: 1550736000,
-			Expected:     "02/21/2019",
-		},
-		{
-			FWDate:       "",
-			FirmwareDate: 1556866800,
-			Expected:     "05/03/2019",
-		},
-		{
-			FWDate:       "",
-			FirmwareDate: 1504681200,
-			Expected:     "09/06/2017",
-		},
-	}
-
-	for _, test := range tests {
-		f := Firmware{
-			FWDate:       test.FWDate,
-			FirmwareDate: test.FirmwareDate,
-		}
-		require.Equal(t, test.Expected, f.GetDate().String())
-	}
-}
 
 func TestFirmwareReadTableAccess(t *testing.T) {
 	testDB, close := createEphemeralShardConnection(t)

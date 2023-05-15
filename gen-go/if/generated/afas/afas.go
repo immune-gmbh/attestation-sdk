@@ -1666,12 +1666,11 @@ func (p *ServerInfo) String() string {
 }
 
 // Attributes:
-//  - BIOSVersion
+//  - Version
 //  - Reason
 type UnableToGetOriginalFirmware struct {
-  BIOSVersion string `thrift:"BIOSVersion,1" db:"BIOSVersion" json:"BIOSVersion"`
-  // unused field # 2
-  Reason string `thrift:"Reason,3" db:"Reason" json:"Reason"`
+  Version string `thrift:"Version,1" db:"Version" json:"Version"`
+  Reason string `thrift:"Reason,2" db:"Reason" json:"Reason"`
 }
 
 func NewUnableToGetOriginalFirmware() *UnableToGetOriginalFirmware {
@@ -1679,8 +1678,8 @@ func NewUnableToGetOriginalFirmware() *UnableToGetOriginalFirmware {
 }
 
 
-func (p *UnableToGetOriginalFirmware) GetBIOSVersion() string {
-  return p.BIOSVersion
+func (p *UnableToGetOriginalFirmware) GetVersion() string {
+  return p.Version
 }
 
 func (p *UnableToGetOriginalFirmware) GetReason() string {
@@ -1709,9 +1708,9 @@ func (p *UnableToGetOriginalFirmware) Read(ctx context.Context, iprot thrift.TPr
           return err
         }
       }
-    case 3:
+    case 2:
       if fieldTypeId == thrift.STRING {
-        if err := p.ReadField3(ctx, iprot); err != nil {
+        if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -1738,14 +1737,14 @@ func (p *UnableToGetOriginalFirmware)  ReadField1(ctx context.Context, iprot thr
   if v, err := iprot.ReadString(ctx); err != nil {
   return thrift.PrependError("error reading field 1: ", err)
 } else {
-  p.BIOSVersion = v
+  p.Version = v
 }
   return nil
 }
 
-func (p *UnableToGetOriginalFirmware)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *UnableToGetOriginalFirmware)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadString(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
+  return thrift.PrependError("error reading field 2: ", err)
 } else {
   p.Reason = v
 }
@@ -1757,7 +1756,7 @@ func (p *UnableToGetOriginalFirmware) Write(ctx context.Context, oprot thrift.TP
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(ctx, oprot); err != nil { return err }
-    if err := p.writeField3(ctx, oprot); err != nil { return err }
+    if err := p.writeField2(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -1767,22 +1766,22 @@ func (p *UnableToGetOriginalFirmware) Write(ctx context.Context, oprot thrift.TP
 }
 
 func (p *UnableToGetOriginalFirmware) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "BIOSVersion", thrift.STRING, 1); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:BIOSVersion: ", p), err) }
-  if err := oprot.WriteString(ctx, string(p.BIOSVersion)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.BIOSVersion (1) field write error: ", p), err) }
+  if err := oprot.WriteFieldBegin(ctx, "Version", thrift.STRING, 1); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:Version: ", p), err) }
+  if err := oprot.WriteString(ctx, string(p.Version)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.Version (1) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:BIOSVersion: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:Version: ", p), err) }
   return err
 }
 
-func (p *UnableToGetOriginalFirmware) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Reason", thrift.STRING, 3); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:Reason: ", p), err) }
+func (p *UnableToGetOriginalFirmware) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin(ctx, "Reason", thrift.STRING, 2); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Reason: ", p), err) }
   if err := oprot.WriteString(ctx, string(p.Reason)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.Reason (3) field write error: ", p), err) }
+  return thrift.PrependError(fmt.Sprintf("%T.Reason (2) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:Reason: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Reason: ", p), err) }
   return err
 }
 
@@ -1792,7 +1791,7 @@ func (p *UnableToGetOriginalFirmware) Equals(other *UnableToGetOriginalFirmware)
   } else if p == nil || other == nil {
     return false
   }
-  if p.BIOSVersion != other.BIOSVersion { return false }
+  if p.Version != other.Version { return false }
   if p.Reason != other.Reason { return false }
   return true
 }

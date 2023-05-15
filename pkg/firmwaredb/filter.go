@@ -5,9 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"privatecore/firmware/analyzer/if/rtp"
-	"privatecore/firmware/analyzer/pkg/rtpdb/models"
-	"privatecore/firmware/analyzer/pkg/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
 )
 
 // Filter defines conditions to select firmware entries
@@ -38,7 +36,7 @@ func (f FilterVersion) Match(fw *Firmware) bool {
 	if fw == nil {
 		return false
 	}
-	return fw.FWVersion == string(f)
+	return fw.Version == string(f)
 }
 
 // FilterTypes defines a firmware types condition to select firmwares.
@@ -50,10 +48,10 @@ func (f FilterTypes) WhereCond() (string, []interface{}) {
 		return "1 == 0", nil
 	}
 	s := make([]string, 0, len(f))
-	for _, _type := range f {
-		s = append(s, strconv.FormatInt(int64(_type), 10))
+	for _, t := range f {
+		s = append(s, t.String())
 	}
-	return fmt.Sprintf("firmware_type IN (%s)", strings.Join(s, ",")), nil
+	return fmt.Sprintf("type IN (%s)", strings.Join(s, ",")), nil
 }
 
 // Match implements Filter.
@@ -62,51 +60,7 @@ func (f FilterTypes) Match(fw *Firmware) bool {
 		return false
 	}
 	for _, t := range f {
-		if fw.FirmwareType == t {
-			return true
-		}
-	}
-	return false
-}
-
-// FilterEvaluationStatus defines an evaluation status condition to select firmwares.
-type FilterEvaluationStatus EvaluationStatus
-
-// WhereCond implements Filter.
-func (f FilterEvaluationStatus) WhereCond() (string, []interface{}) {
-	return "evaluation_status = ?", []interface{}{int64(f)}
-}
-
-// Match implements Filter.
-func (f FilterEvaluationStatus) Match(fw *Firmware) bool {
-	if fw == nil {
-		return false
-	}
-	return fw.EvaluationStatus == EvaluationStatus(f)
-}
-
-// FilterQualificationStatuses defines a qualification statuses condition to select firmwares.
-type FilterQualificationStatuses []QualificationStatus
-
-// WhereCond implements Filter.
-func (f FilterQualificationStatuses) WhereCond() (string, []interface{}) {
-	if len(f) == 0 {
-		return "1 == 0", nil
-	}
-	s := make([]string, 0, len(f))
-	for _, status := range f {
-		s = append(s, strconv.FormatInt(int64(status), 10))
-	}
-	return fmt.Sprintf("qualification_status IN (%s)", strings.Join(s, ",")), nil
-}
-
-// Match implements Filter.
-func (f FilterQualificationStatuses) Match(fw *Firmware) bool {
-	if fw == nil {
-		return false
-	}
-	for _, status := range f {
-		if rtp.QualificationStatus(fw.QualificationStatus) == status {
+		if fw.Type == t {
 			return true
 		}
 	}
@@ -158,56 +112,36 @@ func (f FiltersOR) Match(fw *Firmware) bool {
 	return false
 }
 
-// FilterPCR0Tag filters only the entries which contains a PCR0 value with a specified tag.
-type FilterPCR0Tag types.TagID
+// FilterPCR0Tag filters only the entries which are associated with a measurement with a specified metadata value.
+type FilterMeasurementMetadata struct {
+	Key   string
+	Value string
+}
 
 // WhereCond implements Filter.
-func (f FilterPCR0Tag) WhereCond() (string, []interface{}) {
-	return "fw_hash LIKE ?", []interface{}{fmt.Sprintf("%%i:%d;%%", f)}
+func (f FilterMeasurementMetadata) WhereCond() (string, []any) {
+	return "firmware_measurement_type_metadata.key = ? AND firmware_measurement_type_metadata.value = ?", []any{f.Key, f.Value}
 }
 
 // Match implements Filter.
-func (f FilterPCR0Tag) Match(fw *Firmware) bool {
+func (f FilterMeasurementMetadata) Match(fw *Firmware) bool {
 	if fw == nil {
 		return false
 	}
-	hashes, _ := models.UnmarshalFirmwareHash(fw.FWHash)
-	for _, hash := range hashes {
-		for _, tag := range hash.Tags {
-			if tag == types.TagID(f) {
-				return true
+
+	for _, m := range fw.Measurements {
+		for _, metadata := range m.FirmwareMeasurementType.Metadata {
+			if metadata.Key == f.Key {
+				return metadata.Value == f.Value
 			}
 		}
 	}
-	return false
-}
 
-// FilterFilenames filters only the entries with the specified tar filenames.
-type FilterFilenames []string
-
-// WhereCond implements Filter.
-func (f FilterFilenames) WhereCond() (string, []interface{}) {
-	if len(f) == 0 {
-		return "1 == 0", nil
-	}
-	return "filename IN (?)", []interface{}{strings.Join(f, ",")}
-}
-
-// Match implements Filter.
-func (f FilterFilenames) Match(fw *Firmware) bool {
-	if fw == nil {
-		return false
-	}
-	for _, filename := range f {
-		if fw.Filename == filename {
-			return true
-		}
-	}
 	return false
 }
 
 // FilterIDs filters only the entries with the specified IDs.
-type FilterIDs []uint64
+type FilterIDs []int64
 
 // WhereCond implements Filter.
 func (f FilterIDs) WhereCond() (string, []interface{}) {
@@ -216,7 +150,7 @@ func (f FilterIDs) WhereCond() (string, []interface{}) {
 	}
 	s := make([]string, 0, len(f))
 	for _, id := range f {
-		s = append(s, strconv.FormatUint(id, 10))
+		s = append(s, strconv.FormatInt(id, 10))
 	}
 	return fmt.Sprintf("id IN (%s)", strings.Join(s, ",")), nil
 }
@@ -235,10 +169,10 @@ func (f FilterIDs) Match(fw *Firmware) bool {
 }
 
 // FilterModelFamilyIDs filters only the entries with the specified model family IDs.
-type FilterModelFamilyIDs []uint64
+type FilterModelIDs []uint64
 
 // WhereCond implements Filter.
-func (f FilterModelFamilyIDs) WhereCond() (string, []interface{}) {
+func (f FilterModelIDs) WhereCond() (string, []interface{}) {
 	if len(f) == 0 {
 		return "1 == 0", nil
 	}
@@ -246,19 +180,27 @@ func (f FilterModelFamilyIDs) WhereCond() (string, []interface{}) {
 	for _, id := range f {
 		s = append(s, strconv.FormatUint(id, 10))
 	}
-	return fmt.Sprintf("model_family_id IN (%s)", strings.Join(s, ",")), nil
+	return fmt.Sprintf("firmware_targets.model_id IN (%s)", strings.Join(s, ",")), nil
 }
 
 // Match implements Filter.
-func (f FilterModelFamilyIDs) Match(fw *Firmware) bool {
+func (f FilterModelIDs) Match(fw *Firmware) bool {
 	if fw == nil {
 		return false
 	}
+
+	m := map[int64]struct{}{}
 	for _, id := range f {
-		if fw.ModelFamilyID == nil {
+		m[int64(id)] = struct{}{}
+	}
+
+	for _, target := range fw.Targets {
+		if target.ModelID == nil {
 			continue
 		}
-		if *fw.ModelFamilyID == id {
+		modelID := *target.ModelID
+
+		if _, ok := m[modelID]; ok {
 			return true
 		}
 	}

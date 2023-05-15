@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"privatecore/firmware/analyzer/pkg/rtpdb/models"
 	"time"
 
 	"github.com/facebookincubator/go-belt/tool/logger"

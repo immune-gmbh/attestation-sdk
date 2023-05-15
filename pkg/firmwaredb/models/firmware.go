@@ -7,4 +7,8 @@ type Firmware struct {
 	Type     FirmwareType `db:"type"`
 	Version  string       `db:"version"`
 	ImageURL string       `db:"image_url"`
+
+	// loaded from other tables
+	Targets      []*FirmwareTarget
+	Measurements []*FirmwareMeasurement
 }

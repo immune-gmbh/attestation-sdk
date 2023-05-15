@@ -9,7 +9,6 @@ var (
 	allErrors = []error{
 		ErrInitMySQL{},
 		ErrMySQLPing{},
-		ErrParseModelIDs{},
 		ErrCancelled{},
 	}
 )

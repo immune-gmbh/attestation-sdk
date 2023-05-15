@@ -80,8 +80,8 @@ enum BuildMode {
 }
 
 exception UnableToGetOriginalFirmware {
-  1: string BIOSVersion;
-  3: string Reason;
+  1: string Version;
+  2: string Reason;
 }
 
 exception IncorrectHostConfiguration {

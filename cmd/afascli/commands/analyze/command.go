@@ -187,39 +187,38 @@ func (cmd Command) FirmwareVersionDate(ctx context.Context, actualFirmware []byt
 		return []afas.FirmwareVersion{
 			{
 				Version: *cmd.firmwareVersion,
-				Date:    *cmd.firmwareDate,
 			},
 		}, nil
 	}
 	// Try actualFirmware first (as we should take original firmware that matches it)
 	// Try local firmware DMI Table (if we do analysis for a local host)
 	// Try information found in Manifold (Manifold may store old/outdated information)
-	var getFirmwareVersion []func() (string, string, error)
+	var getFirmwareVersion []func() (string, error)
 	if len(actualFirmware) > 0 {
-		getFirmwareVersion = append(getFirmwareVersion, func() (string, string, error) {
+		getFirmwareVersion = append(getFirmwareVersion, func() (string, error) {
 			actualDMI, err := dmidecode.DMITableFromFirmwareImage(actualFirmware)
 			if err != nil {
 				logger.FromCtx(ctx).Errorf("Failed to get DMI Table from actual firmware: %v", err)
-				return "", "", err
+				return "", err
 			}
 			biosInfo := actualDMI.BIOSInfo()
-			return biosInfo.Version, biosInfo.ReleaseDate, nil
+			return biosInfo.Version, nil
 		})
 	}
 	if *cmd.localhostRequest {
-		getFirmwareVersion = append(getFirmwareVersion, func() (string, string, error) {
+		getFirmwareVersion = append(getFirmwareVersion, func() (string, error) {
 			localDMI, err := dmidecode.LocalDMITable()
 			if err != nil {
 				logger.FromCtx(ctx).Errorf("Failed to get local DMI Table: %v", err)
-				return "", "", err
+				return "", err
 			}
 			biosInfo := localDMI.BIOSInfo()
-			return biosInfo.Version, biosInfo.ReleaseDate, nil
+			return biosInfo.Version, nil
 		})
 	}
-	if actualImageMetaData != nil && actualImageMetaData.Version != nil && actualImageMetaData.ReleaseDate != nil {
-		getFirmwareVersion = append(getFirmwareVersion, func() (string, string, error) {
-			return *actualImageMetaData.Version, *actualImageMetaData.ReleaseDate, nil
+	if actualImageMetaData != nil && actualImageMetaData.Version != nil {
+		getFirmwareVersion = append(getFirmwareVersion, func() (string, error) {
+			return *actualImageMetaData.Version, nil
 		})
 	}
 
@@ -228,20 +227,18 @@ func (cmd Command) FirmwareVersionDate(ctx context.Context, actualFirmware []byt
 		resultErr errors.MultiError
 	)
 	for _, getter := range getFirmwareVersion {
-		firmwareVersion, firmwareDate, err := getter()
+		firmwareVersion, err := getter()
 		if err != nil {
 			resultErr.Add(err)
 			continue
 		}
 		result = append(result, afas.FirmwareVersion{
 			Version: firmwareVersion,
-			Date:    firmwareDate,
 		})
 		trimmedVersion := strings.TrimSpace(firmwareVersion)
 		if trimmedVersion != firmwareVersion {
 			result = append(result, afas.FirmwareVersion{
 				Version: trimmedVersion,
-				Date:    firmwareDate,
 			})
 		}
 	}
@@ -360,15 +357,13 @@ func (cmd Command) buildAnalyzeRequest(
 	if checkFwResult, err := fwWand.CheckFirmwareVersion(ctx, firmwareVersions); err != nil {
 		if len(firmwareVersions) > 0 {
 			firmwareVersion = firmwareVersions[0].Version
-			firmwareDate = firmwareVersions[0].Date
-			logger.FromCtx(ctx).Errorf("Failed to check firmware versions, use: %s/%s", firmwareVersion, firmwareDate)
+			logger.FromCtx(ctx).Errorf("Failed to check firmware versions, use: %s", firmwareVersion)
 		}
 	} else {
 		for idx, exists := range checkFwResult {
 			if exists {
 				firmwareVersion = firmwareVersions[idx].Version
-				firmwareDate = firmwareVersions[idx].Date
-				logger.FromCtx(ctx).Infof("Use valid firmware version/date: %s/%s", firmwareVersion, firmwareDate)
+				logger.FromCtx(ctx).Infof("Use valid firmware version: %s", firmwareVersion)
 				break
 			}
 		}

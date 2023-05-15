@@ -30,21 +30,6 @@ func (err ErrMySQLPing) Unwrap() error {
 	return err.Err
 }
 
-// ErrParseModelIDs implements "error", for the description see Error.
-type ErrParseModelIDs struct {
-	Err         error
-	ModelFamily ModelFamily
-}
-
-func (err ErrParseModelIDs) Error() string {
-	return fmt.Sprintf("unable to parse serialized model IDs '%s': %v",
-		err.ModelFamily.ModelIDs, err.Err)
-}
-
-func (err ErrParseModelIDs) Unwrap() error {
-	return err.Err
-}
-
 // ErrCancelled implements "error", for the description see Error.
 type ErrCancelled struct {
 	Err error

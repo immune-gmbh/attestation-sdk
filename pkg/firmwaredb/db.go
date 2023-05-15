@@ -5,8 +5,6 @@ import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
-
-	"libfb/go/fbmysql"
 )
 
 const (
