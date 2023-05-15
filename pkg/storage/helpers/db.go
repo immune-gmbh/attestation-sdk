@@ -32,7 +32,7 @@ func GetDBColumnName(t reflect.Type, fieldName string) (string, error) {
 	return value[0:idx], nil
 }
 
-// GetValuesAndColumns parses input's structure values and approperiate sql columns
+// GetValuesAndColumns parses input's structure values and appropriate sql columns
 func GetValuesAndColumns(obj interface{}, shouldSkip func(fieldName string, value interface{}) bool) ([]interface{}, []string, error) {
 	v := reflect.ValueOf(obj)
 	if v.Kind() == reflect.Pointer && !v.Elem().IsValid() {
@@ -41,6 +41,7 @@ func GetValuesAndColumns(obj interface{}, shouldSkip func(fieldName string, valu
 	}
 	return getValuesAndColumns("", reflect.Indirect(v), shouldSkip)
 }
+
 func getValuesAndColumns(prefix string, e reflect.Value, shouldSkip func(fieldName string, value interface{}) bool) ([]interface{}, []string, error) {
 	t := e.Type()
 
