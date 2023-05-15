@@ -9,7 +9,7 @@ import (
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
@@ -27,7 +27,7 @@ func (ctrl *Controller) SearchReport(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "")
 	defer span.Finish()
 
-	findFilter := firmwarestorage.AnalyzeReportFindFilter{}
+	findFilter := storage.AnalyzeReportFindFilter{}
 	requestFilter := requestFilters[0]
 	if requestFilter.JobID != nil {
 		var jobID types.JobID

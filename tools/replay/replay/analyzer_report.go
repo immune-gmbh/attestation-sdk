@@ -13,9 +13,9 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )
@@ -38,7 +38,7 @@ func AnalyzerReport(
 		}
 	}()
 
-	stor, err := firmwarestorage.New(rdbmsURL, blobStorage, nil, logger.FromCtx(ctx).WithField("module", "storage"))
+	stor, err := storage.New(rdbmsURL, blobStorage, nil, logger.FromCtx(ctx).WithField("module", "storage"))
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize Storage client: %w", err)
 	}

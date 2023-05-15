@@ -1,4 +1,4 @@
-package firmwarestorage
+package storage
 
 import (
 	"context"
@@ -7,18 +7,18 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
-// FindFilter is a set of values to look for (concatenated through "AND"-s).
+// FindFirmwareFilter is a set of values to look for (concatenated through "AND"-s).
 //
 // If a field has a nil-value then it is not included to filter conditions.
-type FindFilter struct {
+type FindFirmwareFilter struct {
 	// Here we include only indexed columns, see also models/image_metadata.sql
 
 	// == exact values ==
@@ -36,15 +36,15 @@ type FindFilter struct {
 }
 
 // IsEmpty returns true if no filters are set
-func (f FindFilter) IsEmpty() bool {
+func (f FindFirmwareFilter) IsEmpty() bool {
 	return reflect.ValueOf(f).IsZero()
 }
 
 // FindOne locks (with a shared lock) the row and returns image metadata.
 //
 // Second returned variable is a function to release the lock on the row.
-func (fwStor *FirmwareStorage) FindOne(ctx context.Context, filter FindFilter) (*models.ImageMetadata, context.CancelFunc, error) {
-	metas, unlockFn, err := fwStor.Find(ctx, filter)
+func (stor *Storage) FindOne(ctx context.Context, filter FindFirmwareFilter) (*models.ImageMetadata, context.CancelFunc, error) {
+	metas, unlockFn, err := stor.Find(ctx, filter)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -68,7 +68,7 @@ func (fwStor *FirmwareStorage) FindOne(ctx context.Context, filter FindFilter) (
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
-func (fwStor *FirmwareStorage) FindOneReproducedPCRs(ctx context.Context, key models.UniqueKey) (models.ReproducedPCRs, error) {
+func (stor *Storage) FindOneReproducedPCRs(ctx context.Context, key models.UniqueKey) (models.ReproducedPCRs, error) {
 	_, columns, err := helpers.GetValuesAndColumns(&models.ReproducedPCRs{}, nil)
 	if err != nil {
 		return models.ReproducedPCRs{}, err
@@ -79,7 +79,7 @@ func (fwStor *FirmwareStorage) FindOneReproducedPCRs(ctx context.Context, key mo
 		"SELECT %s FROM `reproduced_pcrs` WHERE `hash_stable` = ? AND `registers_sha512` = ? AND `tpm_device` = ?",
 		strings.Join(columns, ","),
 	)
-	if err := sqlx.Select(fwStor.DB, &result, query, key.HashStable, key.RegistersSHA512, key.TPMDevice); err != nil {
+	if err := sqlx.Select(stor.DB, &result, query, key.HashStable, key.RegistersSHA512, key.TPMDevice); err != nil {
 		return models.ReproducedPCRs{}, fmt.Errorf("unable to query firmware metadata: %w", err)
 	}
 	if len(result) == 0 {
@@ -98,7 +98,7 @@ func (fwStor *FirmwareStorage) FindOneReproducedPCRs(ctx context.Context, key mo
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
-func (fwStor *FirmwareStorage) SelectReproducedPCRs(ctx context.Context) ([]models.ReproducedPCRs, error) {
+func (stor *Storage) SelectReproducedPCRs(ctx context.Context) ([]models.ReproducedPCRs, error) {
 	_, columns, err := helpers.GetValuesAndColumns(&models.ReproducedPCRs{}, nil)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (fwStor *FirmwareStorage) SelectReproducedPCRs(ctx context.Context) ([]mode
 		"SELECT %s FROM `reproduced_pcrs`",
 		strings.Join(columns, ","),
 	)
-	if err := sqlx.Select(fwStor.DB, &result, query); err != nil {
+	if err := sqlx.Select(stor.DB, &result, query); err != nil {
 		return nil, fmt.Errorf("unable to query firmware metadata: %w", err)
 	}
 	return result, nil
@@ -127,7 +127,7 @@ func ptr[T any](v T) *T {
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
-func (fwStor *FirmwareStorage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) ([]models.ReproducedPCRs, []models.ImageMetadata, error) {
+func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) ([]models.ReproducedPCRs, []models.ImageMetadata, error) {
 	var (
 		leftRow  models.ReproducedPCRs
 		rightRow models.ImageMetadata
@@ -146,7 +146,7 @@ func (fwStor *FirmwareStorage) SelectReproducedPCRsWithImageMetadata(ctx context
 		constructColumns("pcrs", leftColumns),
 		constructColumns("meta", rightColumns),
 	)
-	rows, err := fwStor.DB.Query(query)
+	rows, err := stor.DB.Query(query)
 	if err != nil {
 		return nil, nil, fmt.Errorf("unable to query '%s': %w", query, err)
 	}
@@ -186,7 +186,7 @@ func (fwStor *FirmwareStorage) SelectReproducedPCRsWithImageMetadata(ctx context
 //	db.Query("SELECT * FROM table WHERE "+whereConds, whereArgs...)
 //
 // See also unit-test: TestCompileWhereConds
-func compileImageWhereConds(filters FindFilter) (string, []interface{}) {
+func compileImageWhereConds(filters FindFirmwareFilter) (string, []interface{}) {
 	var whereConds []string
 	var whereArgs []interface{}
 
@@ -225,7 +225,7 @@ func compileImageWhereConds(filters FindFilter) (string, []interface{}) {
 // Find locks (with a shared lock) the rows and returns image metadata.
 //
 // Second returned variable is a function to release the lock on the row.
-func (fwStor *FirmwareStorage) Find(ctx context.Context, filter FindFilter) (imageMetas []*models.ImageMetadata, unlockFn context.CancelFunc, err error) {
+func (stor *Storage) Find(ctx context.Context, filter FindFirmwareFilter) (imageMetas []*models.ImageMetadata, unlockFn context.CancelFunc, err error) {
 
 	// Collecting WHERE conditions
 	whereConds, whereArgs := compileImageWhereConds(filter)
@@ -236,7 +236,7 @@ func (fwStor *FirmwareStorage) Find(ctx context.Context, filter FindFilter) (ima
 	// We do a lock on the row, and to have an isolated way to
 	// handle locks we create a transaction. We need an isolated way because
 	// some other routine can use "stor.DB" at the same time.
-	tx, err := fwStor.startTransaction(ctx)
+	tx, err := stor.startTransaction(ctx)
 	if err != nil {
 		return nil, nil, ErrSelect{Err: err}
 	}
@@ -275,7 +275,7 @@ func (fwStor *FirmwareStorage) Find(ctx context.Context, filter FindFilter) (ima
 	)
 
 	err = tx.Select(&imageMetas, query, whereArgs...)
-	fwStor.Logger.Debugf("query: '%s' with args %v result: err:%v", query, whereArgs, err)
+	stor.Logger.Debugf("query: '%s' with args %v result: err:%v", query, whereArgs, err)
 	if err != nil {
 		return nil, nil, ErrSelect{Err: err}
 	}

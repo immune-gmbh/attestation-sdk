@@ -1,4 +1,4 @@
-package firmwarestorage
+package storage
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 )
 
 // GetAnalyzeReportGroup finds and locks an existing AnalyzeReportGroup.
@@ -26,7 +26,7 @@ import (
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (fwStor *FirmwareStorage) GetAnalyzeReportGroup(
+func (stor *Storage) GetAnalyzeReportGroup(
 	ctx context.Context,
 	key models.AnalyzeReportGroupKey,
 	tx *sqlx.Tx,
@@ -73,7 +73,7 @@ func (fwStor *FirmwareStorage) GetAnalyzeReportGroup(
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
-func (fwStor *FirmwareStorage) GetOrCreateAnalyzeReportGroup(
+func (stor *Storage) GetOrCreateAnalyzeReportGroup(
 	ctx context.Context,
 	key models.AnalyzeReportGroupKey,
 	tx *sqlx.Tx,
@@ -86,7 +86,7 @@ func (fwStor *FirmwareStorage) GetOrCreateAnalyzeReportGroup(
 		return nil, fmt.Errorf("the provided key is the zero value")
 	}
 
-	group, err := fwStor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
+	group, err := stor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
 	if err != nil {
 		return nil, fmt.Errorf("unable to try to fetch an existing analyze report group: %w", err)
 	}
@@ -100,7 +100,7 @@ func (fwStor *FirmwareStorage) GetOrCreateAnalyzeReportGroup(
 		return nil, fmt.Errorf("unable to create an analyzer reports group with key %s using query '%s': %w", key, query, err)
 	}
 
-	group, err = fwStor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
+	group, err = stor.GetAnalyzeReportGroup(ctx, key, tx, fetchAnalyzeReports)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch back the analyze report group: %w", err)
 	}

@@ -13,8 +13,8 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/errors"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 )
 
 const (

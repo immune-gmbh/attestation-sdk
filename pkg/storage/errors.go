@@ -1,4 +1,4 @@
-package firmwarestorage
+package storage
 
 import (
 	"fmt"

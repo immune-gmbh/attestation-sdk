@@ -1,24 +1,24 @@
-package firmwarestorage
+package storage
 
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 // Get returns an image and the metadata by ImageID
 // (basically combines FindOne and GetBytes).
-func (fwStor *FirmwareStorage) Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.ImageMetadata, error) {
-	meta, unlockFunc, err := fwStor.FindOne(ctx, FindFilter{ImageID: &imageID})
+func (stor *Storage) Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.ImageMetadata, error) {
+	meta, unlockFunc, err := stor.FindOne(ctx, FindFirmwareFilter{ImageID: &imageID})
 	if err != nil {
 		return nil, nil, ErrGetMeta{Err: err}
 	}
 	defer unlockFunc()
 
-	imageBytes, err := fwStor.GetBytes(ctx, imageID)
+	imageBytes, err := stor.GetBytes(ctx, imageID)
 	if err != nil {
 		return nil, nil, ErrGetData{Err: err}
 	}
@@ -27,12 +27,12 @@ func (fwStor *FirmwareStorage) Get(ctx context.Context, imageID types.ImageID) (
 }
 
 // GetBytes returns an image itself only by ImageID.
-func (fwStor *FirmwareStorage) GetBytes(ctx context.Context, imageID types.ImageID) (firmwareImage []byte, err error) {
-	return fwStor.getBytesByPath(ctx, imageID.ManifoldPath())
+func (stor *Storage) GetBytes(ctx context.Context, imageID types.ImageID) (firmwareImage []byte, err error) {
+	return stor.getBytesByPath(ctx, imageID.ManifoldPath())
 }
 
 // getBytesByPath returns an image itself only by its path in the Manifold bucket.
-func (fwStor *FirmwareStorage) getBytesByPath(ctx context.Context, imagePath string) (firmwareImage []byte, err error) {
+func (stor *Storage) getBytesByPath(ctx context.Context, imagePath string) (firmwareImage []byte, err error) {
 	type getBytesByPathResult struct {
 		firmwareImage []byte
 		err           error
@@ -40,7 +40,7 @@ func (fwStor *FirmwareStorage) getBytesByPath(ctx context.Context, imagePath str
 	cacheKey, cacheKeyErr := objhash.Build("GetBytesByPath", imagePath)
 	var unlocker *lockmap.Unlocker
 	if cacheKeyErr == nil {
-		unlocker = fwStor.CacheLockMap.Lock(cacheKey)
+		unlocker = stor.CacheLockMap.Lock(cacheKey)
 		defer unlocker.Unlock()
 
 		if result, ok := unlocker.UserData.(getBytesByPathResult); ok {
@@ -49,13 +49,13 @@ func (fwStor *FirmwareStorage) getBytesByPath(ctx context.Context, imagePath str
 
 		// Since this storage is by design content-addressed, we can safely
 		// assume full cache coherence for a specific manifold path (if the file exist).
-		cachedValue, ok := fwStor.Cache.Get(ctx, cacheKey).([]byte)
+		cachedValue, ok := stor.Cache.Get(ctx, cacheKey).([]byte)
 		if ok {
 			return cachedValue, nil
 		}
 	}
-	err = fwStor.retryLoop(func() (err error) {
-		firmwareImage, err = fwStor.BlobStorage.Get(ctx, imagePath)
+	err = stor.retryLoop(func() (err error) {
+		firmwareImage, err = stor.BlobStorage.Get(ctx, imagePath)
 		return
 	})
 	if unlocker != nil {
@@ -68,7 +68,7 @@ func (fwStor *FirmwareStorage) getBytesByPath(ctx context.Context, imagePath str
 		return nil, ErrDownload{Err: err}
 	}
 	if cacheKeyErr == nil {
-		fwStor.Cache.Set(ctx, cacheKey, firmwareImage, uint64(len(firmwareImage)))
+		stor.Cache.Set(ctx, cacheKey, firmwareImage, uint64(len(firmwareImage)))
 	}
 	return
 }

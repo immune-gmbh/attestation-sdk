@@ -12,8 +12,8 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/google/uuid"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
@@ -40,7 +40,7 @@ func (ctrl *Controller) saveImageAsync(
 			log.Debugf("Saved image with ID 0x%X", *id)
 			return
 		}
-		if errors.As(err, &firmwarestorage.ErrAlreadyExists{}) {
+		if errors.As(err, &storage.ErrAlreadyExists{}) {
 			log.Debugf("Image %#+v already exists", meta)
 		} else {
 			log.Errorf("Failed to save image %#+v: %v", meta, err)

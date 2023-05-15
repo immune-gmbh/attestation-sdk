@@ -12,12 +12,12 @@ import (
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 )
@@ -42,7 +42,7 @@ type imageSaverAsync interface {
 
 // AnalyzerFirmwaresAccessor implements analyzerinput.FirmwaresAccessor for a Controller
 type AnalyzerFirmwaresAccessor struct {
-	storage                 FirmwareStorage
+	storage                 Storage
 	originalFirmwareStorage originalFWImageRepository
 	imageSaverAsync         imageSaverAsync
 	targetModelID           int64
@@ -61,13 +61,13 @@ var _ analyzerinput.FirmwaresAccessor = (*AnalyzerFirmwaresAccessor)(nil)
 //
 // TODO: try to polish-up function signature (for example, consider merging rtpFW and firmwareEvaluationStatus)
 func NewAnalyzerFirmwaresAccessor(
-	firmwareStorage FirmwareStorage,
+	storage Storage,
 	originalFirmwareStorage originalFWImageRepository,
 	imageSaverAsync imageSaverAsync,
 	targetModelID int64,
 ) *AnalyzerFirmwaresAccessor {
 	return &AnalyzerFirmwaresAccessor{
-		storage:                 firmwareStorage,
+		storage:                 storage,
 		originalFirmwareStorage: originalFirmwareStorage,
 		imageSaverAsync:         imageSaverAsync,
 		targetModelID:           targetModelID,
@@ -149,7 +149,7 @@ func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "trySetFWVersionAndDate")
 	defer span.Finish()
 	log := logger.FromCtx(ctx)
-	_meta, releaseFn, _ := a.storage.FindOne(ctx, firmwarestorage.FindFilter{
+	_meta, releaseFn, _ := a.storage.FindOne(ctx, storage.FindFirmwareFilter{
 		ImageID: &meta.ImageID,
 	})
 	if releaseFn != nil {

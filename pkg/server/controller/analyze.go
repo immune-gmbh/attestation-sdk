@@ -21,9 +21,9 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
 	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/errors"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 

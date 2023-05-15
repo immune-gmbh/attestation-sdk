@@ -13,12 +13,12 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/firmwaredbsql"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarerepo"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objcache"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/thrift"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 	fianoLog "github.com/linuxboot/fiano/pkg/log"
@@ -98,7 +98,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	firmwareStorage, err := firmwarestorage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
+	firmwareStorage, err := storage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
 	if err != nil {
 		log.Panic(err)
 	}

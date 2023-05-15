@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgraph-io/ristretto"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 )
 
 const (
@@ -18,7 +18,7 @@ type storageCache struct {
 	cache *ristretto.Cache
 }
 
-var _ firmwarestorage.Cache = (*storageCache)(nil)
+var _ storage.Cache = (*storageCache)(nil)
 
 func New(memoryLimit uint64) (*storageCache, error) {
 	cfg := &ristretto.Config{

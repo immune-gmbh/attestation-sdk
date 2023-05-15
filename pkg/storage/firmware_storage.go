@@ -1,4 +1,4 @@
-package firmwarestorage
+package storage
 
 import (
 	"context"
@@ -28,7 +28,7 @@ type BlobStorage interface {
 
 // Storage is the implementation of firmware images storage (which handles
 // both: metadata and the image itself).
-type FirmwareStorage struct {
+type Storage struct {
 	DB                       *sqlx.DB
 	BlobStorage              BlobStorage
 	Cache                    Cache
@@ -66,14 +66,14 @@ func New(
 	blobStorage BlobStorage,
 	cache Cache,
 	log logger.Logger,
-) (*FirmwareStorage, error) {
+) (*Storage, error) {
 	if log == nil {
 		log = dummy.New()
 	}
 	if cache == nil {
 		cache = dummyCache{}
 	}
-	stor := &FirmwareStorage{
+	stor := &Storage{
 		Logger:                   log,
 		BlobStorage:              blobStorage,
 		Cache:                    cache,
@@ -104,14 +104,14 @@ func New(
 	return stor, nil
 }
 
-func (fwStor *FirmwareStorage) startTransaction(
+func (stor *Storage) startTransaction(
 	ctx context.Context,
 ) (*sqlx.Tx, error) {
-	return fwStor.DB.BeginTxx(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted})
+	return stor.DB.BeginTxx(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted})
 }
 
-func (fwStor *FirmwareStorage) startTransactionWithRollback(ctx context.Context) (*sqlx.Tx, context.CancelFunc, error) {
-	tx, err := fwStor.startTransaction(ctx)
+func (stor *Storage) startTransactionWithRollback(ctx context.Context) (*sqlx.Tx, context.CancelFunc, error) {
+	tx, err := stor.startTransaction(ctx)
 	if err != nil {
 		return nil, nil, ErrSelect{Err: err}
 	}
@@ -133,29 +133,29 @@ func (fwStor *FirmwareStorage) startTransactionWithRollback(ctx context.Context)
 }
 
 // Close stops the instance of the Storage.
-func (fwStor *FirmwareStorage) Close() error {
+func (stor *Storage) Close() error {
 	return multierror.Append((error)(nil),
-		fwStor.DB.Close(),
-		fwStor.BlobStorage.Close(),
+		stor.DB.Close(),
+		stor.BlobStorage.Close(),
 	).ErrorOrNil()
 }
 
-func (fwStor *FirmwareStorage) retryLoop(fn func() error) error {
-	timeout := time.NewTimer(fwStor.RetryTimeout)
+func (stor *Storage) retryLoop(fn func() error) error {
+	timeout := time.NewTimer(stor.RetryTimeout)
 	defer timeout.Stop()
 
-	delay := fwStor.RetryDefaultInitialDelay
+	delay := stor.RetryDefaultInitialDelay
 
 	for {
 		err := fn()
 		if err == nil {
 			return nil
 		}
-		fwStor.Logger.Debugf("err == %T:%v", err, err)
+		stor.Logger.Debugf("err == %T:%v", err, err)
 
 		select {
 		case <-timeout.C:
-			fwStor.Logger.Debugf("timed out")
+			stor.Logger.Debugf("timed out")
 			return err
 		default:
 		}
@@ -164,7 +164,7 @@ func (fwStor *FirmwareStorage) retryLoop(fn func() error) error {
 			CanRetry() bool
 		})
 		if !ok || !canRetryErr.CanRetry() {
-			fwStor.Logger.Debugf("is not a retriable error")
+			stor.Logger.Debugf("is not a retriable error")
 			return err
 		}
 		if retryAter, ok := err.(interface {
@@ -174,7 +174,7 @@ func (fwStor *FirmwareStorage) retryLoop(fn func() error) error {
 			delay = time.Now().Sub(retryAt)
 		}
 
-		fwStor.Logger.Debugf("delay is: %v", delay)
+		stor.Logger.Debugf("delay is: %v", delay)
 		select {
 		case <-time.After(delay):
 			delay *= 2
@@ -183,6 +183,6 @@ func (fwStor *FirmwareStorage) retryLoop(fn func() error) error {
 			// nothing? No: we will make one last try before exit (and will
 			// exit in the `select` above).
 		}
-		fwStor.Logger.Debugf("retry")
+		stor.Logger.Debugf("retry")
 	}
 }

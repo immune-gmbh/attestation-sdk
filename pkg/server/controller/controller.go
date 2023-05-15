@@ -20,8 +20,8 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
@@ -45,7 +45,7 @@ type Controller struct {
 
 	Context                   context.Context
 	ContextCancel             context.CancelFunc
-	FirmwareStorage           FirmwareStorage
+	FirmwareStorage           Storage
 	DeviceGetter              DeviceGetter
 	OriginalFWDB              firmwaredb.DB
 	OriginalFWImageRepository originalFWImageRepository
@@ -60,7 +60,7 @@ type Controller struct {
 
 func New(
 	ctx context.Context,
-	firmwareStorage FirmwareStorage,
+	firmwareStorage Storage,
 	origFirmwareDB firmwaredb.DB,
 	origFirmwareRepo originalFWImageRepository,
 	analysisDataCalculator analysisDataCalculatorInterface,

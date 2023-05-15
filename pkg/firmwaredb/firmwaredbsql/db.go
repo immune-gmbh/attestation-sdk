@@ -9,7 +9,7 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/helpers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
 )
 
 type DB struct {
