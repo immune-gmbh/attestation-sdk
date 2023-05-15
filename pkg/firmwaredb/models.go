@@ -1,4 +1,4 @@
-package rtpdb
+package firmwaredb
 
 import "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
 

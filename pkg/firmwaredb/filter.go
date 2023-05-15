@@ -1,4 +1,4 @@
-package rtpdb
+package firmwaredb
 
 import (
 	"fmt"

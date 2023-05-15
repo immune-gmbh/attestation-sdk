@@ -1,98 +1,54 @@
-package rtpdb
+package firmwaredb
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
 
+	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/jmoiron/sqlx"
 )
 
-const (
-	// DefaultXDBTier is the tier of the XDB of the RTP firmware table
-	DefaultXDBTier = `xdb.rtp_firmware`
-)
-
-// DB is the type representing RTP firmware table accessor.
 type DB struct {
-	Tier string
-	DB   *sqlx.DB
-	Role string
+	ConnectionString string
 }
 
-var _ RWAccess = (*DB)(nil)
-
-// GetDBRO returns a read-only accessor to the RTP firmware table.
-func GetDBRO() (*DB, error) {
-	return GetDB(fbmysql.DefaultConfig(DefaultXDBTier))
-}
-
-// GetDBRW returns a read-write accessor to the RTP firmware table.
-func GetDBRW() (*DB, error) {
-	return GetDB(fbmysql.DefaultConfigRW(DefaultXDBTier))
-}
-
-// GetDB returns a configurable accessor to the RTP firmware table
-func GetDB(config *fbmysql.Config) (*DB, error) {
-	// TODO: Use FirmwarePortalV2 API instead of direct access through MySQL and NodeAPI.
-
-	if config == nil {
-		config = fbmysql.DefaultConfig(DefaultXDBTier)
-	}
-
-	mysqlConnector, err := fbmysql.NewConnector(config)
-	if err != nil {
-		return nil, ErrInitMySQL{Err: err}
-	}
-
-	db := sql.OpenDB(mysqlConnector)
-	err = db.Ping()
-	if err != nil {
-		return nil, ErrMySQLPing{Err: err}
-	}
-
+func New(connectionString string) *DB {
 	return &DB{
-		Tier: config.Tier,
-		DB:   sqlx.NewDb(db, "rtp_firmware"),
-		Role: config.Role,
-	}, nil
+		ConnectionString: connectionString,
+	}
 }
 
-// ExecContext calls (*sql.DB).ExecContext
-func (db *DB) ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
-	return db.DB.ExecContext(ctx, query, args...)
+func (db *DB) Get(ctx context.Context, filters ...Filter) ([]*Firmware, error) {
+	whereCond, args := Filters(filters).WhereCond()
+
+	query := "SELECT * FROM `firmware` WHERE " + whereCond
+	logger.FromCtx(ctx).Debugf("query:'%s', args:%v", query, args)
+
 }
 
-// Query calls (*sql.DB).Query
-func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	return db.DB.Query(query, args...)
-}
+// GetFirmwares returns firmware metadata according to the filters.
+func GetFirmwares(ctx context.Context, db Querier, filters ...Filter) ([]Firmware, error) {
+	logger := logger.FromCtx(ctx)
+	logger.Debugf("whereCond:'%s', args:%v", whereCond, args)
 
-// Queryx calls (*sqlx.DB).Queryx
-func (db *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	return db.DB.Queryx(query, args...)
-}
+	query := "SELECT * FROM `firmware` WHERE " + whereCond
+	var preFiltered []Firmware
+	err := sqlx.SelectContext(ctx, db, &preFiltered, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("unable to query firmware metadata using query '%s' with arguments %v: %w", query, args, err)
+	}
 
-// QueryRowx calls (*sqlx.DB).QueryRowx
-func (db *DB) QueryRowx(query string, args ...interface{}) *sqlx.Row {
-	return db.DB.QueryRowx(query, args...)
-}
+	// If it was impossible to effectively filter something using SQL WHERE condition,
+	// where do post filtering here:
+	var filtered []Firmware
+	for _, fw := range preFiltered {
+		if !Filters(filters).Match(&fw) {
+			logger.Debugf("entry %d:%s:%s was filtered out", fw.ID, fw.FWVersion, fw.GetDate())
+			continue
+		}
+		logger.Debugf("entry %d:%s:%s matches, adding", fw.ID, fw.FWVersion, fw.GetDate())
+		filtered = append(filtered, fw)
+	}
 
-// QueryContext calls (*sql.DB).QueryContext
-func (db *DB) QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
-	return db.DB.QueryContext(ctx, query, args...)
-}
-
-// QueryxContext calls (*sqlx.DB).QueryxContext
-func (db *DB) QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error) {
-	return db.DB.QueryxContext(ctx, query, args...)
-}
-
-// QueryRowxContext calls (*sqlx.DB).QueryRowxContext
-func (db *DB) QueryRowxContext(ctx context.Context, query string, args ...interface{}) *sqlx.Row {
-	return db.DB.QueryRowxContext(ctx, query, args...)
-}
-
-// Close implements io.Closer.
-func (db *DB) Close() error {
-	return db.DB.Close()
+	return filtered, nil
 }
