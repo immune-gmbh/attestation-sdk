@@ -98,7 +98,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	firmwareStorage, err := storage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
+	storage, err := storage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -117,7 +117,7 @@ func main() {
 	controllertypes.OverrideValueCalculators(dataCalculator)
 
 	ctrl, err := controller.New(ctx,
-		firmwareStorage,
+		storage,
 		origFirmwareDB,
 		origFirmwareRepo,
 		dataCalculator,
