@@ -1667,11 +1667,10 @@ func (p *ServerInfo) String() string {
 
 // Attributes:
 //  - BIOSVersion
-//  - BIOSDateString
 //  - Reason
 type UnableToGetOriginalFirmware struct {
   BIOSVersion string `thrift:"BIOSVersion,1" db:"BIOSVersion" json:"BIOSVersion"`
-  BIOSDateString string `thrift:"BIOSDateString,2" db:"BIOSDateString" json:"BIOSDateString"`
+  // unused field # 2
   Reason string `thrift:"Reason,3" db:"Reason" json:"Reason"`
 }
 
@@ -1682,10 +1681,6 @@ func NewUnableToGetOriginalFirmware() *UnableToGetOriginalFirmware {
 
 func (p *UnableToGetOriginalFirmware) GetBIOSVersion() string {
   return p.BIOSVersion
-}
-
-func (p *UnableToGetOriginalFirmware) GetBIOSDateString() string {
-  return p.BIOSDateString
 }
 
 func (p *UnableToGetOriginalFirmware) GetReason() string {
@@ -1707,16 +1702,6 @@ func (p *UnableToGetOriginalFirmware) Read(ctx context.Context, iprot thrift.TPr
     case 1:
       if fieldTypeId == thrift.STRING {
         if err := p.ReadField1(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 2:
-      if fieldTypeId == thrift.STRING {
-        if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -1758,15 +1743,6 @@ func (p *UnableToGetOriginalFirmware)  ReadField1(ctx context.Context, iprot thr
   return nil
 }
 
-func (p *UnableToGetOriginalFirmware)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadString(ctx); err != nil {
-  return thrift.PrependError("error reading field 2: ", err)
-} else {
-  p.BIOSDateString = v
-}
-  return nil
-}
-
 func (p *UnableToGetOriginalFirmware)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadString(ctx); err != nil {
   return thrift.PrependError("error reading field 3: ", err)
@@ -1781,7 +1757,6 @@ func (p *UnableToGetOriginalFirmware) Write(ctx context.Context, oprot thrift.TP
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(ctx, oprot); err != nil { return err }
-    if err := p.writeField2(ctx, oprot); err != nil { return err }
     if err := p.writeField3(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
@@ -1798,16 +1773,6 @@ func (p *UnableToGetOriginalFirmware) writeField1(ctx context.Context, oprot thr
   return thrift.PrependError(fmt.Sprintf("%T.BIOSVersion (1) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write field end error 1:BIOSVersion: ", p), err) }
-  return err
-}
-
-func (p *UnableToGetOriginalFirmware) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "BIOSDateString", thrift.STRING, 2); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:BIOSDateString: ", p), err) }
-  if err := oprot.WriteString(ctx, string(p.BIOSDateString)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.BIOSDateString (2) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:BIOSDateString: ", p), err) }
   return err
 }
 
@@ -1828,7 +1793,6 @@ func (p *UnableToGetOriginalFirmware) Equals(other *UnableToGetOriginalFirmware)
     return false
   }
   if p.BIOSVersion != other.BIOSVersion { return false }
-  if p.BIOSDateString != other.BIOSDateString { return false }
   if p.Reason != other.Reason { return false }
   return true
 }
@@ -2749,7 +2713,6 @@ func (p *Firmware) String() string {
 //  - HashStable
 //  - Filename
 //  - Version
-//  - ReleaseDate
 //  - Size
 //  - TSAdd
 //  - TSUpload
@@ -2760,10 +2723,9 @@ type FirmwareImageMetadata struct {
   HashStable []byte `thrift:"HashStable,4" db:"HashStable" json:"HashStable"`
   Filename *string `thrift:"Filename,5" db:"Filename" json:"Filename,omitempty"`
   Version *string `thrift:"Version,6" db:"Version" json:"Version,omitempty"`
-  ReleaseDate *string `thrift:"ReleaseDate,7" db:"ReleaseDate" json:"ReleaseDate,omitempty"`
-  Size int64 `thrift:"Size,8" db:"Size" json:"Size"`
-  TSAdd int64 `thrift:"TSAdd,9" db:"TSAdd" json:"TSAdd"`
-  TSUpload *int64 `thrift:"TSUpload,10" db:"TSUpload" json:"TSUpload,omitempty"`
+  Size int64 `thrift:"Size,7" db:"Size" json:"Size"`
+  TSAdd int64 `thrift:"TSAdd,8" db:"TSAdd" json:"TSAdd"`
+  TSUpload *int64 `thrift:"TSUpload,9" db:"TSUpload" json:"TSUpload,omitempty"`
 }
 
 func NewFirmwareImageMetadata() *FirmwareImageMetadata {
@@ -2800,13 +2762,6 @@ func (p *FirmwareImageMetadata) GetVersion() string {
   }
 return *p.Version
 }
-var FirmwareImageMetadata_ReleaseDate_DEFAULT string
-func (p *FirmwareImageMetadata) GetReleaseDate() string {
-  if !p.IsSetReleaseDate() {
-    return FirmwareImageMetadata_ReleaseDate_DEFAULT
-  }
-return *p.ReleaseDate
-}
 
 func (p *FirmwareImageMetadata) GetSize() int64 {
   return p.Size
@@ -2828,10 +2783,6 @@ func (p *FirmwareImageMetadata) IsSetFilename() bool {
 
 func (p *FirmwareImageMetadata) IsSetVersion() bool {
   return p.Version != nil
-}
-
-func (p *FirmwareImageMetadata) IsSetReleaseDate() bool {
-  return p.ReleaseDate != nil
 }
 
 func (p *FirmwareImageMetadata) IsSetTSUpload() bool {
@@ -2912,7 +2863,7 @@ func (p *FirmwareImageMetadata) Read(ctx context.Context, iprot thrift.TProtocol
         }
       }
     case 7:
-      if fieldTypeId == thrift.STRING {
+      if fieldTypeId == thrift.I64 {
         if err := p.ReadField7(ctx, iprot); err != nil {
           return err
         }
@@ -2934,16 +2885,6 @@ func (p *FirmwareImageMetadata) Read(ctx context.Context, iprot thrift.TProtocol
     case 9:
       if fieldTypeId == thrift.I64 {
         if err := p.ReadField9(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 10:
-      if fieldTypeId == thrift.I64 {
-        if err := p.ReadField10(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -3021,10 +2962,10 @@ func (p *FirmwareImageMetadata)  ReadField6(ctx context.Context, iprot thrift.TP
 }
 
 func (p *FirmwareImageMetadata)  ReadField7(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadString(ctx); err != nil {
+  if v, err := iprot.ReadI64(ctx); err != nil {
   return thrift.PrependError("error reading field 7: ", err)
 } else {
-  p.ReleaseDate = &v
+  p.Size = v
 }
   return nil
 }
@@ -3033,7 +2974,7 @@ func (p *FirmwareImageMetadata)  ReadField8(ctx context.Context, iprot thrift.TP
   if v, err := iprot.ReadI64(ctx); err != nil {
   return thrift.PrependError("error reading field 8: ", err)
 } else {
-  p.Size = v
+  p.TSAdd = v
 }
   return nil
 }
@@ -3041,15 +2982,6 @@ func (p *FirmwareImageMetadata)  ReadField8(ctx context.Context, iprot thrift.TP
 func (p *FirmwareImageMetadata)  ReadField9(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI64(ctx); err != nil {
   return thrift.PrependError("error reading field 9: ", err)
-} else {
-  p.TSAdd = v
-}
-  return nil
-}
-
-func (p *FirmwareImageMetadata)  ReadField10(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI64(ctx); err != nil {
-  return thrift.PrependError("error reading field 10: ", err)
 } else {
   p.TSUpload = &v
 }
@@ -3069,7 +3001,6 @@ func (p *FirmwareImageMetadata) Write(ctx context.Context, oprot thrift.TProtoco
     if err := p.writeField7(ctx, oprot); err != nil { return err }
     if err := p.writeField8(ctx, oprot); err != nil { return err }
     if err := p.writeField9(ctx, oprot); err != nil { return err }
-    if err := p.writeField10(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -3143,45 +3074,33 @@ func (p *FirmwareImageMetadata) writeField6(ctx context.Context, oprot thrift.TP
 }
 
 func (p *FirmwareImageMetadata) writeField7(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetReleaseDate() {
-    if err := oprot.WriteFieldBegin(ctx, "ReleaseDate", thrift.STRING, 7); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:ReleaseDate: ", p), err) }
-    if err := oprot.WriteString(ctx, string(*p.ReleaseDate)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.ReleaseDate (7) field write error: ", p), err) }
-    if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 7:ReleaseDate: ", p), err) }
-  }
+  if err := oprot.WriteFieldBegin(ctx, "Size", thrift.I64, 7); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:Size: ", p), err) }
+  if err := oprot.WriteI64(ctx, int64(p.Size)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.Size (7) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(ctx); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 7:Size: ", p), err) }
   return err
 }
 
 func (p *FirmwareImageMetadata) writeField8(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Size", thrift.I64, 8); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 8:Size: ", p), err) }
-  if err := oprot.WriteI64(ctx, int64(p.Size)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.Size (8) field write error: ", p), err) }
+  if err := oprot.WriteFieldBegin(ctx, "TSAdd", thrift.I64, 8); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 8:TSAdd: ", p), err) }
+  if err := oprot.WriteI64(ctx, int64(p.TSAdd)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.TSAdd (8) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 8:Size: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 8:TSAdd: ", p), err) }
   return err
 }
 
 func (p *FirmwareImageMetadata) writeField9(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "TSAdd", thrift.I64, 9); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 9:TSAdd: ", p), err) }
-  if err := oprot.WriteI64(ctx, int64(p.TSAdd)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.TSAdd (9) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 9:TSAdd: ", p), err) }
-  return err
-}
-
-func (p *FirmwareImageMetadata) writeField10(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetTSUpload() {
-    if err := oprot.WriteFieldBegin(ctx, "TSUpload", thrift.I64, 10); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 10:TSUpload: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "TSUpload", thrift.I64, 9); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 9:TSUpload: ", p), err) }
     if err := oprot.WriteI64(ctx, int64(*p.TSUpload)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TSUpload (10) field write error: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T.TSUpload (9) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 10:TSUpload: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 9:TSUpload: ", p), err) }
   }
   return err
 }
@@ -3208,12 +3127,6 @@ func (p *FirmwareImageMetadata) Equals(other *FirmwareImageMetadata) bool {
     }
     if (*p.Version) != (*other.Version) { return false }
   }
-  if p.ReleaseDate != other.ReleaseDate {
-    if p.ReleaseDate == nil || other.ReleaseDate == nil {
-      return false
-    }
-    if (*p.ReleaseDate) != (*other.ReleaseDate) { return false }
-  }
   if p.Size != other.Size { return false }
   if p.TSAdd != other.TSAdd { return false }
   if p.TSUpload != other.TSUpload {
@@ -3237,8 +3150,7 @@ func (p *FirmwareImageMetadata) String() string {
 //  - Limit
 type SearchReportRequest struct {
   OrFilters []*SearchReportFilters `thrift:"OrFilters,1" db:"OrFilters" json:"OrFilters"`
-  // unused field # 2
-  Limit int64 `thrift:"Limit,3" db:"Limit" json:"Limit"`
+  Limit int64 `thrift:"Limit,2" db:"Limit" json:"Limit"`
 }
 
 func NewSearchReportRequest() *SearchReportRequest {
@@ -3276,9 +3188,9 @@ func (p *SearchReportRequest) Read(ctx context.Context, iprot thrift.TProtocol) 
           return err
         }
       }
-    case 3:
+    case 2:
       if fieldTypeId == thrift.I64 {
-        if err := p.ReadField3(ctx, iprot); err != nil {
+        if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -3321,9 +3233,9 @@ func (p *SearchReportRequest)  ReadField1(ctx context.Context, iprot thrift.TPro
   return nil
 }
 
-func (p *SearchReportRequest)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *SearchReportRequest)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI64(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
+  return thrift.PrependError("error reading field 2: ", err)
 } else {
   p.Limit = v
 }
@@ -3335,7 +3247,7 @@ func (p *SearchReportRequest) Write(ctx context.Context, oprot thrift.TProtocol)
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(ctx, oprot); err != nil { return err }
-    if err := p.writeField3(ctx, oprot); err != nil { return err }
+    if err := p.writeField2(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -3363,13 +3275,13 @@ func (p *SearchReportRequest) writeField1(ctx context.Context, oprot thrift.TPro
   return err
 }
 
-func (p *SearchReportRequest) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Limit", thrift.I64, 3); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:Limit: ", p), err) }
+func (p *SearchReportRequest) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin(ctx, "Limit", thrift.I64, 2); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Limit: ", p), err) }
   if err := oprot.WriteI64(ctx, int64(p.Limit)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.Limit (3) field write error: ", p), err) }
+  return thrift.PrependError(fmt.Sprintf("%T.Limit (2) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:Limit: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Limit: ", p), err) }
   return err
 }
 
@@ -3725,10 +3637,8 @@ func (p *SearchReportResult_) String() string {
 
 // Attributes:
 //  - Version
-//  - Date
 type FirmwareVersion struct {
   Version string `thrift:"Version,1" db:"Version" json:"Version"`
-  Date string `thrift:"Date,2" db:"Date" json:"Date"`
 }
 
 func NewFirmwareVersion() *FirmwareVersion {
@@ -3738,10 +3648,6 @@ func NewFirmwareVersion() *FirmwareVersion {
 
 func (p *FirmwareVersion) GetVersion() string {
   return p.Version
-}
-
-func (p *FirmwareVersion) GetDate() string {
-  return p.Date
 }
 func (p *FirmwareVersion) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
@@ -3759,16 +3665,6 @@ func (p *FirmwareVersion) Read(ctx context.Context, iprot thrift.TProtocol) erro
     case 1:
       if fieldTypeId == thrift.STRING {
         if err := p.ReadField1(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 2:
-      if fieldTypeId == thrift.STRING {
-        if err := p.ReadField2(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -3800,21 +3696,11 @@ func (p *FirmwareVersion)  ReadField1(ctx context.Context, iprot thrift.TProtoco
   return nil
 }
 
-func (p *FirmwareVersion)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadString(ctx); err != nil {
-  return thrift.PrependError("error reading field 2: ", err)
-} else {
-  p.Date = v
-}
-  return nil
-}
-
 func (p *FirmwareVersion) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "FirmwareVersion"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
     if err := p.writeField1(ctx, oprot); err != nil { return err }
-    if err := p.writeField2(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -3833,16 +3719,6 @@ func (p *FirmwareVersion) writeField1(ctx context.Context, oprot thrift.TProtoco
   return err
 }
 
-func (p *FirmwareVersion) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Date", thrift.STRING, 2); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Date: ", p), err) }
-  if err := oprot.WriteString(ctx, string(p.Date)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.Date (2) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Date: ", p), err) }
-  return err
-}
-
 func (p *FirmwareVersion) Equals(other *FirmwareVersion) bool {
   if p == other {
     return true
@@ -3850,7 +3726,6 @@ func (p *FirmwareVersion) Equals(other *FirmwareVersion) bool {
     return false
   }
   if p.Version != other.Version { return false }
-  if p.Date != other.Date { return false }
   return true
 }
 
@@ -4472,13 +4347,12 @@ func (p *PCR) String() string {
 //  - StatusRegisters
 //  - MeasurementsFlow
 type Artifact struct {
-  // unused field # 1
-  FwImage *FirmwareImage `thrift:"FwImage,2" db:"FwImage" json:"FwImage,omitempty"`
-  Pcr *PCR `thrift:"Pcr,3" db:"Pcr" json:"Pcr,omitempty"`
-  TPMDevice *TPMType `thrift:"TPMDevice,4" db:"TPMDevice" json:"TPMDevice,omitempty"`
-  TPMEventLog *tpm.EventLog `thrift:"TPMEventLog,5" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
-  StatusRegisters []*StatusRegister `thrift:"StatusRegisters,6" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
-  MeasurementsFlow *measurements.Flow `thrift:"MeasurementsFlow,7" db:"MeasurementsFlow" json:"MeasurementsFlow,omitempty"`
+  FwImage *FirmwareImage `thrift:"FwImage,1" db:"FwImage" json:"FwImage,omitempty"`
+  Pcr *PCR `thrift:"Pcr,2" db:"Pcr" json:"Pcr,omitempty"`
+  TPMDevice *TPMType `thrift:"TPMDevice,3" db:"TPMDevice" json:"TPMDevice,omitempty"`
+  TPMEventLog *tpm.EventLog `thrift:"TPMEventLog,4" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
+  StatusRegisters []*StatusRegister `thrift:"StatusRegisters,5" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
+  MeasurementsFlow *measurements.Flow `thrift:"MeasurementsFlow,6" db:"MeasurementsFlow" json:"MeasurementsFlow,omitempty"`
 }
 
 func NewArtifact() *Artifact {
@@ -4586,6 +4460,16 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
     }
     if fieldTypeId == thrift.STOP { break; }
     switch fieldId {
+    case 1:
+      if fieldTypeId == thrift.STRUCT {
+        if err := p.ReadField1(ctx, iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+          return err
+        }
+      }
     case 2:
       if fieldTypeId == thrift.STRUCT {
         if err := p.ReadField2(ctx, iprot); err != nil {
@@ -4597,7 +4481,7 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 3:
-      if fieldTypeId == thrift.STRUCT {
+      if fieldTypeId == thrift.I32 {
         if err := p.ReadField3(ctx, iprot); err != nil {
           return err
         }
@@ -4607,7 +4491,7 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 4:
-      if fieldTypeId == thrift.I32 {
+      if fieldTypeId == thrift.STRUCT {
         if err := p.ReadField4(ctx, iprot); err != nil {
           return err
         }
@@ -4617,7 +4501,7 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 5:
-      if fieldTypeId == thrift.STRUCT {
+      if fieldTypeId == thrift.LIST {
         if err := p.ReadField5(ctx, iprot); err != nil {
           return err
         }
@@ -4627,18 +4511,8 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 6:
-      if fieldTypeId == thrift.LIST {
-        if err := p.ReadField6(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 7:
       if fieldTypeId == thrift.I32 {
-        if err := p.ReadField7(ctx, iprot); err != nil {
+        if err := p.ReadField6(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -4661,7 +4535,7 @@ func (p *Artifact) Read(ctx context.Context, iprot thrift.TProtocol) error {
   return nil
 }
 
-func (p *Artifact)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   p.FwImage = &FirmwareImage{}
   if err := p.FwImage.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.FwImage), err)
@@ -4669,7 +4543,7 @@ func (p *Artifact)  ReadField2(ctx context.Context, iprot thrift.TProtocol) erro
   return nil
 }
 
-func (p *Artifact)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
   p.Pcr = &PCR{}
   if err := p.Pcr.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Pcr), err)
@@ -4677,9 +4551,9 @@ func (p *Artifact)  ReadField3(ctx context.Context, iprot thrift.TProtocol) erro
   return nil
 }
 
-func (p *Artifact)  ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 4: ", err)
+  return thrift.PrependError("error reading field 3: ", err)
 } else {
   temp := TPMType(v)
   p.TPMDevice = &temp
@@ -4687,7 +4561,7 @@ func (p *Artifact)  ReadField4(ctx context.Context, iprot thrift.TProtocol) erro
   return nil
 }
 
-func (p *Artifact)  ReadField5(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
   p.TPMEventLog = &tpm.EventLog{}
   if err := p.TPMEventLog.Read(ctx, iprot); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.TPMEventLog), err)
@@ -4695,7 +4569,7 @@ func (p *Artifact)  ReadField5(ctx context.Context, iprot thrift.TProtocol) erro
   return nil
 }
 
-func (p *Artifact)  ReadField6(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField5(ctx context.Context, iprot thrift.TProtocol) error {
   _, size, err := iprot.ReadListBegin(ctx)
   if err != nil {
     return thrift.PrependError("error reading list begin: ", err)
@@ -4715,9 +4589,9 @@ func (p *Artifact)  ReadField6(ctx context.Context, iprot thrift.TProtocol) erro
   return nil
 }
 
-func (p *Artifact)  ReadField7(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *Artifact)  ReadField6(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 7: ", err)
+  return thrift.PrependError("error reading field 6: ", err)
 } else {
   temp := measurements.Flow(v)
   p.MeasurementsFlow = &temp
@@ -4732,12 +4606,12 @@ func (p *Artifact) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if err := oprot.WriteStructBegin(ctx, "Artifact"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
+    if err := p.writeField1(ctx, oprot); err != nil { return err }
     if err := p.writeField2(ctx, oprot); err != nil { return err }
     if err := p.writeField3(ctx, oprot); err != nil { return err }
     if err := p.writeField4(ctx, oprot); err != nil { return err }
     if err := p.writeField5(ctx, oprot); err != nil { return err }
     if err := p.writeField6(ctx, oprot); err != nil { return err }
-    if err := p.writeField7(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -4746,61 +4620,61 @@ func (p *Artifact) Write(ctx context.Context, oprot thrift.TProtocol) error {
   return nil
 }
 
-func (p *Artifact) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *Artifact) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetFwImage() {
-    if err := oprot.WriteFieldBegin(ctx, "FwImage", thrift.STRUCT, 2); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:FwImage: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "FwImage", thrift.STRUCT, 1); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:FwImage: ", p), err) }
     if err := p.FwImage.Write(ctx, oprot); err != nil {
       return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.FwImage), err)
     }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 2:FwImage: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 1:FwImage: ", p), err) }
+  }
+  return err
+}
+
+func (p *Artifact) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if p.IsSetPcr() {
+    if err := oprot.WriteFieldBegin(ctx, "Pcr", thrift.STRUCT, 2); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Pcr: ", p), err) }
+    if err := p.Pcr.Write(ctx, oprot); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.Pcr), err)
+    }
+    if err := oprot.WriteFieldEnd(ctx); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Pcr: ", p), err) }
   }
   return err
 }
 
 func (p *Artifact) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetPcr() {
-    if err := oprot.WriteFieldBegin(ctx, "Pcr", thrift.STRUCT, 3); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:Pcr: ", p), err) }
-    if err := p.Pcr.Write(ctx, oprot); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.Pcr), err)
-    }
+  if p.IsSetTPMDevice() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 3); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:TPMDevice: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (3) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:Pcr: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:TPMDevice: ", p), err) }
   }
   return err
 }
 
 func (p *Artifact) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMDevice() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 4); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:TPMDevice: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (4) field write error: ", p), err) }
+  if p.IsSetTPMEventLog() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.STRUCT, 4); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:TPMEventLog: ", p), err) }
+    if err := p.TPMEventLog.Write(ctx, oprot); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.TPMEventLog), err)
+    }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:TPMDevice: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:TPMEventLog: ", p), err) }
   }
   return err
 }
 
 func (p *Artifact) writeField5(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMEventLog() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.STRUCT, 5); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:TPMEventLog: ", p), err) }
-    if err := p.TPMEventLog.Write(ctx, oprot); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.TPMEventLog), err)
-    }
-    if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:TPMEventLog: ", p), err) }
-  }
-  return err
-}
-
-func (p *Artifact) writeField6(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetStatusRegisters() {
-    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.LIST, 6); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:StatusRegisters: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.LIST, 5); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:StatusRegisters: ", p), err) }
     if err := oprot.WriteListBegin(ctx, thrift.STRUCT, len(p.StatusRegisters)); err != nil {
       return thrift.PrependError("error writing list begin: ", err)
     }
@@ -4813,19 +4687,19 @@ func (p *Artifact) writeField6(ctx context.Context, oprot thrift.TProtocol) (err
       return thrift.PrependError("error writing list end: ", err)
     }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 6:StatusRegisters: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:StatusRegisters: ", p), err) }
   }
   return err
 }
 
-func (p *Artifact) writeField7(ctx context.Context, oprot thrift.TProtocol) (err error) {
+func (p *Artifact) writeField6(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetMeasurementsFlow() {
-    if err := oprot.WriteFieldBegin(ctx, "MeasurementsFlow", thrift.I32, 7); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:MeasurementsFlow: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "MeasurementsFlow", thrift.I32, 6); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:MeasurementsFlow: ", p), err) }
     if err := oprot.WriteI32(ctx, int32(*p.MeasurementsFlow)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.MeasurementsFlow (7) field write error: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T.MeasurementsFlow (6) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 7:MeasurementsFlow: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 6:MeasurementsFlow: ", p), err) }
   }
   return err
 }
@@ -4874,13 +4748,12 @@ func (p *Artifact) String() string {
 //  - TPMEventLog
 //  - ActualPCR0
 type DiffMeasuredBootInput struct {
-  // unused field # 1
+  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,1" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
   OriginalFirmwareImage *int32 `thrift:"OriginalFirmwareImage,2" db:"OriginalFirmwareImage" json:"OriginalFirmwareImage,omitempty"`
-  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,3" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
-  StatusRegisters *int32 `thrift:"StatusRegisters,4" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
-  TPMDevice *int32 `thrift:"TPMDevice,5" db:"TPMDevice" json:"TPMDevice,omitempty"`
-  TPMEventLog *int32 `thrift:"TPMEventLog,6" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
-  ActualPCR0 *int32 `thrift:"ActualPCR0,7" db:"ActualPCR0" json:"ActualPCR0,omitempty"`
+  StatusRegisters *int32 `thrift:"StatusRegisters,3" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
+  TPMDevice *int32 `thrift:"TPMDevice,4" db:"TPMDevice" json:"TPMDevice,omitempty"`
+  TPMEventLog *int32 `thrift:"TPMEventLog,5" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
+  ActualPCR0 *int32 `thrift:"ActualPCR0,6" db:"ActualPCR0" json:"ActualPCR0,omitempty"`
 }
 
 func NewDiffMeasuredBootInput() *DiffMeasuredBootInput {
@@ -4959,9 +4832,9 @@ func (p *DiffMeasuredBootInput) Read(ctx context.Context, iprot thrift.TProtocol
     }
     if fieldTypeId == thrift.STOP { break; }
     switch fieldId {
-    case 3:
+    case 1:
       if fieldTypeId == thrift.I32 {
-        if err := p.ReadField3(ctx, iprot); err != nil {
+        if err := p.ReadField1(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -4972,6 +4845,16 @@ func (p *DiffMeasuredBootInput) Read(ctx context.Context, iprot thrift.TProtocol
     case 2:
       if fieldTypeId == thrift.I32 {
         if err := p.ReadField2(ctx, iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 3:
+      if fieldTypeId == thrift.I32 {
+        if err := p.ReadField3(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -5009,16 +4892,6 @@ func (p *DiffMeasuredBootInput) Read(ctx context.Context, iprot thrift.TProtocol
           return err
         }
       }
-    case 7:
-      if fieldTypeId == thrift.I32 {
-        if err := p.ReadField7(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
     default:
       if err := iprot.Skip(ctx, fieldTypeId); err != nil {
         return err
@@ -5034,9 +4907,9 @@ func (p *DiffMeasuredBootInput) Read(ctx context.Context, iprot thrift.TProtocol
   return nil
 }
 
-func (p *DiffMeasuredBootInput)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *DiffMeasuredBootInput)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
+  return thrift.PrependError("error reading field 1: ", err)
 } else {
   p.ActualFirmwareImage = v
 }
@@ -5052,11 +4925,20 @@ func (p *DiffMeasuredBootInput)  ReadField2(ctx context.Context, iprot thrift.TP
   return nil
 }
 
+func (p *DiffMeasuredBootInput)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+  if v, err := iprot.ReadI32(ctx); err != nil {
+  return thrift.PrependError("error reading field 3: ", err)
+} else {
+  p.StatusRegisters = &v
+}
+  return nil
+}
+
 func (p *DiffMeasuredBootInput)  ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 4: ", err)
 } else {
-  p.StatusRegisters = &v
+  p.TPMDevice = &v
 }
   return nil
 }
@@ -5065,7 +4947,7 @@ func (p *DiffMeasuredBootInput)  ReadField5(ctx context.Context, iprot thrift.TP
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 5: ", err)
 } else {
-  p.TPMDevice = &v
+  p.TPMEventLog = &v
 }
   return nil
 }
@@ -5073,15 +4955,6 @@ func (p *DiffMeasuredBootInput)  ReadField5(ctx context.Context, iprot thrift.TP
 func (p *DiffMeasuredBootInput)  ReadField6(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 6: ", err)
-} else {
-  p.TPMEventLog = &v
-}
-  return nil
-}
-
-func (p *DiffMeasuredBootInput)  ReadField7(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 7: ", err)
 } else {
   p.ActualPCR0 = &v
 }
@@ -5092,18 +4965,28 @@ func (p *DiffMeasuredBootInput) Write(ctx context.Context, oprot thrift.TProtoco
   if err := oprot.WriteStructBegin(ctx, "DiffMeasuredBootInput"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
+    if err := p.writeField1(ctx, oprot); err != nil { return err }
     if err := p.writeField2(ctx, oprot); err != nil { return err }
     if err := p.writeField3(ctx, oprot); err != nil { return err }
     if err := p.writeField4(ctx, oprot); err != nil { return err }
     if err := p.writeField5(ctx, oprot); err != nil { return err }
     if err := p.writeField6(ctx, oprot); err != nil { return err }
-    if err := p.writeField7(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
   if err := oprot.WriteStructEnd(ctx); err != nil {
     return thrift.PrependError("write struct stop error: ", err) }
   return nil
+}
+
+func (p *DiffMeasuredBootInput) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 1); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ActualFirmwareImage: ", p), err) }
+  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (1) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(ctx); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ActualFirmwareImage: ", p), err) }
+  return err
 }
 
 func (p *DiffMeasuredBootInput) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
@@ -5119,59 +5002,49 @@ func (p *DiffMeasuredBootInput) writeField2(ctx context.Context, oprot thrift.TP
 }
 
 func (p *DiffMeasuredBootInput) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 3); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ActualFirmwareImage: ", p), err) }
-  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (3) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ActualFirmwareImage: ", p), err) }
+  if p.IsSetStatusRegisters() {
+    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.I32, 3); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:StatusRegisters: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.StatusRegisters)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.StatusRegisters (3) field write error: ", p), err) }
+    if err := oprot.WriteFieldEnd(ctx); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:StatusRegisters: ", p), err) }
+  }
   return err
 }
 
 func (p *DiffMeasuredBootInput) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetStatusRegisters() {
-    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.I32, 4); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:StatusRegisters: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.StatusRegisters)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.StatusRegisters (4) field write error: ", p), err) }
+  if p.IsSetTPMDevice() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 4); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:TPMDevice: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (4) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:StatusRegisters: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:TPMDevice: ", p), err) }
   }
   return err
 }
 
 func (p *DiffMeasuredBootInput) writeField5(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMDevice() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 5); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:TPMDevice: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (5) field write error: ", p), err) }
+  if p.IsSetTPMEventLog() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.I32, 5); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:TPMEventLog: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.TPMEventLog)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.TPMEventLog (5) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:TPMDevice: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:TPMEventLog: ", p), err) }
   }
   return err
 }
 
 func (p *DiffMeasuredBootInput) writeField6(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMEventLog() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.I32, 6); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:TPMEventLog: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.TPMEventLog)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TPMEventLog (6) field write error: ", p), err) }
-    if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 6:TPMEventLog: ", p), err) }
-  }
-  return err
-}
-
-func (p *DiffMeasuredBootInput) writeField7(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetActualPCR0() {
-    if err := oprot.WriteFieldBegin(ctx, "ActualPCR0", thrift.I32, 7); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:ActualPCR0: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "ActualPCR0", thrift.I32, 6); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:ActualPCR0: ", p), err) }
     if err := oprot.WriteI32(ctx, int32(*p.ActualPCR0)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.ActualPCR0 (7) field write error: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T.ActualPCR0 (6) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 7:ActualPCR0: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 6:ActualPCR0: ", p), err) }
   }
   return err
 }
@@ -5182,13 +5055,13 @@ func (p *DiffMeasuredBootInput) Equals(other *DiffMeasuredBootInput) bool {
   } else if p == nil || other == nil {
     return false
   }
+  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   if p.OriginalFirmwareImage != other.OriginalFirmwareImage {
     if p.OriginalFirmwareImage == nil || other.OriginalFirmwareImage == nil {
       return false
     }
     if (*p.OriginalFirmwareImage) != (*other.OriginalFirmwareImage) { return false }
   }
-  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   if p.StatusRegisters != other.StatusRegisters {
     if p.StatusRegisters == nil || other.StatusRegisters == nil {
       return false
@@ -5227,9 +5100,8 @@ func (p *DiffMeasuredBootInput) String() string {
 //  - ActualFirmwareImage
 //  - OriginalFirmwareImage
 type IntelACMInput struct {
-  // unused field # 1
+  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,1" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
   OriginalFirmwareImage *int32 `thrift:"OriginalFirmwareImage,2" db:"OriginalFirmwareImage" json:"OriginalFirmwareImage,omitempty"`
-  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,3" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
 }
 
 func NewIntelACMInput() *IntelACMInput {
@@ -5264,9 +5136,9 @@ func (p *IntelACMInput) Read(ctx context.Context, iprot thrift.TProtocol) error 
     }
     if fieldTypeId == thrift.STOP { break; }
     switch fieldId {
-    case 3:
+    case 1:
       if fieldTypeId == thrift.I32 {
-        if err := p.ReadField3(ctx, iprot); err != nil {
+        if err := p.ReadField1(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -5299,9 +5171,9 @@ func (p *IntelACMInput) Read(ctx context.Context, iprot thrift.TProtocol) error 
   return nil
 }
 
-func (p *IntelACMInput)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *IntelACMInput)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
+  return thrift.PrependError("error reading field 1: ", err)
 } else {
   p.ActualFirmwareImage = v
 }
@@ -5321,14 +5193,24 @@ func (p *IntelACMInput) Write(ctx context.Context, oprot thrift.TProtocol) error
   if err := oprot.WriteStructBegin(ctx, "IntelACMInput"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
+    if err := p.writeField1(ctx, oprot); err != nil { return err }
     if err := p.writeField2(ctx, oprot); err != nil { return err }
-    if err := p.writeField3(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
   if err := oprot.WriteStructEnd(ctx); err != nil {
     return thrift.PrependError("write struct stop error: ", err) }
   return nil
+}
+
+func (p *IntelACMInput) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 1); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ActualFirmwareImage: ", p), err) }
+  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (1) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(ctx); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ActualFirmwareImage: ", p), err) }
+  return err
 }
 
 func (p *IntelACMInput) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
@@ -5343,29 +5225,19 @@ func (p *IntelACMInput) writeField2(ctx context.Context, oprot thrift.TProtocol)
   return err
 }
 
-func (p *IntelACMInput) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 3); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ActualFirmwareImage: ", p), err) }
-  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (3) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ActualFirmwareImage: ", p), err) }
-  return err
-}
-
 func (p *IntelACMInput) Equals(other *IntelACMInput) bool {
   if p == other {
     return true
   } else if p == nil || other == nil {
     return false
   }
+  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   if p.OriginalFirmwareImage != other.OriginalFirmwareImage {
     if p.OriginalFirmwareImage == nil || other.OriginalFirmwareImage == nil {
       return false
     }
     if (*p.OriginalFirmwareImage) != (*other.OriginalFirmwareImage) { return false }
   }
-  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   return true
 }
 
@@ -5385,14 +5257,13 @@ func (p *IntelACMInput) String() string {
 //  - ExpectedPCR
 //  - MeasurementsFlow
 type ReproducePCRInput struct {
-  // unused field # 1
+  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,1" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
   OriginalFirmwareImage *int32 `thrift:"OriginalFirmwareImage,2" db:"OriginalFirmwareImage" json:"OriginalFirmwareImage,omitempty"`
-  ActualFirmwareImage int32 `thrift:"ActualFirmwareImage,3" db:"ActualFirmwareImage" json:"ActualFirmwareImage"`
-  StatusRegisters *int32 `thrift:"StatusRegisters,4" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
-  TPMDevice *int32 `thrift:"TPMDevice,5" db:"TPMDevice" json:"TPMDevice,omitempty"`
-  TPMEventLog *int32 `thrift:"TPMEventLog,6" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
-  ExpectedPCR int32 `thrift:"ExpectedPCR,7" db:"ExpectedPCR" json:"ExpectedPCR"`
-  MeasurementsFlow *int32 `thrift:"MeasurementsFlow,8" db:"MeasurementsFlow" json:"MeasurementsFlow,omitempty"`
+  StatusRegisters *int32 `thrift:"StatusRegisters,3" db:"StatusRegisters" json:"StatusRegisters,omitempty"`
+  TPMDevice *int32 `thrift:"TPMDevice,4" db:"TPMDevice" json:"TPMDevice,omitempty"`
+  TPMEventLog *int32 `thrift:"TPMEventLog,5" db:"TPMEventLog" json:"TPMEventLog,omitempty"`
+  ExpectedPCR int32 `thrift:"ExpectedPCR,6" db:"ExpectedPCR" json:"ExpectedPCR"`
+  MeasurementsFlow *int32 `thrift:"MeasurementsFlow,7" db:"MeasurementsFlow" json:"MeasurementsFlow,omitempty"`
 }
 
 func NewReproducePCRInput() *ReproducePCRInput {
@@ -5475,9 +5346,9 @@ func (p *ReproducePCRInput) Read(ctx context.Context, iprot thrift.TProtocol) er
     }
     if fieldTypeId == thrift.STOP { break; }
     switch fieldId {
-    case 3:
+    case 1:
       if fieldTypeId == thrift.I32 {
-        if err := p.ReadField3(ctx, iprot); err != nil {
+        if err := p.ReadField1(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -5488,6 +5359,16 @@ func (p *ReproducePCRInput) Read(ctx context.Context, iprot thrift.TProtocol) er
     case 2:
       if fieldTypeId == thrift.I32 {
         if err := p.ReadField2(ctx, iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 3:
+      if fieldTypeId == thrift.I32 {
+        if err := p.ReadField3(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -5535,16 +5416,6 @@ func (p *ReproducePCRInput) Read(ctx context.Context, iprot thrift.TProtocol) er
           return err
         }
       }
-    case 8:
-      if fieldTypeId == thrift.I32 {
-        if err := p.ReadField8(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
     default:
       if err := iprot.Skip(ctx, fieldTypeId); err != nil {
         return err
@@ -5560,9 +5431,9 @@ func (p *ReproducePCRInput) Read(ctx context.Context, iprot thrift.TProtocol) er
   return nil
 }
 
-func (p *ReproducePCRInput)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *ReproducePCRInput)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
+  return thrift.PrependError("error reading field 1: ", err)
 } else {
   p.ActualFirmwareImage = v
 }
@@ -5578,11 +5449,20 @@ func (p *ReproducePCRInput)  ReadField2(ctx context.Context, iprot thrift.TProto
   return nil
 }
 
+func (p *ReproducePCRInput)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+  if v, err := iprot.ReadI32(ctx); err != nil {
+  return thrift.PrependError("error reading field 3: ", err)
+} else {
+  p.StatusRegisters = &v
+}
+  return nil
+}
+
 func (p *ReproducePCRInput)  ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 4: ", err)
 } else {
-  p.StatusRegisters = &v
+  p.TPMDevice = &v
 }
   return nil
 }
@@ -5591,7 +5471,7 @@ func (p *ReproducePCRInput)  ReadField5(ctx context.Context, iprot thrift.TProto
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 5: ", err)
 } else {
-  p.TPMDevice = &v
+  p.TPMEventLog = &v
 }
   return nil
 }
@@ -5600,7 +5480,7 @@ func (p *ReproducePCRInput)  ReadField6(ctx context.Context, iprot thrift.TProto
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 6: ", err)
 } else {
-  p.TPMEventLog = &v
+  p.ExpectedPCR = v
 }
   return nil
 }
@@ -5608,15 +5488,6 @@ func (p *ReproducePCRInput)  ReadField6(ctx context.Context, iprot thrift.TProto
 func (p *ReproducePCRInput)  ReadField7(ctx context.Context, iprot thrift.TProtocol) error {
   if v, err := iprot.ReadI32(ctx); err != nil {
   return thrift.PrependError("error reading field 7: ", err)
-} else {
-  p.ExpectedPCR = v
-}
-  return nil
-}
-
-func (p *ReproducePCRInput)  ReadField8(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 8: ", err)
 } else {
   p.MeasurementsFlow = &v
 }
@@ -5627,19 +5498,29 @@ func (p *ReproducePCRInput) Write(ctx context.Context, oprot thrift.TProtocol) e
   if err := oprot.WriteStructBegin(ctx, "ReproducePCRInput"); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
   if p != nil {
+    if err := p.writeField1(ctx, oprot); err != nil { return err }
     if err := p.writeField2(ctx, oprot); err != nil { return err }
     if err := p.writeField3(ctx, oprot); err != nil { return err }
     if err := p.writeField4(ctx, oprot); err != nil { return err }
     if err := p.writeField5(ctx, oprot); err != nil { return err }
     if err := p.writeField6(ctx, oprot); err != nil { return err }
     if err := p.writeField7(ctx, oprot); err != nil { return err }
-    if err := p.writeField8(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
   if err := oprot.WriteStructEnd(ctx); err != nil {
     return thrift.PrependError("write struct stop error: ", err) }
   return nil
+}
+
+func (p *ReproducePCRInput) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 1); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ActualFirmwareImage: ", p), err) }
+  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (1) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(ctx); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ActualFirmwareImage: ", p), err) }
+  return err
 }
 
 func (p *ReproducePCRInput) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
@@ -5655,69 +5536,59 @@ func (p *ReproducePCRInput) writeField2(ctx context.Context, oprot thrift.TProto
 }
 
 func (p *ReproducePCRInput) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ActualFirmwareImage", thrift.I32, 3); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ActualFirmwareImage: ", p), err) }
-  if err := oprot.WriteI32(ctx, int32(p.ActualFirmwareImage)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ActualFirmwareImage (3) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ActualFirmwareImage: ", p), err) }
+  if p.IsSetStatusRegisters() {
+    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.I32, 3); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:StatusRegisters: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.StatusRegisters)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.StatusRegisters (3) field write error: ", p), err) }
+    if err := oprot.WriteFieldEnd(ctx); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:StatusRegisters: ", p), err) }
+  }
   return err
 }
 
 func (p *ReproducePCRInput) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetStatusRegisters() {
-    if err := oprot.WriteFieldBegin(ctx, "StatusRegisters", thrift.I32, 4); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:StatusRegisters: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.StatusRegisters)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.StatusRegisters (4) field write error: ", p), err) }
+  if p.IsSetTPMDevice() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 4); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:TPMDevice: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (4) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:StatusRegisters: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 4:TPMDevice: ", p), err) }
   }
   return err
 }
 
 func (p *ReproducePCRInput) writeField5(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMDevice() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMDevice", thrift.I32, 5); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:TPMDevice: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.TPMDevice)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TPMDevice (5) field write error: ", p), err) }
+  if p.IsSetTPMEventLog() {
+    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.I32, 5); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:TPMEventLog: ", p), err) }
+    if err := oprot.WriteI32(ctx, int32(*p.TPMEventLog)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.TPMEventLog (5) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:TPMDevice: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 5:TPMEventLog: ", p), err) }
   }
   return err
 }
 
 func (p *ReproducePCRInput) writeField6(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetTPMEventLog() {
-    if err := oprot.WriteFieldBegin(ctx, "TPMEventLog", thrift.I32, 6); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:TPMEventLog: ", p), err) }
-    if err := oprot.WriteI32(ctx, int32(*p.TPMEventLog)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.TPMEventLog (6) field write error: ", p), err) }
-    if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 6:TPMEventLog: ", p), err) }
-  }
+  if err := oprot.WriteFieldBegin(ctx, "ExpectedPCR", thrift.I32, 6); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:ExpectedPCR: ", p), err) }
+  if err := oprot.WriteI32(ctx, int32(p.ExpectedPCR)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.ExpectedPCR (6) field write error: ", p), err) }
+  if err := oprot.WriteFieldEnd(ctx); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 6:ExpectedPCR: ", p), err) }
   return err
 }
 
 func (p *ReproducePCRInput) writeField7(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ExpectedPCR", thrift.I32, 7); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:ExpectedPCR: ", p), err) }
-  if err := oprot.WriteI32(ctx, int32(p.ExpectedPCR)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ExpectedPCR (7) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 7:ExpectedPCR: ", p), err) }
-  return err
-}
-
-func (p *ReproducePCRInput) writeField8(ctx context.Context, oprot thrift.TProtocol) (err error) {
   if p.IsSetMeasurementsFlow() {
-    if err := oprot.WriteFieldBegin(ctx, "MeasurementsFlow", thrift.I32, 8); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 8:MeasurementsFlow: ", p), err) }
+    if err := oprot.WriteFieldBegin(ctx, "MeasurementsFlow", thrift.I32, 7); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:MeasurementsFlow: ", p), err) }
     if err := oprot.WriteI32(ctx, int32(*p.MeasurementsFlow)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.MeasurementsFlow (8) field write error: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T.MeasurementsFlow (7) field write error: ", p), err) }
     if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 8:MeasurementsFlow: ", p), err) }
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 7:MeasurementsFlow: ", p), err) }
   }
   return err
 }
@@ -5728,13 +5599,13 @@ func (p *ReproducePCRInput) Equals(other *ReproducePCRInput) bool {
   } else if p == nil || other == nil {
     return false
   }
+  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   if p.OriginalFirmwareImage != other.OriginalFirmwareImage {
     if p.OriginalFirmwareImage == nil || other.OriginalFirmwareImage == nil {
       return false
     }
     if (*p.OriginalFirmwareImage) != (*other.OriginalFirmwareImage) { return false }
   }
-  if p.ActualFirmwareImage != other.ActualFirmwareImage { return false }
   if p.StatusRegisters != other.StatusRegisters {
     if p.StatusRegisters == nil || other.StatusRegisters == nil {
       return false

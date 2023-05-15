@@ -25,6 +25,8 @@ func (fwStor *FirmwareStorage) aoscWorkaroundBuildAnalyzerReportIndexes(tx *sql.
 		return fmt.Errorf("report.ID == 0")
 	}
 
+	sdfsdf
+
 	var (
 		columns []string
 		values  []any

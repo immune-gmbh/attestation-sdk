@@ -19,10 +19,12 @@ var _ = bytes.Equal
 
 // Attributes:
 //  - AssetID
+//  - ModelID
 //  - Hostname
 type Device struct {
   AssetID int64 `thrift:"AssetID,1" db:"AssetID" json:"AssetID"`
-  Hostname string `thrift:"Hostname,2" db:"Hostname" json:"Hostname"`
+  ModelID int64 `thrift:"ModelID,2" db:"ModelID" json:"ModelID"`
+  Hostname *string `thrift:"Hostname,3" db:"Hostname" json:"Hostname,omitempty"`
 }
 
 func NewDevice() *Device {
@@ -34,9 +36,20 @@ func (p *Device) GetAssetID() int64 {
   return p.AssetID
 }
 
-func (p *Device) GetHostname() string {
-  return p.Hostname
+func (p *Device) GetModelID() int64 {
+  return p.ModelID
 }
+var Device_Hostname_DEFAULT string
+func (p *Device) GetHostname() string {
+  if !p.IsSetHostname() {
+    return Device_Hostname_DEFAULT
+  }
+return *p.Hostname
+}
+func (p *Device) IsSetHostname() bool {
+  return p.Hostname != nil
+}
+
 func (p *Device) Read(ctx context.Context, iprot thrift.TProtocol) error {
   if _, err := iprot.ReadStructBegin(ctx); err != nil {
     return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
@@ -61,8 +74,18 @@ func (p *Device) Read(ctx context.Context, iprot thrift.TProtocol) error {
         }
       }
     case 2:
-      if fieldTypeId == thrift.STRING {
+      if fieldTypeId == thrift.I64 {
         if err := p.ReadField2(ctx, iprot); err != nil {
+          return err
+        }
+      } else {
+        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+          return err
+        }
+      }
+    case 3:
+      if fieldTypeId == thrift.STRING {
+        if err := p.ReadField3(ctx, iprot); err != nil {
           return err
         }
       } else {
@@ -95,10 +118,19 @@ func (p *Device)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error 
 }
 
 func (p *Device)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadString(ctx); err != nil {
+  if v, err := iprot.ReadI64(ctx); err != nil {
   return thrift.PrependError("error reading field 2: ", err)
 } else {
-  p.Hostname = v
+  p.ModelID = v
+}
+  return nil
+}
+
+func (p *Device)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+  if v, err := iprot.ReadString(ctx); err != nil {
+  return thrift.PrependError("error reading field 3: ", err)
+} else {
+  p.Hostname = &v
 }
   return nil
 }
@@ -109,6 +141,7 @@ func (p *Device) Write(ctx context.Context, oprot thrift.TProtocol) error {
   if p != nil {
     if err := p.writeField1(ctx, oprot); err != nil { return err }
     if err := p.writeField2(ctx, oprot); err != nil { return err }
+    if err := p.writeField3(ctx, oprot); err != nil { return err }
   }
   if err := oprot.WriteFieldStop(ctx); err != nil {
     return thrift.PrependError("write field stop error: ", err) }
@@ -128,12 +161,24 @@ func (p *Device) writeField1(ctx context.Context, oprot thrift.TProtocol) (err e
 }
 
 func (p *Device) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "Hostname", thrift.STRING, 2); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Hostname: ", p), err) }
-  if err := oprot.WriteString(ctx, string(p.Hostname)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.Hostname (2) field write error: ", p), err) }
+  if err := oprot.WriteFieldBegin(ctx, "ModelID", thrift.I64, 2); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:ModelID: ", p), err) }
+  if err := oprot.WriteI64(ctx, int64(p.ModelID)); err != nil {
+  return thrift.PrependError(fmt.Sprintf("%T.ModelID (2) field write error: ", p), err) }
   if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Hostname: ", p), err) }
+    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:ModelID: ", p), err) }
+  return err
+}
+
+func (p *Device) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
+  if p.IsSetHostname() {
+    if err := oprot.WriteFieldBegin(ctx, "Hostname", thrift.STRING, 3); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:Hostname: ", p), err) }
+    if err := oprot.WriteString(ctx, string(*p.Hostname)); err != nil {
+    return thrift.PrependError(fmt.Sprintf("%T.Hostname (3) field write error: ", p), err) }
+    if err := oprot.WriteFieldEnd(ctx); err != nil {
+      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:Hostname: ", p), err) }
+  }
   return err
 }
 
@@ -144,7 +189,13 @@ func (p *Device) Equals(other *Device) bool {
     return false
   }
   if p.AssetID != other.AssetID { return false }
-  if p.Hostname != other.Hostname { return false }
+  if p.ModelID != other.ModelID { return false }
+  if p.Hostname != other.Hostname {
+    if p.Hostname == nil || other.Hostname == nil {
+      return false
+    }
+    if (*p.Hostname) != (*other.Hostname) { return false }
+  }
   return true
 }
 

@@ -81,7 +81,6 @@ enum BuildMode {
 
 exception UnableToGetOriginalFirmware {
   1: string BIOSVersion;
-  2: string BIOSDateString;
   3: string Reason;
 }
 
@@ -126,10 +125,9 @@ struct FirmwareImageMetadata {
 
   5: optional string Filename;
   6: optional string Version;
-  7: optional string ReleaseDate;
-  8: i64 Size;
-  9: i64 TSAdd;
-  10: optional i64 TSUpload;
+  7: i64 Size;
+  8: i64 TSAdd;
+  9: optional i64 TSUpload;
 }
 
 struct SearchReportRequest {
@@ -137,7 +135,7 @@ struct SearchReportRequest {
 
   // Limit defines the maximal amount of reports to return.
   // Value "0" means no limit.
-  3: i64 Limit;
+  2: i64 Limit;
 }
 
 struct SearchReportFilters {
@@ -153,7 +151,6 @@ struct SearchReportResult {
 
 struct FirmwareVersion {
   1: string Version;
-  2: string Date;
 }
 
 struct CompressedBlob {
@@ -177,40 +174,37 @@ struct PCR {
 
 // Artifact represents large shared data objects that are desirable to be passed once
 union Artifact {
-  2: FirmwareImage FwImage;
-  3: PCR Pcr;
-  4: TPMType TPMDevice;
-  5: tpm.EventLog TPMEventLog;
-  6: list<StatusRegister> StatusRegisters;
-  7: measurements.Flow MeasurementsFlow;
+  1: FirmwareImage FwImage;
+  2: PCR Pcr;
+  3: TPMType TPMDevice;
+  4: tpm.EventLog TPMEventLog;
+  5: list<StatusRegister> StatusRegisters;
+  6: measurements.Flow MeasurementsFlow;
 }
 
 // DiffMeasuredBootInput is an input structure for DiffMeasuredBoot analyzer
-// TODO: Fix field IDs
 struct DiffMeasuredBootInput {
-  3: i32 ActualFirmwareImage;
+  1: i32 ActualFirmwareImage;
   2: optional i32 OriginalFirmwareImage;
-  4: optional i32 StatusRegisters;
-  5: optional i32 TPMDevice;
-  6: optional i32 TPMEventLog;
-  7: optional i32 ActualPCR0;
+  3: optional i32 StatusRegisters;
+  4: optional i32 TPMDevice;
+  5: optional i32 TPMEventLog;
+  6: optional i32 ActualPCR0;
 }
 
-// TODO: Fix field IDs
 struct IntelACMInput {
-  3: i32 ActualFirmwareImage;
+  1: i32 ActualFirmwareImage;
   2: optional i32 OriginalFirmwareImage;
 }
 
-// TODO: Fix field IDs
 struct ReproducePCRInput {
-  3: i32 ActualFirmwareImage;
+  1: i32 ActualFirmwareImage;
   2: optional i32 OriginalFirmwareImage;
-  4: optional i32 StatusRegisters;
-  5: optional i32 TPMDevice;
-  6: optional i32 TPMEventLog;
-  7: i32 ExpectedPCR;
-  8: optional i32 MeasurementsFlow;
+  3: optional i32 StatusRegisters;
+  4: optional i32 TPMDevice;
+  5: optional i32 TPMEventLog;
+  6: i32 ExpectedPCR;
+  7: optional i32 MeasurementsFlow;
 }
 
 struct PSPSignatureInput {

@@ -85,7 +85,7 @@ func (ctrl *Controller) getAnalyzeReport(
 
 	artifactsAccessor, err := analyzerinput.NewArtifactsAccessor(
 		artifacts,
-		NewAnalyzerFirmwaresAccessor(ctrl.FirmwareStorage, ctrl.rtpfw, ctrl.OriginalFWImageRepository, ctrl, modelFamilyID, evaluationStatus),
+		NewAnalyzerFirmwaresAccessor(ctrl.FirmwareStorage, ctrl.OriginalFWImageRepository, ctrl, device.ModelID),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create artifacts accessor: %w", err)

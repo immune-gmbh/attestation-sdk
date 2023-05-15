@@ -1,0 +1,51 @@
+load("//libfb/go:defs.bzl", "go_package")
+
+go_package(
+    name = "rtpdb",
+    test_deps = [
+        "//libfb/go/ephemdb:ephemdb",
+    ],
+    test_external_deps = [
+        "github.com/stretchr/testify/assert",
+        "github.com/stretchr/testify/require",
+    ],
+    deps = [
+        "//libfb/go/fbmysql:fbmysql",
+        "//privatecore/firmware/analyzer/if:rtp-go",
+        "//privatecore/firmware/analyzer/pkg/rtpdb/models:models",
+        "//privatecore/firmware/analyzer/pkg/rtpdb/nodeapi:dummy",
+        "//privatecore/firmware/analyzer/pkg/types:types",
+    ],
+    external_deps = [
+        "github.com/9elements/converged-security-suite/v2/pkg/errors",
+        "github.com/elliotchance/phpserialize",
+        "github.com/jmoiron/sqlx",
+        "github.com/facebookincubator/go-belt/tool/logger",
+    ],
+)
+
+go_package(
+    name = "rtpdb-with-nodeapi",
+    package_name = "privatecore/firmware/analyzer/pkg/rtpdb",
+    test_deps = [
+        "//libfb/go/ephemdb:ephemdb",
+    ],
+    test_external_deps = [
+        "github.com/stretchr/testify/assert",
+        "github.com/stretchr/testify/require",
+    ],
+    tests = False,
+    deps = [
+        "//libfb/go/fbmysql:fbmysql",
+        "//privatecore/firmware/analyzer/if:rtp-go",
+        "//privatecore/firmware/analyzer/pkg/rtpdb/models:models",
+        "//privatecore/firmware/analyzer/pkg/rtpdb/nodeapi:nodeapi",
+        "//privatecore/firmware/analyzer/pkg/types:types",
+    ],
+    external_deps = [
+        "github.com/9elements/converged-security-suite/v2/pkg/errors",
+        "github.com/elliotchance/phpserialize",
+        "github.com/jmoiron/sqlx",
+        "github.com/facebookincubator/go-belt/tool/logger",
+    ],
+)

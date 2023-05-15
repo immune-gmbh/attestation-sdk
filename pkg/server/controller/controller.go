@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-	"sync/atomic"
 	"time"
-	"unsafe"
 
 	"lukechampine.com/blake3"
 
@@ -17,7 +15,6 @@ import (
 	"github.com/9elements/converged-security-suite/v2/pkg/uefi"
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/logger"
-	lru "github.com/hashicorp/golang-lru"
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
@@ -49,6 +46,7 @@ type Controller struct {
 	Context                   context.Context
 	ContextCancel             context.CancelFunc
 	FirmwareStorage           FirmwareStorage
+	DeviceGetter              DeviceGetter
 	OriginalFWImageRepository originalFWImageRepository
 	analyzersRegistry         *analyzers.Registry
 	analysisDataCalculator    analysisDataCalculatorInterface
@@ -138,6 +136,7 @@ func New(
 
 	ctrl := &Controller{
 		FirmwareStorage:           firmwareStorage,
+		DeviceGetter:              deviceGetter,
 		OriginalFWImageRepository: origFirmwareRepo,
 		analyzersRegistry:         analyzersRegistry,
 		analysisDataCalculator:    analysisDataCalculator,
@@ -170,32 +169,11 @@ func (ctrl *Controller) updateCacheLoop(
 	}
 }
 
-func (ctrl *Controller) updateRTPFWCache() {
-	ctx := ctrl.Context
-	log := logger.FromCtx(ctx)
-	log.Infof("Update RTP cache")
-	updated, err := ctrl.rtpfw.Update(ctx)
-	if err != nil {
-		log.Errorf("Failed to updated RTP table cache, err: %v", err)
-		return
-	}
-
-	if updated {
-		log.Infof("Clear cache diff firmware and calc pcr0 caches")
-		ctrl.purgeAPICache()
-	}
-}
-
 func (ctrl *Controller) purgeAPICache() {
 	ctx := ctrl.Context
 
 	logger.FromCtx(ctx).Infof("purge controller API cache")
-	ctrl.DiffFirmwareCache.Purge()
-	ctrl.ReportHostConfigCache.Purge()
-}
-
-func (ctrl *Controller) diffFirmwareCacheLoad() *lru.TwoQueueCache {
-	return (*lru.TwoQueueCache)(atomic.LoadPointer((*unsafe.Pointer)((unsafe.Pointer)(&ctrl.DiffFirmwareCache))))
+	// TODO: purge any cache
 }
 
 func uint64deref(p *uint64) uint64 {

@@ -45,9 +45,7 @@ type FirmwareImage struct {
 type FirmwaresAccessor interface {
 	GetByBlob(ctx context.Context, content []byte) (analysis.Blob, error)
 	GetByID(ctx context.Context, imageID types.ImageID) (analysis.Blob, error)
-	GetByVersionAndDate(ctx context.Context, firmwareVersion, firmwareDateString string) (analysis.Blob, error)
-	GetByFilename(ctx context.Context, filename string) (analysis.Blob, error)
-	GetByEverstoreHandle(ctx context.Context, handle string) (analysis.Blob, error)
+	GetByVersion(ctx context.Context, firmwareVersion string) (analysis.Blob, error)
 }
 
 type getFirmwareResult struct {
@@ -139,30 +137,19 @@ func (a *artifactsAccessor) GetFirmware(
 			} else {
 				firmwareAccessor, err = a.firmwaresAccessor.GetByBlob(ctx, image)
 			}
-		case fwImage.IsSetFilename():
-			firmwareAccessor, err = a.firmwaresAccessor.GetByFilename(ctx, fwImage.GetFilename())
-			if err != nil {
-				err = fmt.Errorf("failed to download image by name '%s' for artifact '%d': %w", fwImage.GetFilename(), artIdx, err)
-			}
 		case fwImage.IsSetManifoldID():
 			firmwareAccessor, err = a.firmwaresAccessor.GetByID(ctx, types.NewImageIDFromBytes(fwImage.GetManifoldID()))
-		case fwImage.IsSetEverstoreHandle():
-			firmwareAccessor, err = a.firmwaresAccessor.GetByEverstoreHandle(ctx, fwImage.GetEverstoreHandle())
-			if err != nil {
-				err = fmt.Errorf("failed to download image by everstore handle '%s' for artifact '%d': %w", fwImage.GetEverstoreHandle(), artIdx, err)
-			}
 		case fwImage.IsSetFwVersion():
 			firmwareVersionInfo := fwImage.GetFwVersion()
-			firmwareAccessor, err = a.firmwaresAccessor.GetByVersionAndDate(
+			firmwareAccessor, err = a.firmwaresAccessor.GetByVersion(
 				ctx,
 				firmwareVersionInfo.GetVersion(),
-				firmwareVersionInfo.GetDate(),
 			)
 			if err != nil {
-				log.Errorf("Failed to get firmware image of '%s'/'%s': %v", firmwareVersionInfo.GetVersion(), firmwareVersionInfo.GetDate(), err)
+				log.Errorf("Failed to get firmware image of version '%s': %v", firmwareVersionInfo.GetVersion(), err)
 			}
 		default:
-			err = fmt.Errorf("not supported firmware image type for artifcat '%d'", artIdx)
+			err = fmt.Errorf("not supported firmware image type for artifact '%d'", artIdx)
 		}
 	default:
 		err = fmt.Errorf("unexpected artifact's '%d' type for obtaining firmware image", artIdx)

@@ -83,10 +83,9 @@ func detectLocalFirmware(log logger.Logger, manifoldEntry *afas.FirmwareImageMet
 	//   in AFAS or due to wrong version reported by methods above.
 	originalFirmwareVariants := map[firmwareVariant]fwVariantSources{}
 
-	if manifoldEntry != nil && manifoldEntry.Version != nil && manifoldEntry.ReleaseDate != nil {
+	if manifoldEntry != nil && manifoldEntry.Version != nil {
 		variant := firmwareVariant{
-			Version:     *manifoldEntry.Version,
-			ReleaseDate: *manifoldEntry.ReleaseDate,
+			Version: *manifoldEntry.Version,
 		}
 		originalFirmwareVariants[variant] = append(originalFirmwareVariants[variant], fwVariantSourceDB)
 	}

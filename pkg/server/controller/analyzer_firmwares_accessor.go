@@ -42,15 +42,13 @@ type imageSaverAsync interface {
 
 // AnalyzerFirmwaresAccessor implements analyzerinput.FirmwaresAccessor for a Controller
 type AnalyzerFirmwaresAccessor struct {
-	storage                          FirmwareStorage
-	rtpFW                            rtpfwInterface
-	originalFirmwareStorage          originalFWImageRepository
-	imageSaverAsync                  imageSaverAsync
-	targetModelFamilyID              *uint64
-	firmwareExpectedEvaluationStatus sdf //rtp.EvaluationStatus
-	cache                            map[objhash.ObjHash]analyzerFirmwaresAccessorResult
-	cacheLocker                      sync.Mutex
-	cacheSingleOp                    *lockmap.LockMap
+	storage                 FirmwareStorage
+	originalFirmwareStorage originalFWImageRepository
+	imageSaverAsync         imageSaverAsync
+	targetModelID           int64
+	cache                   map[objhash.ObjHash]analyzerFirmwaresAccessorResult
+	cacheLocker             sync.Mutex
+	cacheSingleOp           *lockmap.LockMap
 }
 
 var _ analyzerinput.FirmwaresAccessor = (*AnalyzerFirmwaresAccessor)(nil)
@@ -63,22 +61,18 @@ var _ analyzerinput.FirmwaresAccessor = (*AnalyzerFirmwaresAccessor)(nil)
 //
 // TODO: try to polish-up function signature (for example, consider merging rtpFW and firmwareEvaluationStatus)
 func NewAnalyzerFirmwaresAccessor(
-	storage FirmwareStorage,
-	rtpFW rtpfwInterface,
+	firmwareStorage FirmwareStorage,
 	originalFirmwareStorage originalFWImageRepository,
 	imageSaverAsync imageSaverAsync,
-	targetModelFamilyID *uint64,
-	firmwareExpectedEvaluationStatus sdf, //rtp.EvaluationStatus,
+	targetModelID int64,
 ) *AnalyzerFirmwaresAccessor {
 	return &AnalyzerFirmwaresAccessor{
-		storage:                          storage,
-		rtpFW:                            rtpFW,
-		originalFirmwareStorage:          originalFirmwareStorage,
-		imageSaverAsync:                  imageSaverAsync,
-		targetModelFamilyID:              targetModelFamilyID,
-		firmwareExpectedEvaluationStatus: firmwareExpectedEvaluationStatus,
-		cache:                            make(map[objhash.ObjHash]analyzerFirmwaresAccessorResult),
-		cacheSingleOp:                    lockmap.NewLockMap(),
+		storage:                 firmwareStorage,
+		originalFirmwareStorage: originalFirmwareStorage,
+		imageSaverAsync:         imageSaverAsync,
+		targetModelID:           targetModelID,
+		cache:                   make(map[objhash.ObjHash]analyzerFirmwaresAccessorResult),
+		cacheSingleOp:           lockmap.NewLockMap(),
 	}
 }
 
@@ -229,10 +223,6 @@ func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 			String: biosInfo.Version,
 			Valid:  true,
 		}
-		meta.FirmwareDateString = sql.NullString{
-			String: biosInfo.ReleaseDate,
-			Valid:  true,
-		}
 	}()
 	wg.Wait()
 
@@ -299,14 +289,13 @@ func biosInfoFromMeta(meta *models.ImageMetadata) *dmidecode.BIOSInfo {
 		return nil
 	}
 
-	if !meta.FirmwareDateString.Valid || !meta.FirmwareVersion.Valid {
+	if !meta.FirmwareVersion.Valid {
 		return nil
 	}
 
 	// TODO: add the rest of the BIOSInfo fields to the database
 	return &dmidecode.BIOSInfo{
-		Version:     meta.FirmwareVersion.String,
-		ReleaseDate: meta.FirmwareDateString.String,
+		Version: meta.FirmwareVersion.String,
 	}
 }
 
@@ -334,58 +323,16 @@ func (a *AnalyzerFirmwaresAccessor) GetByID(ctx context.Context, imageID types.I
 }
 
 // GetByVersionAndDate implements analyzerinput.FirmwaresAccessor (see the description of AnalyzerFirmwaresAccessor).
-func (a *AnalyzerFirmwaresAccessor) GetByVersionAndDate(
+func (a *AnalyzerFirmwaresAccessor) GetByVersion(
 	ctx context.Context,
-	firmwareVersion, firmwareDateString string,
+	firmwareVersion string,
 ) (analysis.Blob, error) {
 	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
-		fw, err := getRTPFirmware(
-			ctx,
-			a.rtpFW,
-			firmwareVersion,
-			firmwareDateString,
-			a.targetModelFamilyID,
-			a.firmwareExpectedEvaluationStatus,
-			types.CachingPolicyDefault,
-		)
+		blob, filename, err := a.originalFirmwareStorage.DownloadByVersion(ctx, firmwareVersion)
 		if err != nil {
 			return nil, nil, nil, nil, fmt.Errorf("unable to get the RTP Firmware: %w", err)
 		}
-		filename := ""
-		if fw.Metadata.TarballFilename != nil {
-			filename = *fw.Metadata.TarballFilename
-		}
-		meta, parsed := a.metaByImage(ctx, fw.ImageFile.Data, fw.ParsedCache, filename)
-		return fw.ImageFile.Data, &meta, parsed, biosInfoFromMeta(&meta), err
-	}, "GetByVersionAndDate", firmwareVersion, firmwareDateString)
-}
-
-// GetByFilename implements analyzerinput.FirmwaresAccessor (see the description of AnalyzerFirmwaresAccessor).
-func (a *AnalyzerFirmwaresAccessor) GetByFilename(ctx context.Context, filename string) (analysis.Blob, error) {
-	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
-		origFirmwareBytes, _, err := a.originalFirmwareStorage.DownloadByFilename(ctx, filename)
-		if err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("unable to download the original firmware by filename '%s': %w", filename, err)
-		}
-		meta, parsed := a.metaByImage(ctx, origFirmwareBytes, nil, filename)
-		return origFirmwareBytes, &meta, parsed, biosInfoFromMeta(&meta), nil
-	}, "GetByFilename", filename)
-}
-
-// GetByEverstoreHandle implements analyzerinput.FirmwaresAccessor (see the description of AnalyzerFirmwaresAccessor).
-func (a *AnalyzerFirmwaresAccessor) GetByEverstoreHandle(ctx context.Context, handle string) (analysis.Blob, error) {
-	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
-		firmwareImageRaw, originalFilename, err := a.originalFirmwareStorage.DownloadByEverstoreHandle(ctx, handle)
-		if err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("unable to download the original firmware by everstore handle '%s': %w", handle, err)
-		}
-
-		fw, filename, err := firmwarestorage.ExtractFirmwareImage(ctx, originalFilename, firmwareImageRaw)
-		if err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("unable to extract the original firmware: %w", err)
-		}
-
-		meta, _ := a.metaByImage(ctx, nil, fw, filename)
-		return fw.Buf(), &meta, fw, biosInfoFromMeta(&meta), nil
-	}, "GetByEverstoreHandle", handle)
+		meta, parsed := a.metaByImage(ctx, blob, nil, filename)
+		return blob, &meta, parsed, biosInfoFromMeta(&meta), err
+	}, "GetByVersion", firmwareVersion)
 }

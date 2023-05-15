@@ -15,16 +15,15 @@ import (
 // ImageMetadata is a metadata of a stored firmware image.
 // noinspection GoSnakeCaseUsage
 type ImageMetadata struct {
-	ImageID            types.ImageID   `db:"image_id,pk"`
-	FirmwareVersion    sql.NullString  `db:"firmware_version"`
-	FirmwareDateString sql.NullString  `db:"firmware_date"`
-	Filename           sql.NullString  `db:"filename"`
-	Size               uint64          `db:"size"`
-	TSAdd              time.Time       `db:"ts_add"`
-	TSUpload           sql.NullTime    `db:"ts_upload"`
-	HashSHA2_512       types.HashValue `db:"hash_sha2_512"`
-	HashBlake3_512     types.HashValue `db:"hash_blake3_512"`
-	HashStable         types.HashValue `db:"hash_stable"`
+	ImageID         types.ImageID   `db:"image_id,pk"`
+	FirmwareVersion sql.NullString  `db:"firmware_version"`
+	Filename        sql.NullString  `db:"filename"`
+	Size            uint64          `db:"size"`
+	TSAdd           time.Time       `db:"ts_add"`
+	TSUpload        sql.NullTime    `db:"ts_upload"`
+	HashSHA2_512    types.HashValue `db:"hash_sha2_512"`
+	HashBlake3_512  types.HashValue `db:"hash_blake3_512"`
+	HashStable      types.HashValue `db:"hash_stable"`
 }
 
 // NewImageMetadata returns a new instance of image metadata.
@@ -40,12 +39,6 @@ func NewImageMetadata(
 	if firmwareVersion != "" {
 		meta.FirmwareVersion = sql.NullString{
 			String: firmwareVersion,
-			Valid:  true,
-		}
-	}
-	if firmwareDate != "" {
-		meta.FirmwareDateString = sql.NullString{
-			String: firmwareDate,
 			Valid:  true,
 		}
 	}
@@ -124,9 +117,6 @@ func (meta *ImageMetadata) ToThrift() *afas.FirmwareImageMetadata {
 	}
 	if meta.FirmwareVersion.Valid {
 		result.Version = &meta.FirmwareVersion.String
-	}
-	if meta.FirmwareDateString.Valid {
-		result.ReleaseDate = &meta.FirmwareDateString.String
 	}
 	if meta.TSUpload.Valid {
 		result.TSUpload = &[]int64{meta.TSUpload.Time.UnixNano()}[0]

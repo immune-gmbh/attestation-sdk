@@ -94,7 +94,6 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 			FwImage: &afas.FirmwareImage{
 				FwVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
-					Date:    firmwareDate,
 				},
 			},
 		}
@@ -185,7 +184,6 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 			FwImage: &afas.FirmwareImage{
 				FwVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
-					Date:    firmwareDate,
 				},
 			},
 		}
@@ -266,7 +264,6 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 			FwImage: &afas.FirmwareImage{
 				FwVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
-					Date:    firmwareDate,
 				},
 			},
 		}
