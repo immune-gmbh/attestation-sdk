@@ -9,6 +9,7 @@ thrift:
 	for THRIFT_FILE in if/afas.thrift if/txt_errors.thrift if/device.thrift ; do \
 		thrift -r --gen go:package_prefix=github.com/immune-gmbh/AttestationFailureAnalysisService/ $${THRIFT_FILE} ; \
 	done
+	go fmt ./gen-go/...
 	for GENERATED_PATH in $(shell find gen-go -name generated | sed -e 's%gen-go/%%g' -e 's%/generated$$%%g') ; do \
 		ln -s `realpath --relative-to=$${GENERATED_PATH} gen-go/$${GENERATED_PATH}`/generated $${GENERATED_PATH}/generated ; \
 	done
