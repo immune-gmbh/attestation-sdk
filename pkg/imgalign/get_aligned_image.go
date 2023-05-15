@@ -2,8 +2,8 @@ package imgalign
 
 import (
 	"context"
-	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/pkg/field"

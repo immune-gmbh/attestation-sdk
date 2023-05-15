@@ -13,3 +13,8 @@ const (
 // Firmware represent a row of table containing metadata
 // about firmware images.
 type Firmware = models.Firmware
+
+type FirmwareTarget = models.FirmwareTarget
+type FirmwareMeasurement = models.FirmwareMeasurement
+type FirmwareMeasurementType = models.FirmwareMeasurementType
+type FirmwareMeasurementMetadata = models.FirmwareMeasurementMetadata

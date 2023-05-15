@@ -2,12 +2,12 @@
 
 package biosrtmanalysis
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -21,4 +21,3 @@ const BIOSRTMVolumeAnalyzerID = "BIOSRTMVolume"
 
 func init() {
 }
-

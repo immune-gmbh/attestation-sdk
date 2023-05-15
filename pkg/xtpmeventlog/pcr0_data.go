@@ -16,23 +16,23 @@ import (
 /*
 The initial description of the structure is:
 
-type EventData struct {
-	DescriptionSize   uint16
-	DescriptionString [DescriptionSize]uint8
-	ACM_POLICY_STATUS uint64
-	ACMHeaderSVN      uint16
-	ACMSignatureAlgo  TPM_ALG_ID
-	ACMSignatureSize  uint16 // to know the size of the signature, to know where it ends
-	ACMSignature      [ACMSignatureSize]uint8
-	KMSignatureAlgo   TPM_ALG_ID
-	KMSignatureSize   uint16 // to know the size of the signature, to know where it ends
-	KMSignature       [KMSignatureSize ]uint8
-	BPMSignatureAlgo  TPM_ALG_ID
-	BPMSignatureSize  uint16 // to know the size of the signature, to know where it ends
-	BPMSignature      [BPMSignatureSize]uint8
-	IBBDigests        TPML_DIGEST_VALUES
-	OriginalPCR0      TPML_DIGEST_VALUES
-}
+	type EventData struct {
+		DescriptionSize   uint16
+		DescriptionString [DescriptionSize]uint8
+		ACM_POLICY_STATUS uint64
+		ACMHeaderSVN      uint16
+		ACMSignatureAlgo  TPM_ALG_ID
+		ACMSignatureSize  uint16 // to know the size of the signature, to know where it ends
+		ACMSignature      [ACMSignatureSize]uint8
+		KMSignatureAlgo   TPM_ALG_ID
+		KMSignatureSize   uint16 // to know the size of the signature, to know where it ends
+		KMSignature       [KMSignatureSize ]uint8
+		BPMSignatureAlgo  TPM_ALG_ID
+		BPMSignatureSize  uint16 // to know the size of the signature, to know where it ends
+		BPMSignature      [BPMSignatureSize]uint8
+		IBBDigests        TPML_DIGEST_VALUES
+		OriginalPCR0      TPML_DIGEST_VALUES
+	}
 */
 type PCR0DATALog struct {
 	Description       string

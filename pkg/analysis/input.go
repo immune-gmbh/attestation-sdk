@@ -154,7 +154,8 @@ func (in Input) AddOriginalBIOSInfo(biosInfo OriginalBIOSInfo) Input {
 // AddCustomValue adds a custom value as some plugins take unique values
 //
 // Note: register custom values through RegisterInputType, to make them
-//       deserializable.
+//
+//	deserializable.
 func (in Input) AddCustomValue(v any) Input {
 	if !IsRegisteredType(v) {
 		panic(fmt.Errorf("internal error: input value of type %T is not registered", v))

@@ -127,7 +127,8 @@ type calculator[inputType, outputType any] interface {
 // will overwrite the calculator.
 //
 // TODO: The UNIQUE KEY for calculators should be not the outputType, but inputType+outputType. For example
-//       BIOSInfo could be calculated from different input types and it should be allowed.
+//
+//	BIOSInfo could be calculated from different input types and it should be allowed.
 //
 // For example: firmware parsing, fixing register's values.
 // Input argument should be a function of format func(ctx context.Context, in InputStruct) (Output1, Output2, ..., OutputN, []Issue, error)

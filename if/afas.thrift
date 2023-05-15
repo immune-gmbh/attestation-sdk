@@ -63,7 +63,7 @@ struct HostInfo {
   1: optional string Hostname;
   2: optional i64 AssetID;
   3: optional string SerialNumber;
-  4: optional i32 ModelID;
+  4: optional i64 ModelID;
   5: bool IsVerified = false;
   6: bool IsClientHostAnalyzed;
 }

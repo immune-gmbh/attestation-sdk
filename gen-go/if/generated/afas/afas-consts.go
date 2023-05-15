@@ -2,11 +2,10 @@
 
 package afas
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/caching_policy"
@@ -14,7 +13,7 @@ import(
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/tpm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
-
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -33,4 +32,3 @@ var _ = intelacmanalysis.GoUnusedProtection__
 
 func init() {
 }
-

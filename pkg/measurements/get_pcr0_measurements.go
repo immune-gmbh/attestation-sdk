@@ -44,7 +44,8 @@ func init() {
 // SimulateBootProcess returns the result of boot flow simulation.
 //
 // TODO: Delete this function. It is just a function for an intermediate
-//       of the code while migrating it from `pcr` to `bootflow`.
+//
+//	of the code while migrating it from `pcr` to `bootflow`.
 func SimulateBootProcess(
 	ctx context.Context,
 	biosImg *biosimage.BIOSImage,
@@ -67,7 +68,8 @@ func SimulateBootProcess(
 // CalculatePCR0 calculates PCR0 value
 //
 // TODO: Delete this function. It is just a function for an intermediate
-//       of the code while migrating it from `pcr` to `bootflow`.
+//
+//	of the code while migrating it from `pcr` to `bootflow`.
 func CalculatePCR0(
 	ctx context.Context,
 	fw *uefi.UEFI,
@@ -98,7 +100,8 @@ type Issue error
 // GetFixedHostConfiguration returns fixed host configuration elements
 //
 // TODO: Delete this function. It is just a function for an intermediate
-//       of the code while migrating it from `pcr` to `bootflow`.
+//
+//	of the code while migrating it from `pcr` to `bootflow`.
 func GetFixedHostConfiguration(
 	ctx context.Context,
 	originalFW *uefi.UEFI,
@@ -169,7 +172,8 @@ func GetFixedHostConfiguration(
 // CalculateCBnT0TACMPolicyStatus tries to obtain ACM_POLICY_STATUS register from the host configuration using bruteforcing tehniques
 //
 // TODO: Delete this function. It is just a function for an intermediate
-//       of the code while migrating it from `pcr` to `bootflow`.
+//
+//	of the code while migrating it from `pcr` to `bootflow`.
 func CalculateCBnT0TACMPolicyStatus(
 	ctx context.Context,
 	originalFW *uefi.UEFI,

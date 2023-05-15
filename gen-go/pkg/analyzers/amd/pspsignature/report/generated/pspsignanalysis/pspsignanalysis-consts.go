@@ -2,14 +2,13 @@
 
 package pspsignanalysis
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
-
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -20,8 +19,8 @@ var _ = time.Now
 var _ = bytes.Equal
 
 var _ = psptypes.GoUnusedProtection__
+
 const PSPSignatureAnalyzerID = "PSPSignature"
 
 func init() {
 }
-

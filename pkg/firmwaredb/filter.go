@@ -169,7 +169,7 @@ func (f FilterIDs) Match(fw *Firmware) bool {
 }
 
 // FilterModelFamilyIDs filters only the entries with the specified model family IDs.
-type FilterModelIDs []uint64
+type FilterModelIDs []int64
 
 // WhereCond implements Filter.
 func (f FilterModelIDs) WhereCond() (string, []interface{}) {
@@ -178,7 +178,7 @@ func (f FilterModelIDs) WhereCond() (string, []interface{}) {
 	}
 	s := make([]string, 0, len(f))
 	for _, id := range f {
-		s = append(s, strconv.FormatUint(id, 10))
+		s = append(s, strconv.FormatInt(id, 10))
 	}
 	return fmt.Sprintf("firmware_targets.model_id IN (%s)", strings.Join(s, ",")), nil
 }

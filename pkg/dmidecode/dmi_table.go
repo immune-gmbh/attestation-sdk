@@ -6,10 +6,10 @@ import (
 	"io"
 
 	"github.com/digitalocean/go-smbios/smbios"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 	"github.com/linuxboot/fiano/pkg/guid"
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 	"github.com/xaionaro-facebook/go-dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 )
 
 // DMITable is a parsed DMI table.

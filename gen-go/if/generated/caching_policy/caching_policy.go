@@ -2,14 +2,14 @@
 
 package caching_policy
 
-import(
+import (
 	"bytes"
 	"context"
 	"database/sql/driver"
 	"errors"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -20,61 +20,69 @@ var _ = time.Now
 var _ = bytes.Equal
 
 type CachingPolicy int64
+
 const (
-  CachingPolicy_Default CachingPolicy = 0
-  CachingPolicy_NoCache CachingPolicy = 1
-  CachingPolicy_StoreAndUseCache CachingPolicy = 2
-  CachingPolicy_UseCache CachingPolicy = 3
+	CachingPolicy_Default          CachingPolicy = 0
+	CachingPolicy_NoCache          CachingPolicy = 1
+	CachingPolicy_StoreAndUseCache CachingPolicy = 2
+	CachingPolicy_UseCache         CachingPolicy = 3
 )
 
 func (p CachingPolicy) String() string {
-  switch p {
-  case CachingPolicy_Default: return "Default"
-  case CachingPolicy_NoCache: return "NoCache"
-  case CachingPolicy_StoreAndUseCache: return "StoreAndUseCache"
-  case CachingPolicy_UseCache: return "UseCache"
-  }
-  return "<UNSET>"
+	switch p {
+	case CachingPolicy_Default:
+		return "Default"
+	case CachingPolicy_NoCache:
+		return "NoCache"
+	case CachingPolicy_StoreAndUseCache:
+		return "StoreAndUseCache"
+	case CachingPolicy_UseCache:
+		return "UseCache"
+	}
+	return "<UNSET>"
 }
 
 func CachingPolicyFromString(s string) (CachingPolicy, error) {
-  switch s {
-  case "Default": return CachingPolicy_Default, nil 
-  case "NoCache": return CachingPolicy_NoCache, nil 
-  case "StoreAndUseCache": return CachingPolicy_StoreAndUseCache, nil 
-  case "UseCache": return CachingPolicy_UseCache, nil 
-  }
-  return CachingPolicy(0), fmt.Errorf("not a valid CachingPolicy string")
+	switch s {
+	case "Default":
+		return CachingPolicy_Default, nil
+	case "NoCache":
+		return CachingPolicy_NoCache, nil
+	case "StoreAndUseCache":
+		return CachingPolicy_StoreAndUseCache, nil
+	case "UseCache":
+		return CachingPolicy_UseCache, nil
+	}
+	return CachingPolicy(0), fmt.Errorf("not a valid CachingPolicy string")
 }
-
 
 func CachingPolicyPtr(v CachingPolicy) *CachingPolicy { return &v }
 
 func (p CachingPolicy) MarshalText() ([]byte, error) {
-return []byte(p.String()), nil
+	return []byte(p.String()), nil
 }
 
 func (p *CachingPolicy) UnmarshalText(text []byte) error {
-q, err := CachingPolicyFromString(string(text))
-if (err != nil) {
-return err
-}
-*p = q
-return nil
+	q, err := CachingPolicyFromString(string(text))
+	if err != nil {
+		return err
+	}
+	*p = q
+	return nil
 }
 
 func (p *CachingPolicy) Scan(value interface{}) error {
-v, ok := value.(int64)
-if !ok {
-return errors.New("Scan value is not int64")
-}
-*p = CachingPolicy(v)
-return nil
+	v, ok := value.(int64)
+	if !ok {
+		return errors.New("Scan value is not int64")
+	}
+	*p = CachingPolicy(v)
+	return nil
 }
 
-func (p * CachingPolicy) Value() (driver.Value, error) {
-  if p == nil {
-    return nil, nil
-  }
-return int64(*p), nil
+func (p *CachingPolicy) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
 }

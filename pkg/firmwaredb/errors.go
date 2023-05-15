@@ -4,44 +4,26 @@ import (
 	"fmt"
 )
 
-// ErrInitMySQL implements "error", for the description see Error.
-type ErrInitMySQL struct {
-	Err error
+type Err[T fmt.Stringer] struct {
+	Err         error
+	Description T
 }
 
-func (err ErrInitMySQL) Error() string {
-	return fmt.Sprintf("unable to initialize a MySQL client: %v", err.Err)
+func (err Err[T]) Error() string {
+	var s T
+	return fmt.Sprintf("%s: %v", s.String(), err.Err)
 }
 
-func (err ErrInitMySQL) Unwrap() error {
+func (err Err[T]) Unwrap() error {
 	return err.Err
 }
 
-// ErrMySQLPing implements "error", for the description see Error.
-type ErrMySQLPing struct {
-	Err error
+type NotFound struct {
+	Filters Filters
 }
 
-func (err ErrMySQLPing) Error() string {
-	return fmt.Sprintf("unable to ping the MySQL server: %v", err.Err)
+func (e NotFound) String() string {
+	return fmt.Sprintf("nothing found using filters %s", e.Filters)
 }
 
-func (err ErrMySQLPing) Unwrap() error {
-	return err.Err
-}
-
-// ErrCancelled implements "error", for the description see Error.
-type ErrCancelled struct {
-	Err error
-}
-
-func (err ErrCancelled) Error() string {
-	if err.Err != nil {
-		return fmt.Sprintf("cancelled: %v", err.Err)
-	}
-	return "cancelled"
-}
-
-func (err ErrCancelled) Unwrap() error {
-	return err.Err
-}
+type ErrNotFound = Err[NotFound]

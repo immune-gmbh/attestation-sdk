@@ -2,12 +2,12 @@
 
 package txt_errors
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -20,12 +20,11 @@ var _ = bytes.Equal
 var ErrorDescription map[string]string
 
 func init() {
-ErrorDescription = map[string]string{
-  "ErrBPM": "BPM error",
-  "ErrBPMRevoked": "BPM is revoked (firmware was downgraded to an insecure version, BPM SVN is decreased)",
-  "ErrBPTIntegrity": "BPT integrity error",
-  "ErrUnknown": "unknown error",
-}
+	ErrorDescription = map[string]string{
+		"ErrBPM":          "BPM error",
+		"ErrBPMRevoked":   "BPM is revoked (firmware was downgraded to an insecure version, BPM SVN is decreased)",
+		"ErrBPTIntegrity": "BPT integrity error",
+		"ErrUnknown":      "unknown error",
+	}
 
 }
-

@@ -7,4 +7,7 @@ type FirmwareTarget struct {
 	FirmwareID int64   `db:"firmware_id"`
 	ModelID    *int64  `db:"model_id"`
 	Hostname   *string `db:"hostname"`
+
+	// loaded from other tables
+	Firmware *Firmware
 }

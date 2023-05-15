@@ -177,9 +177,8 @@ func (err ErrParseReceivedFirmware) Unwrap() error {
 
 // ErrFetchOrigFirmware implements "error", for the description see Error.
 type ErrFetchOrigFirmware struct {
-	BIOSVersion     string
-	BIOSReleaseDate string
-	Err             error
+	Version string
+	Err     error
 }
 
 func (err ErrFetchOrigFirmware) Error() string {
@@ -193,26 +192,23 @@ func (err ErrFetchOrigFirmware) Unwrap() error {
 // ThriftException converts the error into a thrift format
 func (err ErrFetchOrigFirmware) ThriftException() error {
 	return &afas.UnableToGetOriginalFirmware{
-		BIOSVersion:    err.BIOSVersion,
-		BIOSDateString: err.BIOSReleaseDate,
-		Reason:         err.Error(),
+		Version: err.Version,
+		Reason:  err.Error(),
 	}
 }
 
 // NewErrFetchOrigFirmware creates a new ErrFetchOrigFirmware object
-func NewErrFetchOrigFirmware(biosVersion, biosReleaseDate string, err error) ErrFetchOrigFirmware {
+func NewErrFetchOrigFirmware(biosVersion string, err error) ErrFetchOrigFirmware {
 	return ErrFetchOrigFirmware{
-		BIOSVersion:     biosVersion,
-		BIOSReleaseDate: biosReleaseDate,
-		Err:             err,
+		Version: biosVersion,
+		Err:     err,
 	}
 }
 
 // ErrParseOrigFirmware implements "error", for the description see Error.
 type ErrParseOrigFirmware struct {
-	BIOSVersion     string
-	BIOSReleaseDate string
-	Err             error
+	Version string
+	Err     error
 }
 
 func (err ErrParseOrigFirmware) Error() string {
@@ -226,18 +222,16 @@ func (err ErrParseOrigFirmware) Unwrap() error {
 // ThriftException converts a Go err type into a Thrift Exception type
 func (err ErrParseOrigFirmware) ThriftException() error {
 	return &afas.UnableToGetOriginalFirmware{
-		BIOSVersion:    err.BIOSVersion,
-		BIOSDateString: err.BIOSReleaseDate,
-		Reason:         err.Error(),
+		Version: err.Version,
+		Reason:  err.Error(),
 	}
 }
 
 // NewErrParseOrigFirmware creates a new ErrParseOrigFirmware  object
-func NewErrParseOrigFirmware(biosVersion, biosReleaseDate string, err error) ErrParseOrigFirmware {
+func NewErrParseOrigFirmware(version string, err error) ErrParseOrigFirmware {
 	return ErrParseOrigFirmware{
-		BIOSVersion:     biosVersion,
-		BIOSReleaseDate: biosReleaseDate,
-		Err:             err,
+		Version: version,
+		Err:     err,
 	}
 }
 

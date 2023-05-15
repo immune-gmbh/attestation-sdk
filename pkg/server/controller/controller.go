@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"crypto/sha512"
-	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -20,6 +19,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
@@ -47,6 +47,7 @@ type Controller struct {
 	ContextCancel             context.CancelFunc
 	FirmwareStorage           FirmwareStorage
 	DeviceGetter              DeviceGetter
+	OriginalFWDB              firmwaredb.DB
 	OriginalFWImageRepository originalFWImageRepository
 	analyzersRegistry         *analyzers.Registry
 	analysisDataCalculator    analysisDataCalculatorInterface
@@ -57,71 +58,10 @@ type Controller struct {
 	activeGoroutinesWG sync.WaitGroup
 }
 
-/*
-// New returns an instance of Controller.
-func New(
-	ctx context.Context,
-	objectStorage ObjectStorage,
-	apiCachePurgeTimeout time.Duration,
-	storageCacheSize uint64,
-	diffFirmwareCacheSize int,
-	dataCalcCacheSize int,
-	rdbmsURL string,
-	deviceGetter DeviceGetter,
-) (*Controller, error) {
-	log := logger.FromCtx(ctx)
-
-	storCache, err := newStorageCache(storageCacheSize)
-	if err != nil {
-		log.Errorf("unable to initialize storage cache: %v", err)
-	}
-
-	stor, err := storage.NewStorage(rdbmsURL, manifoldClient, storCache, log.WithField("module", "storage"))
-	if err != nil {
-		return nil, ErrInitStorage{Err: err}
-	}
-
-	serfClient, err := serf.NewClient(tierSeRF)
-	if err != nil {
-		return nil, ErrInitSeRFClient{Err: err}
-	}
-
-	rtpDB, err := rtpdb.GetDBRW()
-	if err != nil {
-		return nil, fmt.Errorf("unable to get a DB-client to RTP table: %w", err)
-	}
-	firmwareStorage := firmwarestorage.NewFirmwareStorage("FirmwareAnalyzer")
-
-	rtpfw, err := rtpfw.New(ctx, rtpDB, firmwareStorage, tagStoreClient, rtpfwCacheSize, rtpfwCacheEvictionTimeout,
-		types.DBIEnabledTag, types.DBIDisabledTag, types.DCDEnabledTag, types.DCDDisabledTag, types.PCRValidated,
-		types.PCR0SHA1Tag, types.PCR0SHA256Tag,
-	)
-	if err != nil {
-		return nil, ErrInitRTPFW{Err: err}
-	}
-
-	dataCalculator, err := analysis.NewDataCalculator(dataCalcCacheSize)
-	if err != nil {
-		return nil, ErrInitDataCalculator{Err: err}
-	}
-	controllertypes.OverrideValueCalculators(dataCalculator)
-
-	return newInternal(
-		ctx,
-		stor,
-		firmwareStorage,
-		rtpfw,
-		newRTPDBReader(rtpDB),
-		dataCalculator,
-		apiCachePurgeTimeout,
-		diffFirmwareCacheSize,
-	)
-}
-*/
-
 func New(
 	ctx context.Context,
 	firmwareStorage FirmwareStorage,
+	origFirmwareDB firmwaredb.DB,
 	origFirmwareRepo originalFWImageRepository,
 	analysisDataCalculator analysisDataCalculatorInterface,
 	deviceGetter DeviceGetter,
@@ -137,6 +77,7 @@ func New(
 	ctrl := &Controller{
 		FirmwareStorage:           firmwareStorage,
 		DeviceGetter:              deviceGetter,
+		OriginalFWDB:              origFirmwareDB,
 		OriginalFWImageRepository: origFirmwareRepo,
 		analyzersRegistry:         analyzersRegistry,
 		analysisDataCalculator:    analysisDataCalculator,
@@ -183,52 +124,21 @@ func uint64deref(p *uint64) uint64 {
 	return *p
 }
 
-// getRTPFirmware fallbacks to getting firmware for most production ready evaluation status firmware or/and modelID == 0
-// if there is no RTP table entry for requested evaluationStatus
-// This becomes helpful in case when evaluationStatus was determined incorrectly (for example because it was not updated in either RTP table or SERF)
-func getRTPFirmware(
+func getOrigFirmwareInfo(
 	ctx context.Context,
-	rtpFW rtpfwInterface,
-	firmwareVersion, firmwareDateString string,
-	modelFamilyID *uint64,
-	expectedEvaluationStatus sdf, //rtp.EvaluationStatus,
+	db firmwaredb.DB,
+	firmwareVersion string,
+	modelID int64,
 	cachingPolicy types.CachingPolicy,
-) (rtpfw.Firmware, error) {
-	log := logger.FromCtx(ctx)
-
-	fw, err := rtpFW.GetFirmware(ctx, firmwareVersion, firmwareDateString, modelFamilyID, expectedEvaluationStatus, cachingPolicy)
-	if err == nil || !errors.As(err, &rtpfw.ErrNotFound{}) {
-		return fw, err
+) (*firmwaredb.Firmware, error) {
+	fws, err := db.Get(ctx, firmwaredb.FilterVersion(firmwareVersion), firmwaredb.FilterModelIDs{modelID})
+	if err != nil {
+		return nil, err
 	}
-	log.Warnf("No firmware found for '%s'/'%s'/'%s'/%d", firmwareVersion, firmwareDateString, expectedEvaluationStatus, uint64deref(modelFamilyID))
-	if expectedEvaluationStatus != rtpfw.EvaluationStatusMostProductionReady {
-		// We have not found a firmware with the expected evaluation status, so trying
-		// to find a firmware with any evaluation status, but preferring the one
-		// which is the closest to be production ready.
-		//
-		// See also: https://fburl.com/code/8di4o5ze
-		log.Infof("Falling back to get firmare for the 'most production ready' evaluation status")
-		fw, err = rtpFW.GetFirmware(ctx, firmwareVersion, firmwareDateString, modelFamilyID, rtpfw.EvaluationStatusMostProductionReady, cachingPolicy)
-		if err == nil || !errors.As(err, &rtpfw.ErrNotFound{}) {
-			return fw, err
-		}
+	if len(fws) != 1 {
+		return nil, fmt.Errorf("expected 1 entry, but got %d", len(fws))
 	}
-	if modelFamilyID == nil {
-		return fw, err
-	}
-	log.Infof("Falling back to get firmare to modelFamilyID == nil")
-	fw, err = rtpFW.GetFirmware(ctx, firmwareVersion, firmwareDateString, nil, expectedEvaluationStatus, cachingPolicy)
-	if err == nil || !errors.As(err, &rtpfw.ErrNotFound{}) {
-		return fw, err
-	}
-	if expectedEvaluationStatus != rtpfw.EvaluationStatusMostProductionReady {
-		log.Infof("Falling back to get firmare for 'most production ready' evaluation status and modelFamilyID == nil")
-		fw, err = rtpFW.GetFirmware(ctx, firmwareVersion, firmwareDateString, nil, rtpfw.EvaluationStatusMostProductionReady, cachingPolicy)
-		if err == nil || !errors.As(err, &rtpfw.ErrNotFound{}) {
-			return fw, err
-		}
-	}
-	return rtpfw.Firmware{}, err
+	return fws[0], nil
 }
 
 // getHostInfo tries to get full information about the host being analyzed.

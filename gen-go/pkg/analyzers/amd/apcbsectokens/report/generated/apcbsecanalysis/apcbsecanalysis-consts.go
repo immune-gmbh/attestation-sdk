@@ -2,12 +2,12 @@
 
 package apcbsecanalysis
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -21,4 +21,3 @@ const APCBSecurityTokensAnalyzerID = "APCBSecurityTokens"
 
 func init() {
 }
-

@@ -6,6 +6,7 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/identity"
 )
 
@@ -24,53 +25,14 @@ func ExtractHostnameFromCtx(ctx context.Context) (hostname string, isVerified bo
 	return
 }
 
-func getClientSeRFDevice(
-	ctx context.Context,
-	serf serfInterface,
-	hostInfo *afas.HostInfo,
-) (dev sdf /* *device.Device */, isVerified bool) {
-	if hostInfo == nil {
-		return nil, false
-	}
-	log := logger.FromCtx(ctx)
-
-	clientHostname, isVerifiedClientHostname := ExtractHostnameFromCtx(ctx)
-	log.Debugf("detected TLS identity hostname: %s (isVerified: %v)", clientHostname, isVerifiedClientHostname)
-	if hostInfo.GetHostname() == clientHostname {
-		// attest proxy may send an Analyze request on behalf of another target
-		// so we can use the TLS certificate to verify the hostname,
-		// only of client hostname matches the hostname in hostInfo
-		isVerified = isVerifiedClientHostname
-	}
-
-	var err error
-	if hostInfo.AssetID != nil {
-		dev, err = serf.GetDeviceById(*hostInfo.AssetID)
-		if err == nil {
-			return
-		}
-		log.Warnf("failed to get SeRF info by asset id %d: %v", *hostInfo.AssetID, err)
-	}
-
-	if hostInfo.Hostname != nil {
-		dev, err = serf.GetDeviceByName(*hostInfo.Hostname)
-		if err == nil {
-			return
-		}
-		log.Warnf("failed to get SeRF info for %s: %v", *hostInfo.Hostname, err)
-	}
-
-	return
-}
-
-func enrichHostInfo(ctx context.Context, serfDevice sdf /* *device.Device */, isVerified bool, hostInfo *afas.HostInfo) {
-	if serfDevice != nil {
+func enrichHostInfo(ctx context.Context, device *device.Device, isVerified bool, hostInfo *afas.HostInfo) {
+	if device != nil {
 		hostInfo.IsVerified = isVerified
-		if isVerified || serfDevice.Name != nil {
-			hostInfo.Hostname = serfDevice.Name
+		if isVerified || device.Hostname != nil {
+			hostInfo.Hostname = device.Hostname
 		}
-		hostInfo.AssetID = &[]int64{int64(serfDevice.Id)}[0]
-		hostInfo.ModelID = &serfDevice.ModelID
+		hostInfo.AssetID = &[]int64{device.AssetID}[0]
+		hostInfo.ModelID = &device.ModelID
 	}
 
 	if hostInfo.AssetID == nil {

@@ -2,14 +2,13 @@
 
 package reproducepcranalysis
 
-import(
+import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
-
+	"time"
 )
 
 // (needed to ensure safety because of naive import list construction.)
@@ -20,249 +19,283 @@ var _ = time.Now
 var _ = bytes.Equal
 
 var _ = measurements.GoUnusedProtection__
+
 // Attributes:
-//  - ExpectedFlow
-//  - ExpectedLocality
-//  - ExpectedACMPolicyStatus
-//  - DisabledMeasurements
+//   - ExpectedFlow
+//   - ExpectedLocality
+//   - ExpectedACMPolicyStatus
+//   - DisabledMeasurements
 type CustomReport struct {
-  ExpectedFlow measurements.Flow `thrift:"ExpectedFlow,1" db:"ExpectedFlow" json:"ExpectedFlow"`
-  ExpectedLocality int8 `thrift:"ExpectedLocality,2" db:"ExpectedLocality" json:"ExpectedLocality"`
-  ExpectedACMPolicyStatus []byte `thrift:"ExpectedACMPolicyStatus,3" db:"ExpectedACMPolicyStatus" json:"ExpectedACMPolicyStatus,omitempty"`
-  DisabledMeasurements []string `thrift:"DisabledMeasurements,4" db:"DisabledMeasurements" json:"DisabledMeasurements"`
+	ExpectedFlow            measurements.Flow `thrift:"ExpectedFlow,1" db:"ExpectedFlow" json:"ExpectedFlow"`
+	ExpectedLocality        int8              `thrift:"ExpectedLocality,2" db:"ExpectedLocality" json:"ExpectedLocality"`
+	ExpectedACMPolicyStatus []byte            `thrift:"ExpectedACMPolicyStatus,3" db:"ExpectedACMPolicyStatus" json:"ExpectedACMPolicyStatus,omitempty"`
+	DisabledMeasurements    []string          `thrift:"DisabledMeasurements,4" db:"DisabledMeasurements" json:"DisabledMeasurements"`
 }
 
 func NewCustomReport() *CustomReport {
-  return &CustomReport{}
+	return &CustomReport{}
 }
 
-
 func (p *CustomReport) GetExpectedFlow() measurements.Flow {
-  return p.ExpectedFlow
+	return p.ExpectedFlow
 }
 
 func (p *CustomReport) GetExpectedLocality() int8 {
-  return p.ExpectedLocality
+	return p.ExpectedLocality
 }
+
 var CustomReport_ExpectedACMPolicyStatus_DEFAULT []byte
 
 func (p *CustomReport) GetExpectedACMPolicyStatus() []byte {
-  return p.ExpectedACMPolicyStatus
+	return p.ExpectedACMPolicyStatus
 }
 
 func (p *CustomReport) GetDisabledMeasurements() []string {
-  return p.DisabledMeasurements
+	return p.DisabledMeasurements
 }
 func (p *CustomReport) IsSetExpectedACMPolicyStatus() bool {
-  return p.ExpectedACMPolicyStatus != nil
+	return p.ExpectedACMPolicyStatus != nil
 }
 
 func (p *CustomReport) Read(ctx context.Context, iprot thrift.TProtocol) error {
-  if _, err := iprot.ReadStructBegin(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-  }
+	if _, err := iprot.ReadStructBegin(ctx); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
 
-
-  for {
-    _, fieldTypeId, fieldId, err := iprot.ReadFieldBegin(ctx)
-    if err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-    }
-    if fieldTypeId == thrift.STOP { break; }
-    switch fieldId {
-    case 1:
-      if fieldTypeId == thrift.I32 {
-        if err := p.ReadField1(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 2:
-      if fieldTypeId == thrift.BYTE {
-        if err := p.ReadField2(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 3:
-      if fieldTypeId == thrift.STRING {
-        if err := p.ReadField3(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    case 4:
-      if fieldTypeId == thrift.LIST {
-        if err := p.ReadField4(ctx, iprot); err != nil {
-          return err
-        }
-      } else {
-        if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-          return err
-        }
-      }
-    default:
-      if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-        return err
-      }
-    }
-    if err := iprot.ReadFieldEnd(ctx); err != nil {
-      return err
-    }
-  }
-  if err := iprot.ReadStructEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-  }
-  return nil
-}
-
-func (p *CustomReport)  ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadI32(ctx); err != nil {
-  return thrift.PrependError("error reading field 1: ", err)
-} else {
-  temp := measurements.Flow(v)
-  p.ExpectedFlow = temp
-}
-  return nil
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin(ctx)
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I32 {
+				if err := p.ReadField1(ctx, iprot); err != nil {
+					return err
+				}
+			} else {
+				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+					return err
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.BYTE {
+				if err := p.ReadField2(ctx, iprot); err != nil {
+					return err
+				}
+			} else {
+				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+					return err
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err := p.ReadField3(ctx, iprot); err != nil {
+					return err
+				}
+			} else {
+				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+					return err
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.LIST {
+				if err := p.ReadField4(ctx, iprot); err != nil {
+					return err
+				}
+			} else {
+				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+					return err
+				}
+			}
+		default:
+			if err := iprot.Skip(ctx, fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(ctx); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(ctx); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
 }
 
-func (p *CustomReport)  ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadByte(ctx); err != nil {
-  return thrift.PrependError("error reading field 2: ", err)
-} else {
-  temp := int8(v)
-  p.ExpectedLocality = temp
-}
-  return nil
-}
-
-func (p *CustomReport)  ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
-  if v, err := iprot.ReadBinary(ctx); err != nil {
-  return thrift.PrependError("error reading field 3: ", err)
-} else {
-  p.ExpectedACMPolicyStatus = v
-}
-  return nil
+func (p *CustomReport) ReadField1(ctx context.Context, iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(ctx); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		temp := measurements.Flow(v)
+		p.ExpectedFlow = temp
+	}
+	return nil
 }
 
-func (p *CustomReport)  ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
-  _, size, err := iprot.ReadListBegin(ctx)
-  if err != nil {
-    return thrift.PrependError("error reading list begin: ", err)
-  }
-  tSlice := make([]string, 0, size)
-  p.DisabledMeasurements =  tSlice
-  for i := 0; i < size; i ++ {
-var _elem0 string
-    if v, err := iprot.ReadString(ctx); err != nil {
-    return thrift.PrependError("error reading field 0: ", err)
-} else {
-    _elem0 = v
+func (p *CustomReport) ReadField2(ctx context.Context, iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadByte(ctx); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		temp := int8(v)
+		p.ExpectedLocality = temp
+	}
+	return nil
 }
-    p.DisabledMeasurements = append(p.DisabledMeasurements, _elem0)
-  }
-  if err := iprot.ReadListEnd(ctx); err != nil {
-    return thrift.PrependError("error reading list end: ", err)
-  }
-  return nil
+
+func (p *CustomReport) ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadBinary(ctx); err != nil {
+		return thrift.PrependError("error reading field 3: ", err)
+	} else {
+		p.ExpectedACMPolicyStatus = v
+	}
+	return nil
+}
+
+func (p *CustomReport) ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin(ctx)
+	if err != nil {
+		return thrift.PrependError("error reading list begin: ", err)
+	}
+	tSlice := make([]string, 0, size)
+	p.DisabledMeasurements = tSlice
+	for i := 0; i < size; i++ {
+		var _elem0 string
+		if v, err := iprot.ReadString(ctx); err != nil {
+			return thrift.PrependError("error reading field 0: ", err)
+		} else {
+			_elem0 = v
+		}
+		p.DisabledMeasurements = append(p.DisabledMeasurements, _elem0)
+	}
+	if err := iprot.ReadListEnd(ctx); err != nil {
+		return thrift.PrependError("error reading list end: ", err)
+	}
+	return nil
 }
 
 func (p *CustomReport) Write(ctx context.Context, oprot thrift.TProtocol) error {
-  if err := oprot.WriteStructBegin(ctx, "CustomReport"); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err) }
-  if p != nil {
-    if err := p.writeField1(ctx, oprot); err != nil { return err }
-    if err := p.writeField2(ctx, oprot); err != nil { return err }
-    if err := p.writeField3(ctx, oprot); err != nil { return err }
-    if err := p.writeField4(ctx, oprot); err != nil { return err }
-  }
-  if err := oprot.WriteFieldStop(ctx); err != nil {
-    return thrift.PrependError("write field stop error: ", err) }
-  if err := oprot.WriteStructEnd(ctx); err != nil {
-    return thrift.PrependError("write struct stop error: ", err) }
-  return nil
+	if err := oprot.WriteStructBegin(ctx, "CustomReport"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if p != nil {
+		if err := p.writeField1(ctx, oprot); err != nil {
+			return err
+		}
+		if err := p.writeField2(ctx, oprot); err != nil {
+			return err
+		}
+		if err := p.writeField3(ctx, oprot); err != nil {
+			return err
+		}
+		if err := p.writeField4(ctx, oprot); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteFieldStop(ctx); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(ctx); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
 }
 
 func (p *CustomReport) writeField1(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ExpectedFlow", thrift.I32, 1); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ExpectedFlow: ", p), err) }
-  if err := oprot.WriteI32(ctx, int32(p.ExpectedFlow)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ExpectedFlow (1) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ExpectedFlow: ", p), err) }
-  return err
+	if err := oprot.WriteFieldBegin(ctx, "ExpectedFlow", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ExpectedFlow: ", p), err)
+	}
+	if err := oprot.WriteI32(ctx, int32(p.ExpectedFlow)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.ExpectedFlow (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(ctx); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ExpectedFlow: ", p), err)
+	}
+	return err
 }
 
 func (p *CustomReport) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "ExpectedLocality", thrift.BYTE, 2); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:ExpectedLocality: ", p), err) }
-  if err := oprot.WriteByte(ctx, int8(p.ExpectedLocality)); err != nil {
-  return thrift.PrependError(fmt.Sprintf("%T.ExpectedLocality (2) field write error: ", p), err) }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 2:ExpectedLocality: ", p), err) }
-  return err
+	if err := oprot.WriteFieldBegin(ctx, "ExpectedLocality", thrift.BYTE, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:ExpectedLocality: ", p), err)
+	}
+	if err := oprot.WriteByte(ctx, int8(p.ExpectedLocality)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.ExpectedLocality (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(ctx); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:ExpectedLocality: ", p), err)
+	}
+	return err
 }
 
 func (p *CustomReport) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if p.IsSetExpectedACMPolicyStatus() {
-    if err := oprot.WriteFieldBegin(ctx, "ExpectedACMPolicyStatus", thrift.STRING, 3); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ExpectedACMPolicyStatus: ", p), err) }
-    if err := oprot.WriteBinary(ctx, p.ExpectedACMPolicyStatus); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T.ExpectedACMPolicyStatus (3) field write error: ", p), err) }
-    if err := oprot.WriteFieldEnd(ctx); err != nil {
-      return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ExpectedACMPolicyStatus: ", p), err) }
-  }
-  return err
+	if p.IsSetExpectedACMPolicyStatus() {
+		if err := oprot.WriteFieldBegin(ctx, "ExpectedACMPolicyStatus", thrift.STRING, 3); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ExpectedACMPolicyStatus: ", p), err)
+		}
+		if err := oprot.WriteBinary(ctx, p.ExpectedACMPolicyStatus); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.ExpectedACMPolicyStatus (3) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(ctx); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ExpectedACMPolicyStatus: ", p), err)
+		}
+	}
+	return err
 }
 
 func (p *CustomReport) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
-  if err := oprot.WriteFieldBegin(ctx, "DisabledMeasurements", thrift.LIST, 4); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:DisabledMeasurements: ", p), err) }
-  if err := oprot.WriteListBegin(ctx, thrift.STRING, len(p.DisabledMeasurements)); err != nil {
-    return thrift.PrependError("error writing list begin: ", err)
-  }
-  for _, v := range p.DisabledMeasurements {
-    if err := oprot.WriteString(ctx, string(v)); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err) }
-  }
-  if err := oprot.WriteListEnd(ctx); err != nil {
-    return thrift.PrependError("error writing list end: ", err)
-  }
-  if err := oprot.WriteFieldEnd(ctx); err != nil {
-    return thrift.PrependError(fmt.Sprintf("%T write field end error 4:DisabledMeasurements: ", p), err) }
-  return err
+	if err := oprot.WriteFieldBegin(ctx, "DisabledMeasurements", thrift.LIST, 4); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:DisabledMeasurements: ", p), err)
+	}
+	if err := oprot.WriteListBegin(ctx, thrift.STRING, len(p.DisabledMeasurements)); err != nil {
+		return thrift.PrependError("error writing list begin: ", err)
+	}
+	for _, v := range p.DisabledMeasurements {
+		if err := oprot.WriteString(ctx, string(v)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
+		}
+	}
+	if err := oprot.WriteListEnd(ctx); err != nil {
+		return thrift.PrependError("error writing list end: ", err)
+	}
+	if err := oprot.WriteFieldEnd(ctx); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 4:DisabledMeasurements: ", p), err)
+	}
+	return err
 }
 
 func (p *CustomReport) Equals(other *CustomReport) bool {
-  if p == other {
-    return true
-  } else if p == nil || other == nil {
-    return false
-  }
-  if p.ExpectedFlow != other.ExpectedFlow { return false }
-  if p.ExpectedLocality != other.ExpectedLocality { return false }
-  if bytes.Compare(p.ExpectedACMPolicyStatus, other.ExpectedACMPolicyStatus) != 0 { return false }
-  if len(p.DisabledMeasurements) != len(other.DisabledMeasurements) { return false }
-  for i, _tgt := range p.DisabledMeasurements {
-    _src1 := other.DisabledMeasurements[i]
-    if _tgt != _src1 { return false }
-  }
-  return true
+	if p == other {
+		return true
+	} else if p == nil || other == nil {
+		return false
+	}
+	if p.ExpectedFlow != other.ExpectedFlow {
+		return false
+	}
+	if p.ExpectedLocality != other.ExpectedLocality {
+		return false
+	}
+	if bytes.Compare(p.ExpectedACMPolicyStatus, other.ExpectedACMPolicyStatus) != 0 {
+		return false
+	}
+	if len(p.DisabledMeasurements) != len(other.DisabledMeasurements) {
+		return false
+	}
+	for i, _tgt := range p.DisabledMeasurements {
+		_src1 := other.DisabledMeasurements[i]
+		if _tgt != _src1 {
+			return false
+		}
+	}
+	return true
 }
 
 func (p *CustomReport) String() string {
-  if p == nil {
-    return "<nil>"
-  }
-  return fmt.Sprintf("CustomReport(%+v)", *p)
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CustomReport(%+v)", *p)
 }
-

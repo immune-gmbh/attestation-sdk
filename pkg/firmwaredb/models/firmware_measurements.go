@@ -20,6 +20,9 @@ type FirmwareMeasurementMetadata struct {
 	MeasurementTypeID int64  `db:"type_id"`
 	Key               string `db:"key"`
 	Value             string `db:"value"`
+
+	// loaded from other tables
+	FirmwareMeasurementType *FirmwareMeasurementType
 }
 
 type FirmwareMeasurement struct {
@@ -29,5 +32,6 @@ type FirmwareMeasurement struct {
 	Value             types.ConvertedBytes `db:"value"`
 
 	// loaded from other tables
+	Firmware                *Firmware
 	FirmwareMeasurementType *FirmwareMeasurementType
 }

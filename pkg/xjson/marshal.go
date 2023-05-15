@@ -38,23 +38,24 @@ type TypeIDHandler interface {
 // If an interface is met, then instead of marshaling its content directly,
 // we resolve its type ID through TypeIDOfer and putting:
 //
-//     {ResolvedTypeID: {...Content...}}
+//	{ResolvedTypeID: {...Content...}}
 //
 // instead (where ResolvedTypeID is a string containing the TypeID).
 //
 // For example:
 //
-//    type Struct {
-//        Field any
-//    }
-//    xjson.MarshalWithTypeIDs(Struct{Field: Struct{Field: int(1)}}, typeIDOfer)
+//	type Struct {
+//	    Field any
+//	}
+//	xjson.MarshalWithTypeIDs(Struct{Field: Struct{Field: int(1)}}, typeIDOfer)
 //
 // might be marshalled to
 //
-//    {"Field": {"Struct": {"Field": {"int": 1}}}}
+//	{"Field": {"Struct": {"Field": {"int": 1}}}}
 //
 // NOTE! This is not a drop-in replacement for standard json.Marshal.
-//       It has incompatible behavior.
+//
+//	It has incompatible behavior.
 func MarshalWithTypeIDs(obj any, typeIDOfer TypeIDOfer) ([]byte, error) {
 	return marshal(reflect.ValueOf(obj), typeIDOfer)
 }
@@ -217,7 +218,8 @@ func unstringifyMapKey(mapKey reflect.Value, s string) error {
 // This function is the inverse function for MarshalWithTypeIDs.
 //
 // NOTE! This is not a drop-in replacement for standard json.Unmarshal.
-//       It has incompatible behavior.
+//
+//	It has incompatible behavior.
 func UnmarshalWithTypeIDs(b []byte, dst any, newByTypeIDer NewByTypeIDer) error {
 	// TODO: use encoding/json.Decoder instead of github.com/tidwall/gjson
 	return unmarshal(gjson.ParseBytes(b), reflect.ValueOf(dst), newByTypeIDer)
