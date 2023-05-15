@@ -94,6 +94,9 @@ func New(
 
 	dataSourceString := strings.SplitN(parsedURL.String(), "://", 2)[1]
 	db, err := sql.Open(parsedURL.Scheme, dataSourceString)
+	if err != nil {
+		return nil, ErrInitMySQL{Err: err, DSN: dataSourceString}
+	}
 
 	err = db.Ping()
 	if err != nil {

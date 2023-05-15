@@ -9,10 +9,11 @@ import (
 // ErrInitMySQL implements "error", for the description see Error.
 type ErrInitMySQL struct {
 	Err error
+	DSN string
 }
 
 func (err ErrInitMySQL) Error() string {
-	return fmt.Sprintf("unable to initialize a MySQL client: %v", err.Err)
+	return fmt.Sprintf("unable to initialize a MySQL client (DSN: '%s'): %v", err.DSN, err.Err)
 }
 
 func (err ErrInitMySQL) Unwrap() error {
