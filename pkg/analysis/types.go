@@ -89,7 +89,7 @@ func NewOriginalFirmware(fw *uefi.UEFI, blob Blob) OriginalFirmware {
 	}
 }
 
-// OriginalFirmwareBlob represents raw bytes of the original firmare image
+// OriginalFirmwareBlob represents raw bytes of the original firmware image
 type OriginalFirmwareBlob struct {
 	Blob
 }
@@ -99,7 +99,7 @@ func NewOriginalFirmwareBlob(image Blob) OriginalFirmwareBlob {
 	return OriginalFirmwareBlob{Blob: image}
 }
 
-// ActualFirmwareBlob represents raw bytes of the actual firmare image (the one obtained from the host)
+// ActualFirmwareBlob represents raw bytes of the actual firmware image (the one obtained from the host)
 type ActualFirmwareBlob struct {
 	Blob
 }

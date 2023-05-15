@@ -113,10 +113,6 @@ func (fwStor *FirmwareStorage) insertAnalyzerReport(tx *sql.Tx, report *models.A
 	}
 
 	report.ID = uint64(lastID)
-	err = fwStor.aoscWorkaroundBuildAnalyzerReportIndexes(tx, report)
-	if err != nil {
-		return fmt.Errorf("unable to build indexes: %w", err)
-	}
 	return nil
 }
 
