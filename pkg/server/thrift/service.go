@@ -14,11 +14,10 @@ const (
 	gcInterval = time.Hour
 )
 
-var _ afas.AttestationFailureAnalyzerService = &service{}
+var _ afas.AttestationFailureAnalyzerService = (*service)(nil)
 
 type service struct {
 	Controller *controller.Controller
-	Cache      *serviceCache
 }
 
 func newService(
@@ -26,12 +25,11 @@ func newService(
 ) *service {
 	return &service{
 		Controller: ctrl,
-		Cache:      newServiceCache(),
 	}
 }
 
 func (svc *service) Reset() {
-	svc.Cache.Reset()
+	// noop
 }
 
 type thriftExceptioner interface {

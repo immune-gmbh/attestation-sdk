@@ -128,7 +128,6 @@ func main() {
 	log.Debugf("created a controller")
 
 	srv, err := thrift.NewServer(
-		ctx,
 		*amountOfWorkers,
 		*workersQueue,
 		*cpuLoadLimit,

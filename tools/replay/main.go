@@ -33,7 +33,7 @@ func usageExit() {
 func main() {
 	logLevel := logger.LevelInfo // the default value
 	rdbmsURL := pflag.String("rdbms-url", `mysql://root:@localhost`, "RDBMS URL")
-	objectStorageURL := pflag.String("object-storage-url", `fs:///srv/afasd`, "URL to an object storage where the firmware images are stored")
+	blobstorageURL := pflag.String("object-storage-url", `fs:///srv/afasd`, "URL to an object storage where the firmware images are stored")
 	analyzerReportID := pflag.Int64("analyzer-report-id", 0, "")
 	pflag.Parse()
 
@@ -65,7 +65,7 @@ func main() {
 
 	fianoLog.DefaultLogger = newFianoLogger(logger.FromCtx(ctx).WithField("module", "fiano"))
 
-	report, err := replay.AnalyzerReport(ctx, *rdbmsURL, *manifoldBucket, *manifoldAPIKey, *analyzerReportID)
+	report, err := replay.AnalyzerReport(ctx, *blobstorageURL, *rdbmsURL, *analyzerReportID)
 	assertNoError(ctx, err)
 
 	format.HumanReadable(os.Stdout, *typeconv.ToThriftAnalyzeReport(&models.AnalyzeReport{

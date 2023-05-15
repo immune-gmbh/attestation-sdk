@@ -12,9 +12,10 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarestorage/models"
 	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )
@@ -23,21 +24,21 @@ import (
 // Returns a regenerated report.
 func AnalyzerReport(
 	ctx context.Context,
+	blobstoreURL string,
 	rdbmsURL string,
-	manifoldBucket, manifoldAPIKey string,
 	analyzerReportID int64,
 ) (*models.AnalyzerReport, error) {
-	objectStorageClient, err := getManifoldClient(manifoldBucket, manifoldAPIKey)
+	blobStorage, err := blobstorage.New(blobstoreURL)
 	if err != nil {
-		return nil, fmt.Errorf("unable to initialize manifold client: %w", err)
+		return nil, fmt.Errorf("unable to initialize the blob storage using URL '%s': %w", blobstoreURL, err)
 	}
 	defer func() {
-		if err := objectStorageClient.Close(); err != nil {
+		if err := blobStorage.Close(); err != nil {
 			logger.FromCtx(ctx).Error(err)
 		}
 	}()
 
-	stor, err := storage.NewStorage(rdbmsURL, objectStorageClient, nil, logger.FromCtx(ctx).WithField("module", "storage"))
+	stor, err := firmwarestorage.New(rdbmsURL, blobStorage, nil, logger.FromCtx(ctx).WithField("module", "storage"))
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize Storage client: %w", err)
 	}
