@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	devMemSkipPlaceholderHead = false
+	devMemSkipPlaceholderHead = true
 )
 
 func (f *flashrom) findBIOSRegionUsingIOMem() (*pkgbytes.Range, error) {
@@ -95,10 +95,7 @@ func (f *flashrom) dumpDevMem(ctx context.Context) ([]byte, error) {
 		for idx := range placeholderWord {
 			placeholderWord[idx] = 0xff
 		}
-		for len(b) >= placeholderWordLength {
-			if !bytes.Equal(b[:placeholderWordLength], placeholderWord) {
-				break
-			}
+		for bytes.HasPrefix(b, placeholderWord) {
 			b = b[placeholderWordLength:]
 		}
 		if len(b) < origLength {
