@@ -22,3 +22,6 @@ afasd: builddir
 
 hwsecvalidator: builddir
 	go build -o build/afasd ./tools/hwsecvalidator
+
+.initdb.sql:
+	find pkg/ -name "*.sql" -exec cat {} + > .initdb.sql

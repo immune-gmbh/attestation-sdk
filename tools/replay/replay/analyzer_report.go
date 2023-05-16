@@ -25,6 +25,7 @@ import (
 func AnalyzerReport(
 	ctx context.Context,
 	blobstoreURL string,
+	rdbmsDriver string,
 	rdbmsURL string,
 	analyzerReportID int64,
 ) (*models.AnalyzerReport, error) {
@@ -38,7 +39,7 @@ func AnalyzerReport(
 		}
 	}()
 
-	stor, err := storage.New(rdbmsURL, blobStorage, nil, logger.FromCtx(ctx).WithField("module", "storage"))
+	stor, err := storage.New(rdbmsDriver, rdbmsURL, blobStorage, nil, logger.FromCtx(ctx).WithField("module", "storage"))
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize Storage client: %w", err)
 	}

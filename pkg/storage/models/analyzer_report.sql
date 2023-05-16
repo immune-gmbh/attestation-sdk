@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS `analyzer_report` (
     `exec_error_code` ENUM('OK', 'ErrNotApplicable', 'ErrOther') GENERATED ALWAYS AS (IF(exec_error IS NULL, 'OK',IF(JSON_CONTAINS_PATH(exec_error, 'one', '$**.ErrNotApplicable'), 'ErrNotApplicable', 'ErrOther')),
     PRIMARY KEY (`id`),
     KEY `analyze_report_id` (`analyze_report_id`),
-    KEY `analyzer_diagnosis` (`analyzer_id`, `diagnosis_code`),
+    KEY `analyzer_diagnosis` (`analyzer_id`, `diagnosis_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;

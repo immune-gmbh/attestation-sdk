@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=afas
+      - MYSQL_ROOT_PASSWORD=somePass
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./.initdb.sql:/docker-entrypoint-initdb.d/init.sql
+  app:
+    image: ubuntu:23.04
+    ports:
+      - 17545:17545
+    volumes:
+      - ./:/project
+volumes:
+  db:
+    driver: local

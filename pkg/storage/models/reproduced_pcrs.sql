@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS `reproduced_pcrs` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `image_id` (`hash_stable`,`registers_sha512`,`tpm_device`)
-) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;

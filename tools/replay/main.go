@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
@@ -32,7 +33,16 @@ func usageExit() {
 
 func main() {
 	logLevel := logger.LevelInfo // the default value
-	rdbmsURL := pflag.String("rdbms-url", `mysql://root:@localhost`, "RDBMS URL")
+	defaultDSN := (&mysql.Config{
+		User:   os.Getenv("DBUSER"),
+		Passwd: os.Getenv("DBPASS"),
+		Net:    "tcp",
+		Addr:   "127.0.0.1:3306",
+		DBName: "afas",
+	}).FormatDSN()
+
+	rdbmsDriver := pflag.String("rdbms-driver", "mysql", "")
+	rdbmsDSN := pflag.String("rdbms-dsn", defaultDSN, "")
 	blobstorageURL := pflag.String("object-storage-url", `fs:///srv/afasd`, "URL to an object storage where the firmware images are stored")
 	analyzerReportID := pflag.Int64("analyzer-report-id", 0, "")
 	pflag.Parse()
@@ -65,7 +75,7 @@ func main() {
 
 	fianoLog.DefaultLogger = newFianoLogger(logger.FromCtx(ctx).WithField("module", "fiano"))
 
-	report, err := replay.AnalyzerReport(ctx, *blobstorageURL, *rdbmsURL, *analyzerReportID)
+	report, err := replay.AnalyzerReport(ctx, *blobstorageURL, *rdbmsDriver, *rdbmsDSN, *analyzerReportID)
 	assertNoError(ctx, err)
 
 	format.HumanReadable(os.Stdout, *typeconv.ToThriftAnalyzeReport(&models.AnalyzeReport{
