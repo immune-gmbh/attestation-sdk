@@ -1,0 +1,19 @@
+load("//libfb/go:defs.bzl", "go_package")
+
+go_package(
+    name = "serverinterceptors",
+    deps = [
+        "//common/fb303/if:fb303-go",
+        "//libfb/go/thriftbase:thriftbase",
+        "//thrift/lib/go/thrift:thrift",
+    ],
+    external_deps = [
+        "github.com/facebookincubator/go-belt",
+        "github.com/facebookincubator/go-belt/beltctx",
+        "github.com/facebookincubator/go-belt/tool/logger",
+        "github.com/facebookincubator/go-belt/tool/experimental/errmon",
+        "github.com/facebookincubator/go-belt/tool/experimental/metrics",
+        "github.com/facebookincubator/go-belt/tool/experimental/tracer",
+        "github.com/facebookincubator/go-belt/pkg/field",
+    ],
+)

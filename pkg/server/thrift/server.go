@@ -7,8 +7,11 @@ import (
 	"sync/atomic"
 
 	"github.com/apache/thrift/lib/go/thrift"
+	"github.com/facebookincubator/go-belt"
+	"github.com/facebookincubator/go-belt/tool/logger"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/httputils/servermiddleware"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
 )
 
@@ -44,11 +47,15 @@ func NewServer(
 	numWorkers, hardConcurrentRequestsLimit uint,
 	maxCPULoad float64,
 	ctrl *controller.Controller,
+	observability *belt.Belt,
+	logLevel logger.Level,
 ) (*Server, error) {
 	protocolFactory := thrift.NewTJSONProtocolFactory()
 	svc := newService(ctrl)
 	processor := afas.NewAttestationFailureAnalyzerServiceProcessor(svc)
-	http.HandleFunc("/", thrift.NewThriftHandlerFunc(processor, protocolFactory, protocolFactory))
+	handler := thrift.NewThriftHandlerFunc(processor, protocolFactory, protocolFactory)
+	handler = servermiddleware.AddDefaultMiddleware(handler, observability, true, logLevel)
+	http.HandleFunc("/", handler)
 	srv := &Server{
 		HardConcurrentRequestsLimit: hardConcurrentRequestsLimit,
 		MaxCPULoad:                  maxCPULoad,

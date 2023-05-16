@@ -21,6 +21,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/thrift"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
 
+	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/logger"
 	fianoLog "github.com/linuxboot/fiano/pkg/log"
 	"github.com/spf13/pflag"
@@ -146,6 +147,8 @@ func main() {
 		*workersQueue,
 		*cpuLoadLimit,
 		ctrl,
+		beltctx.Belt(ctx),
+		logLevel,
 	)
 	assertNoError(ctx, err)
 	log.Debugf("created a Thrift server")

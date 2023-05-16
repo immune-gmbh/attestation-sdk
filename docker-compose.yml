@@ -24,9 +24,12 @@ services:
     ports:
       - 17545:17545
     volumes:
+      - rootgo:/root/go
       - ../AttestationFailureAnalysisService:/project
     links:
       - db
 volumes:
   db:
+    driver: local
+  rootgo:
     driver: local

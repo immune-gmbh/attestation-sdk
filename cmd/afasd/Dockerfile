@@ -1,5 +1,5 @@
 FROM golang:1.20
 
-VOLUME ["/project"]
+VOLUME ["/project", "/root/go"]
 WORKDIR /project
-CMD ["go", "run", "./cmd/afasd/"]
+CMD ["sh", "-c", "while true; do go run ./cmd/afasd/ --log-level trace; done"]
