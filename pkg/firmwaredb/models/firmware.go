@@ -9,6 +9,6 @@ type Firmware struct {
 	ImageURL string       `db:"image_url"`
 
 	// loaded from other tables
-	Targets      []*FirmwareTarget
-	Measurements []*FirmwareMeasurement
+	Targets      []*FirmwareTarget      `db:"-"`
+	Measurements []*FirmwareMeasurement `db:"-"`
 }

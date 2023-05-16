@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `analyze_report` (
     `job_id` BINARY(16) NOT NULL,
     `asset_id` BIGINT UNSIGNED DEFAULT NULL,
     `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `processed_at` TIMESTAMP,
+    `processed_at` TIMESTAMP DEFAULT NULL,
     `group_key` BINARY(128) NULL,
     PRIMARY KEY (`id`),
     KEY `job_id` (`job_id`),

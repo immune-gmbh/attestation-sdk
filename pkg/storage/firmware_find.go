@@ -18,7 +18,7 @@ import (
 //
 // If a field has a nil-value then it is not included to filter conditions.
 type FindFirmwareFilter struct {
-	// Here we include only indexed columns, see also models/image_metadata.sql
+	// Here we include only indexed columns, see also models/firmware_image_metadata.sql
 
 	// == exact values ==
 
@@ -158,7 +158,7 @@ func (stor *Storage) FindFirmware(ctx context.Context, filter FindFirmwareFilter
 
 	// SELECT and lock
 	_, columns, err := helpers.GetValuesAndColumns(&models.FirmwareImageMetadata{}, nil)
-	query := fmt.Sprintf("SELECT %s FROM `image_metadata` WHERE %s LOCK IN SHARE MODE",
+	query := fmt.Sprintf("SELECT %s FROM `firmware_image_metadata` WHERE %s LOCK IN SHARE MODE",
 		strings.Join(columns, ","),
 		whereConds,
 	)

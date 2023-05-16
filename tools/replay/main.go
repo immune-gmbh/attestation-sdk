@@ -83,8 +83,8 @@ func main() {
 		JobID:           types.JobID{},
 		AssetID:         nil,
 		Timestamp:       time.Now(),
-		ProcessedAt:     time.Time{},
-		GroupKey:        models.AnalyzeReportGroupKey{},
+		ProcessedAt:     nil,
+		GroupKey:        nil,
 		AnalyzerReports: []models.AnalyzerReport{*report},
 	}), true, false)
 }

@@ -12,18 +12,19 @@ CREATE TABLE IF NOT EXISTS `firmware_measurement_type` (
 CREATE TABLE IF NOT EXISTS `firmware_measurement` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`firmware_id` BIGINT UNSIGNED NOT NULL COMMENT 'reference to `firmware`.`id`', 
-	`measurement_type_id` BIGINT UNSIGNED NOT NULL COMMENT 'reference to `firmware_measurement_type`.`id`',
+	`type_id` BIGINT UNSIGNED NOT NULL COMMENT 'reference to `firmware_measurement_type`.`id`',
 	`value` BLOB,
     PRIMARY KEY (`id`),
-    KEY `firmware_id` (`firmware_id`, `measurement_type_id`)
+    KEY `firmware_id` (`firmware_id`, `type_id`),
+    KEY `type_id` (`type_id`, `firmware_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE IF NOT EXISTS `firmware_measurement_metadata` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`measurement_type_id` BIGINT UNSIGNED NOT NULL COMMENT 'reference to `firmware_measurement_type`.`id`',
-	`key` BLOB,
+	`type_id` BIGINT UNSIGNED NOT NULL COMMENT 'reference to `firmware_measurement_type`.`id`',
+	`key` VARCHAR(255),
 	`value` BLOB,
     PRIMARY KEY (`id`),
-    KEY `measurement_type_id` (`measurement_type_id`, `key`),
+    KEY `type_id` (`type_id`, `key`),
     KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;

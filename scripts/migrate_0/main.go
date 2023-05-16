@@ -55,7 +55,7 @@ func main() {
 		if err != nil {
 			logger.FromCtx(ctx).Panic(err)
 		}
-		query := fmt.Sprintf("SELECT %s, image_id FROM image_metadata WHERE LENGTH(image_id) != ?", strings.Join(columns[1:], ","))
+		query := fmt.Sprintf("SELECT %s, image_id FROM firmware_image_metadata WHERE LENGTH(image_id) != ?", strings.Join(columns[1:], ","))
 		args := []interface{}{len(types.ImageID{})}
 		logger.FromCtx(ctx).Debugf("query:'%s', args:%v", query, args)
 
@@ -135,7 +135,7 @@ func main() {
 		}
 	case "delete-old-metadata":
 		result, err := stor.DB.Exec(
-			"DELETE FROM image_metadata WHERE LENGTH(image_id) != ?",
+			"DELETE FROM firmware_image_metadata WHERE LENGTH(image_id) != ?",
 			len(types.ImageID{}),
 		)
 		if err != nil {

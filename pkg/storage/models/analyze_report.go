@@ -25,13 +25,13 @@ type AnalyzeReport struct {
 	Timestamp time.Time `db:"timestamp"`
 
 	// ProcessedAt defines the time moment when the analysis report was processed
-	ProcessedAt time.Time `db:"processed_at"`
+	ProcessedAt *time.Time `db:"processed_at"`
 
 	// GroupKey is the key used to aggregate multiple reports together.
 	//
 	// Is assigned by an application which decides how to group reports,
 	// currently it is firmware-alerter.
-	GroupKey AnalyzeReportGroupKey `db:"group_key"`
+	GroupKey *AnalyzeReportGroupKey `db:"group_key"`
 
 	// == Connected data (stored in other tables) ==
 

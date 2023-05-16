@@ -95,7 +95,7 @@ func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.Firmwa
 	placeholders := constructPlaceholders(len(columns))
 
 	for tryCount := uint(1); ; tryCount++ {
-		_, err = tx.Exec("INSERT INTO `image_metadata` ("+columnsStr+") VALUES ("+placeholders+")", values...)
+		_, err = tx.Exec("INSERT INTO `firmware_image_metadata` ("+columnsStr+") VALUES ("+placeholders+")", values...)
 		if err == nil {
 			break
 		}
@@ -145,7 +145,7 @@ func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.Firmwa
 	}
 
 	// Set the "ts_upload".
-	_, err = tx.Exec("UPDATE `image_metadata` SET `ts_upload` = ? WHERE `image_id` = ?",
+	_, err = tx.Exec("UPDATE `firmware_image_metadata` SET `ts_upload` = ? WHERE `image_id` = ?",
 		time.Now(), imageMeta.ImageID)
 	if err != nil {
 		return ErrUnableToInsert{insertedValue: imageMeta.ImageID.String(), Err: fmt.Errorf("unable to update the 'ts_upload' field: %w", err)}

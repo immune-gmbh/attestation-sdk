@@ -92,7 +92,7 @@ func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) 
 	}
 
 	query := fmt.Sprintf(
-		"SELECT %s,%s FROM `reproduced_pcrs` `pcrs` JOIN `image_metadata` `meta` ON `pcrs`.`hash_stable` = `meta`.`hash_stable`",
+		"SELECT %s,%s FROM `reproduced_pcrs` `pcrs` JOIN `firmware_image_metadata` `meta` ON `pcrs`.`hash_stable` = `meta`.`hash_stable`",
 		constructColumns("pcrs", leftColumns),
 		constructColumns("meta", rightColumns),
 	)

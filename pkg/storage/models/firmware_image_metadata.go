@@ -88,7 +88,7 @@ func (meta *FirmwareImageMetadata) CalcMissingInfo(ctx context.Context, image []
 			var err error
 			meta.HashStable, err = types.NewImageStableHashFromImage(image)
 			if err != nil {
-				logger.FromCtx(ctx).Warnf("unable to calculate the stable hash for image %v: %w", meta.ImageID, err)
+				logger.FromCtx(ctx).Warnf("unable to calculate the stable hash for image %v: %v", meta.ImageID, err)
 			}
 		}()
 	}

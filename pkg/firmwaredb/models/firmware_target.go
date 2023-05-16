@@ -9,5 +9,5 @@ type FirmwareTarget struct {
 	Hostname   *string `db:"hostname"`
 
 	// loaded from other tables
-	Firmware *Firmware
+	Firmware *Firmware `db:"-"`
 }

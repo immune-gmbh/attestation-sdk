@@ -12,7 +12,7 @@ type FirmwareMeasurementType struct {
 	Description string `db:"description"`
 
 	// loaded from other tables
-	Metadata []*FirmwareMeasurementMetadata
+	Metadata []*FirmwareMeasurementMetadata `db:"-"`
 }
 
 type FirmwareMeasurementMetadata struct {
@@ -22,7 +22,7 @@ type FirmwareMeasurementMetadata struct {
 	Value             string `db:"value"`
 
 	// loaded from other tables
-	FirmwareMeasurementType *FirmwareMeasurementType
+	FirmwareMeasurementType *FirmwareMeasurementType `db:"-"`
 }
 
 type FirmwareMeasurement struct {
@@ -32,6 +32,6 @@ type FirmwareMeasurement struct {
 	Value             types.ConvertedBytes `db:"value"`
 
 	// loaded from other tables
-	Firmware                *Firmware
-	FirmwareMeasurementType *FirmwareMeasurementType
+	Firmware                *Firmware                `db:"-"`
+	FirmwareMeasurementType *FirmwareMeasurementType `db:"-"`
 }
