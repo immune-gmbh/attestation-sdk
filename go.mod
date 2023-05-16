@@ -9,7 +9,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e
-	github.com/facebookincubator/go-belt v0.0.0-20230119144706-62080641a285
+	github.com/facebookincubator/go-belt v0.0.0-20230516233722-b17245cd1868
 	github.com/fatih/color v1.7.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/go-tpm v0.3.3
@@ -63,6 +63,9 @@ require (
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/xaionaro-go/bytesextra v0.0.0-20220103144954-846e454ddea9 // indirect
 	github.com/xaionaro-go/unhash v0.0.0-20230427202706-0195a574c620 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/sync v0.1.0 // indirect
