@@ -40,53 +40,8 @@ func asMySQLError(err error, errNo uint16) *mysql.MySQLError {
 	return nil
 }
 
-// UpsertReproducedPCRs inserts ReproducedPCRs or updates reproduced pcr values if item already exists structure
-func (stor *Storage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs models.ReproducedPCRs) error {
-	values, columns, err := helpers.GetValuesAndColumns(&reproducedPCRs, func(fieldName string, value interface{}) bool {
-		return fieldName == "ID"
-	})
-	if err != nil {
-		return fmt.Errorf("failed to parse reproducedPCRs: '%w'", err)
-	}
-
-	columnsStr := "`" + strings.Join(columns, "`,`") + "`"
-	placeholders := constructPlaceholders(len(columns))
-
-	_, err = stor.DB.Exec("INSERT INTO `reproduced_pcrs` ("+columnsStr+") VALUES ("+placeholders+")", values...)
-	if err == nil {
-		return nil
-	}
-	if asMySQLError(err, 1062) != nil {
-		// already inserted -> update pcr0 value
-		res, err := stor.DB.Exec(
-			"UPDATE `reproduced_pcrs` SET `pcr0_sha1` = ?, `pcr0_sha256` = ? WHERE `hash_stable` = ? AND `registers_sha512` = ? AND `tpm_device` = ?",
-			reproducedPCRs.PCR0SHA1,
-			reproducedPCRs.PCR0SHA256,
-			reproducedPCRs.HashStable,
-			reproducedPCRs.RegistersSHA512,
-			reproducedPCRs.TPMDevice,
-		)
-		if err != nil {
-			return ErrUnableToUpdate{insertedValue: fmt.Sprintf("%v", reproducedPCRs), Err: fmt.Errorf("failed to determine the number of affected rows: %w", err)}
-		}
-
-		cnt, err := res.RowsAffected()
-		if err != nil {
-			return ErrUnableToUpdate{insertedValue: fmt.Sprintf("%v", reproducedPCRs), Err: fmt.Errorf("failed to determine the number of affected rows: %w", err)}
-		}
-
-		if cnt > 1 {
-			// we should update no more than a single item, because rowID is a primary key
-			panic(fmt.Sprintf("unexepectedly high number of affected rows: '%d'", cnt))
-		}
-		return nil
-	}
-
-	return mySQLInsertError(fmt.Sprintf("%v", reproducedPCRs), fmt.Errorf("unable to insert the row: %w", err))
-}
-
-// Insert adds an image to the storage (saves the images itself and it's metadata).
-func (stor *Storage) Insert(ctx context.Context, imageMeta models.FirmwareImageMetadata, imageData []byte) (err error) {
+// InsertFirmware adds an image to the storage (saves the images itself and it's metadata).
+func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.FirmwareImageMetadata, imageData []byte) (err error) {
 	// Here we insert metadata to MySQL and data to ManifoldClient.
 	//
 	// However it's a problem to process errors correctly if there will

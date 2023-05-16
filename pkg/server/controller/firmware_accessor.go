@@ -30,7 +30,7 @@ func (fw *FirmwareAccessor) Bytes() []byte {
 
 // Init initializes the FirmwareAccessor after it was deserialized.
 func (fw *FirmwareAccessor) Init(ctx context.Context, storage Storage) error {
-	content, err := storage.GetBytes(ctx, fw.ImageID)
+	content, err := storage.GetFirmwareBytes(ctx, fw.ImageID)
 	fw.downloadedContent = content
 	return err
 }

@@ -63,7 +63,7 @@ func AnalyzerReport(
 	prepareImage := func(blobIface analysis.Blob) error {
 		blob := blobIface.(*controllertypes.AnalyzerFirmwareAccessor)
 
-		b, err := stor.GetBytes(ctx, blob.ImageID)
+		b, err := stor.GetFirmwareBytes(ctx, blob.ImageID)
 		if err != nil {
 			return fmt.Errorf("unable to get the image (ID %v): %w", blob.ImageID, err)
 		}

@@ -177,7 +177,7 @@ func (stor *Storage) FindAnalyzeReports(
 	}
 
 	if !filterInput.ActualFirmware.IsEmpty() {
-		imageMetas, unlockFn, err := stor.Find(ctx, filterInput.ActualFirmware)
+		imageMetas, unlockFn, err := stor.FindFirmware(ctx, filterInput.ActualFirmware)
 		if err != nil {
 			return nil, fmt.Errorf("unable to find image references given filter %#+v: %w", filterInput.ActualFirmware, err)
 		}

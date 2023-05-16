@@ -149,7 +149,7 @@ func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "trySetFWVersionAndDate")
 	defer span.Finish()
 	log := logger.FromCtx(ctx)
-	_meta, releaseFn, _ := a.storage.FindOne(ctx, storage.FindFirmwareFilter{
+	_meta, releaseFn, _ := a.storage.FindFirmwareOne(ctx, storage.FindFirmwareFilter{
 		ImageID: &meta.ImageID,
 	})
 	if releaseFn != nil {
@@ -317,7 +317,7 @@ func (a *AnalyzerFirmwaresAccessor) GetByBlob(ctx context.Context, image []byte)
 // GetByID implements analyzerinput.FirmwaresAccessor (see the description of AnalyzerFirmwaresAccessor).
 func (a *AnalyzerFirmwaresAccessor) GetByID(ctx context.Context, imageID types.ImageID) (analysis.Blob, error) {
 	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
-		image, meta, err := a.storage.Get(ctx, imageID)
+		image, meta, err := a.storage.GetFirmware(ctx, imageID)
 		return image, meta, nil, biosInfoFromMeta(meta), err
 	}, "GetByID", imageID)
 }
