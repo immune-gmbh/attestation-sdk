@@ -49,11 +49,15 @@ func usageExit() {
 
 func main() {
 	logLevel := logger.LevelInfo // the default value
+	dbAddr := os.Getenv("DBHOST")
+	if dbAddr == "" {
+		dbAddr = "127.0.0.1:3306"
+	}
 	defaultDSN := (&mysql.Config{
 		User:   os.Getenv("DBUSER"),
 		Passwd: os.Getenv("DBPASS"),
 		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
+		Addr:   dbAddr,
 		DBName: "afas",
 	}).FormatDSN()
 
@@ -65,7 +69,7 @@ func main() {
 	rdbmsDriverInternal := pflag.String("rdbms-driver-internal", "mysql", "")
 	rdbmsDSNInternal := pflag.String("rdbms-dsn-internal", defaultDSN, "")
 	firmwareImageReportBaseURL := pflag.String("firmware-image-repo-baseurl", "http://localhost/", "")
-	objectStorageURL := pflag.String("object-storage-url", "fs:///srv/afasd", "")
+	blobStorageURL := pflag.String("blob-storage-url", "fs:///srv/afasd", "")
 	amountOfWorkers := pflag.Uint("workers", uint(runtime.NumCPU()), "amount of concurrent workers")
 	workersQueue := pflag.Uint("workers-queue", uint(runtime.NumCPU())*10000, "maximal amount of requests permitted in the queue")
 	cpuLoadLimit := pflag.Float64("cpu-load-limit", 0.8, "suspend accepting requests while fraction of busy CPU cycles is more than the specified number")
@@ -98,7 +102,7 @@ func main() {
 
 	fianoLog.DefaultLogger = newFianoLogger(log.WithField("module", "fiano"))
 
-	firmwareBlobStorage, err := blobstorage.New(*objectStorageURL)
+	firmwareBlobStorage, err := blobstorage.New(*blobStorageURL)
 	if err != nil {
 		log.Panic(err)
 	}

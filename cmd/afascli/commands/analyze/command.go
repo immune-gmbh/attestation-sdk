@@ -67,9 +67,7 @@ type Command struct {
 	eventLog          *string
 	expectPCR0        *string
 	afasEndpoint      *string
-	firmwareFilename  *string
 	firmwareVersion   *string
-	firmwareDate      *string
 	registers         *string
 	tpmDevice         *string
 	flow              *string
@@ -180,8 +178,8 @@ func (cmd Command) FlagUseRequest(ctx context.Context) (*afas.AnalyzeRequest, er
 	return &request, nil
 }
 
-// FirmwareVersionDate returns information about firmware version/date based on flags '-firmware-version' and '-localhost' as well as optional input args
-func (cmd Command) FirmwareVersionDate(ctx context.Context, actualFirmware []byte, actualImageMetaData *afas.FirmwareImageMetadata) ([]afas.FirmwareVersion, error) {
+// FirmwareVersion returns information about firmware version based on flags '-firmware-version' and '-localhost' as well as optional input args
+func (cmd Command) FirmwareVersion(ctx context.Context, actualFirmware []byte, actualImageMetaData *afas.FirmwareImageMetadata) ([]afas.FirmwareVersion, error) {
 	if len(*cmd.firmwareVersion) > 0 {
 		return []afas.FirmwareVersion{
 			{
@@ -263,9 +261,8 @@ func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
 	cmd.dumpCommand.SetupFlagSet(flag)
 
 	flag.Var(&cmd.analyzers, "analyzer", "List of analyzers to start, values: "+knownAnalyzersArg())
-	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
+	cmd.afasEndpoint = flag.String("afas-endpoint", "http://localhost:17545", "")
 	cmd.firmwareVersion = flag.String("firmware-version", "", "the version of the firmware to compare with; empty value means to read SMBIOS values")
-	cmd.firmwareDate = flag.String("firmware-date", "", "the date of the firmware to compare with; empty value means to read SMBIOS values")
 	cmd.eventLog = flag.String("event-log", "", "path to the binary EventLog")
 	cmd.expectPCR0 = flag.String("expect-pcr0", "", "if you need information why PCR0 does not match the one you expect then pass the expected value here (allowed formats: binary, base64, hex); by default it reads the PCR0 value from TPM")
 	cmd.registers = flag.String("registers", "", "use status registers from JSON file (or dump them from TXT Public Space if empty value)")
@@ -350,13 +347,13 @@ func (cmd Command) buildAnalyzeRequest(
 		actualFirmwareMeta = fwWand.FindImage(ctx, actualFirmware)
 	}
 
-	firmwareVersions, err := cmd.FirmwareVersionDate(ctx, actualFirmware, actualFirmwareMeta)
+	firmwareVersions, err := cmd.FirmwareVersion(ctx, actualFirmware, actualFirmwareMeta)
 	if err != nil {
-		logger.FromCtx(ctx).Errorf("Failed to obtain firmware version/date: %v", err)
+		logger.FromCtx(ctx).Errorf("Failed to obtain firmware version: %v", err)
 	}
 
 	// Some of the items in firmwareVersions could contain invalid information, check versions in AFAS
-	var firmwareVersion, firmwareDate string
+	var firmwareVersion string
 	if checkFwResult, err := fwWand.CheckFirmwareVersion(ctx, firmwareVersions); err != nil {
 		if len(firmwareVersions) > 0 {
 			firmwareVersion = firmwareVersions[0].Version
@@ -421,9 +418,7 @@ func (cmd Command) buildAnalyzeRequest(
 	}
 
 	var actualImage afas.FirmwareImage
-	if len(*cmd.firmwareFilename) > 0 {
-		actualImage.Filename = cmd.firmwareFilename
-	} else if actualFirmwareMeta != nil && len(actualFirmwareMeta.ImageID) > 0 {
+	if actualFirmwareMeta != nil && len(actualFirmwareMeta.ImageID) > 0 {
 		logger.FromCtx(ctx).Infof("Use blob storage image ID: %X", actualFirmwareMeta.ImageID)
 		actualImage.BlobStorageKey = ptr(string(actualFirmwareMeta.ImageID))
 	} else if len(actualFirmware) > 0 {
@@ -449,7 +444,6 @@ func (cmd Command) buildAnalyzeRequest(
 		case diffanalysis.DiffMeasuredBootAnalyzerID:
 			err = requestBuilder.AddDiffMeasuredBootInput(
 				firmwareVersion,
-				firmwareDate,
 				originalImage,
 				actualImage,
 				registers,
@@ -463,7 +457,6 @@ func (cmd Command) buildAnalyzeRequest(
 		case intelacmanalysis.IntelACMAnalyzerID:
 			err = requestBuilder.AddIntelACMInput(
 				firmwareVersion,
-				firmwareDate,
 				originalImage,
 				actualImage,
 			)
@@ -473,7 +466,6 @@ func (cmd Command) buildAnalyzeRequest(
 		case reproducepcranalysis.ReproducePCRAnalyzerID:
 			err = requestBuilder.AddReproducePCRInput(
 				firmwareVersion,
-				firmwareDate,
 				originalImage,
 				actualImage,
 				registers,
@@ -542,9 +534,6 @@ func (cmd Command) OutputTemplate() (*template.Template, error) {
 func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []string) error {
 	if len(args) > 2 {
 		return commands.ErrArgs{Err: fmt.Errorf("unexpected number of arguments: %d", len(args))}
-	}
-	if (len(*cmd.firmwareVersion) > 0) != (len(*cmd.firmwareDate) > 0) {
-		return commands.ErrArgs{Err: fmt.Errorf("both firmware version and date should be specified or not")}
 	}
 	if len(*cmd.outputFormat) > 0 && *cmd.outputJSON {
 		return commands.ErrArgs{Err: fmt.Errorf("flags -json and -format are incompatible")}

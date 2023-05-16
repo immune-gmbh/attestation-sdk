@@ -49,11 +49,17 @@ func (f *flashrom) dumpAuto(ctx context.Context) ([]byte, error) {
 	if devMemDumpErr == nil {
 		return imageBytes, nil
 	}
+	devMemBytes := imageBytes
 
 	imageBytes, mtdErr := f.dumpMTD(ctx)
 	logger.FromCtx(ctx).Debugf("MTD dumper error: %v", mtdErr)
 	if mtdErr == nil {
 		return imageBytes, nil
+	}
+
+	if devMemBytes != nil {
+		logger.FromCtx(ctx).Errorf("%v", devMemDumpErr)
+		return devMemBytes, nil
 	}
 
 	return nil, fmt.Errorf("unable to find a working way to dump the image; flashRomErr: '%v'; devMemDumpErr: '%v', mtdErr: '%v'",

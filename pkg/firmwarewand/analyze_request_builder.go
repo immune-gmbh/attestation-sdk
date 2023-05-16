@@ -46,7 +46,7 @@ func (req *AnalyzeRequestBuilder) AddLocalHostInfo() error {
 
 // AddDiffMeasuredBootInput populates AnalyzeRequest with input for DiffMeasuredBoot analyzer
 func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
-	firmwareVersion, firmwareDate string,
+	firmwareVersion string,
 	originalFirmwareImage *afas.FirmwareImage,
 	actualFirmwareImage afas.FirmwareImage,
 	actualRegisters registers.Registers,
@@ -54,9 +54,6 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 	eventLog *tpmeventlog.TPMEventLog,
 	actualPCR0 []byte,
 ) error {
-	if err := checkFirmwareVersionDate(firmwareVersion, firmwareDate); err != nil {
-		return err
-	}
 	if originalFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*originalFirmwareImage, "originalFirmwareImage"); err != nil {
 			return err
@@ -152,13 +149,10 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 
 // AddIntelACMInput populates AnalyzeRequest with input for IntelACM analyzer
 func (req *AnalyzeRequestBuilder) AddIntelACMInput(
-	firmwareVersion, firmwareDate string,
+	firmwareVersion string,
 	originalFirmwareImage *afas.FirmwareImage,
 	actualFirmwareImage afas.FirmwareImage,
 ) error {
-	if err := checkFirmwareVersionDate(firmwareVersion, firmwareDate); err != nil {
-		return err
-	}
 	if originalFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*originalFirmwareImage, "originalFirmwareImage"); err != nil {
 			return err
@@ -168,7 +162,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 		return err
 	}
 	if len(firmwareVersion) == 0 && originalFirmwareImage == nil {
-		return fmt.Errorf("either firmware version/date or originalFirmwareImage should be provided (or both)")
+		return fmt.Errorf("either firmware version or originalFirmwareImage should be provided (or both)")
 	}
 
 	var input afas.IntelACMInput
@@ -207,7 +201,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 
 // AddReproducePCRInput populates AnalyzeRequest with input for ReproducePCR analyzer
 func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
-	firmwareVersion, firmwareDate string,
+	firmwareVersion string,
 	originalFirmwareImage *afas.FirmwareImage,
 	actualFirmwareImage afas.FirmwareImage,
 	actualRegisters registers.Registers,
@@ -216,9 +210,6 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 	flow pcr.Flow,
 	expectedPCR0 []byte,
 ) error {
-	if err := checkFirmwareVersionDate(firmwareVersion, firmwareDate); err != nil {
-		return err
-	}
 	if originalFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*originalFirmwareImage, "originalFirmwareImage"); err != nil {
 			return err
@@ -333,7 +324,7 @@ func (req *AnalyzeRequestBuilder) AddPSPSignatureInput(
 	actualFirmwareImage *afas.FirmwareImage,
 ) error {
 	if actualFirmwareImage == nil {
-		return fmt.Errorf("either firmware version/date or actualFirmwareImage should be provided (or both)")
+		return fmt.Errorf("either firmware version or actualFirmwareImage should be provided (or both)")
 	}
 	if actualFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*actualFirmwareImage, "actualFirmwareImage"); err != nil {
@@ -356,7 +347,7 @@ func (req *AnalyzeRequestBuilder) AddBIOSRTMVolumeInput(
 	actualFirmwareImage *afas.FirmwareImage,
 ) error {
 	if actualFirmwareImage == nil {
-		return fmt.Errorf("either firmware version/date or actualFirmwareImage should be provided (or both)")
+		return fmt.Errorf("either firmware version or actualFirmwareImage should be provided (or both)")
 	}
 	if actualFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*actualFirmwareImage, "actualFirmwareImage"); err != nil {
@@ -379,7 +370,7 @@ func (req *AnalyzeRequestBuilder) AddAPCBSecurityTokensInput(
 	actualFirmwareImage *afas.FirmwareImage,
 ) error {
 	if actualFirmwareImage == nil {
-		return fmt.Errorf("either firmware version/date or actualFirmwareImage should be provided (or both)")
+		return fmt.Errorf("either firmware version or actualFirmwareImage should be provided (or both)")
 	}
 	if actualFirmwareImage != nil {
 		if err := checkFirmwareImageIsCorrectEnum(*actualFirmwareImage, "actualFirmwareImage"); err != nil {
@@ -408,13 +399,6 @@ func (req *AnalyzeRequestBuilder) addArtifact(art *afas.Artifact) int32 {
 	req.request.Artifacts = append(req.request.Artifacts, art)
 	req.putArtifactsToPos[artifactHash] = idx
 	return idx
-}
-
-func checkFirmwareVersionDate(firmwareVersion, firmwareDate string) error {
-	if (len(firmwareVersion) > 0) != (len(firmwareDate) > 0) {
-		return fmt.Errorf("both firmware version and date should be specified or not")
-	}
-	return nil
 }
 
 func checkFirmwareImageIsCorrectEnum(image afas.FirmwareImage, name string) error {

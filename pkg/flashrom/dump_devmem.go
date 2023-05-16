@@ -4,13 +4,19 @@
 package flashrom
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"os"
 
+	"github.com/facebookincubator/go-belt/tool/logger"
 	pkgbytes "github.com/linuxboot/fiano/pkg/bytes"
 	"github.com/linuxboot/fiano/pkg/uefi"
+)
+
+const (
+	devMemSkipPlaceholderHead = false
 )
 
 func (f *flashrom) findBIOSRegionUsingIOMem() (*pkgbytes.Range, error) {
@@ -82,10 +88,28 @@ func (f *flashrom) dumpDevMem(ctx context.Context) ([]byte, error) {
 		return nil, fmt.Errorf("received wrong length: %d != %d", r, firmwareSize)
 	}
 
+	if devMemSkipPlaceholderHead {
+		placeholderWordLength := 0x10000
+		origLength := len(b)
+		placeholderWord := make([]byte, placeholderWordLength)
+		for idx := range placeholderWord {
+			placeholderWord[idx] = 0xff
+		}
+		for len(b) >= placeholderWordLength {
+			if !bytes.Equal(b[:placeholderWordLength], placeholderWord) {
+				break
+			}
+			b = b[placeholderWordLength:]
+		}
+		if len(b) < origLength {
+			logger.FromCtx(ctx).Warnf("the beginning of dumped image is filled with 0xFF; after removing the placeholder the length reduced from 0x%X (%d) to 0x%X (%d) bytes", origLength, origLength, len(b), len(b))
+		}
+	}
+
 	// Verifying if this is indeed a BIOS region.
 	_, err = uefi.Parse(b)
 	if err != nil {
-		return nil, fmt.Errorf("received memory region is not a valid BIOS region: %w", err)
+		return b, fmt.Errorf("received memory region is not a valid BIOS region: %w", err)
 	}
 
 	return b, nil

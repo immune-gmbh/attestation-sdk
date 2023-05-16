@@ -16,7 +16,8 @@ func (f *flashrom) dumpFlashrom(ctx context.Context) ([]byte, error) {
 	//
 	// We expect flashrom to handle the request in ~3-20 seconds, but
 	// to be sure we wait up to 5 minutes.
-	ctx, _ = context.WithTimeout(ctx, time.Minute*5)
+	ctx, cancelFunc := context.WithTimeout(ctx, time.Minute*5)
+	defer cancelFunc()
 
 	imageBytes, err := f.execReceive(ctx, f.Config.FlashromPath,
 		"-p", "internal:laptop=this_is_not_a_laptop,ich_spi_mode=hwseq",

@@ -12,7 +12,8 @@ func (f *flashrom) dumpAfulnx64(ctx context.Context) ([]byte, error) {
 	//
 	// We expect AFULNX64 to handle the request within a minute, but
 	// to be sure we wait up to 5 minutes.
-	ctx, _ = context.WithTimeout(ctx, time.Minute*5)
+	ctx, cancelFunc := context.WithTimeout(ctx, time.Minute*5)
+	defer cancelFunc()
 
 	return f.execReceive(ctx, f.Config.Afulnx64Path, outputPathArgument,
 		// Save to file

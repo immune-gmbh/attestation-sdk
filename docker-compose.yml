@@ -14,11 +14,19 @@ services:
       - db:/var/lib/mysql
       - ./.initdb.sql:/docker-entrypoint-initdb.d/init.sql
   app:
-    image: ubuntu:23.04
+    build:
+      dockerfile: Dockerfile
+      context: cmd/afasd
+    environment:
+      DBHOST: db
+      DBUSER: root
+      DBPASS: somePass
     ports:
       - 17545:17545
     volumes:
-      - ./:/project
+      - ../AttestationFailureAnalysisService:/project
+    links:
+      - db
 volumes:
   db:
     driver: local
