@@ -15,7 +15,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
 )
 
 func init() {
@@ -45,8 +44,6 @@ type Controller struct {
 	analyzersRegistry         *analyzers.Registry
 	analysisDataCalculator    analysisDataCalculatorInterface
 
-	UEFIParseLock *lockmap.LockMap
-
 	closedSignal       chan struct{}
 	activeGoroutinesWG sync.WaitGroup
 }
@@ -75,8 +72,7 @@ func New(
 		analyzersRegistry:         analyzersRegistry,
 		analysisDataCalculator:    analysisDataCalculator,
 
-		UEFIParseLock: lockmap.NewLockMap(),
-		closedSignal:  make(chan struct{}),
+		closedSignal: make(chan struct{}),
 	}
 	ctrl.Context, ctrl.ContextCancel = context.WithCancel(ctx)
 
