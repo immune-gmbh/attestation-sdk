@@ -69,7 +69,7 @@ func (ctrl *Controller) getAnalyzeReport(
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "getAnalyzeReport")
 	defer span.Finish()
 
-	hostInfo, device := ctrl.getHostInfo(ctx, _hostInfo)
+	hostInfo, _ := ctrl.getHostInfo(ctx, _hostInfo)
 
 	report := &models.AnalyzeReport{
 		Timestamp:       time.Now(),
@@ -85,7 +85,7 @@ func (ctrl *Controller) getAnalyzeReport(
 
 	artifactsAccessor, err := analyzerinput.NewArtifactsAccessor(
 		artifacts,
-		NewAnalyzerFirmwaresAccessor(ctrl.FirmwareStorage, ctrl.OriginalFWImageRepository, ctrl, device.ModelID),
+		NewAnalyzerFirmwaresAccessor(ctrl.FirmwareStorage, ctrl.OriginalFWImageRepository, ctrl, hostInfo.ModelID),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create artifacts accessor: %w", err)

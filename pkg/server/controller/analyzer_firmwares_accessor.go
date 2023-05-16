@@ -45,7 +45,7 @@ type AnalyzerFirmwaresAccessor struct {
 	storage                 Storage
 	originalFirmwareStorage originalFWImageRepository
 	imageSaverAsync         imageSaverAsync
-	targetModelID           int64
+	targetModelID           *int64
 	cache                   map[objhash.ObjHash]analyzerFirmwaresAccessorResult
 	cacheLocker             sync.Mutex
 	cacheSingleOp           *lockmap.LockMap
@@ -64,7 +64,7 @@ func NewAnalyzerFirmwaresAccessor(
 	storage Storage,
 	originalFirmwareStorage originalFWImageRepository,
 	imageSaverAsync imageSaverAsync,
-	targetModelID int64,
+	targetModelID *int64,
 ) *AnalyzerFirmwaresAccessor {
 	return &AnalyzerFirmwaresAccessor{
 		storage:                 storage,

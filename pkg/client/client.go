@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/httputils/clienthelpers"
 )
 
 const (
@@ -54,7 +55,6 @@ func NewClient(ctx context.Context, opts ...Option) (*Client, error) {
 	cfg := initConfig{
 		Timeout:        DefaultTimeout,
 		RemoteLogLevel: logger.LevelWarning,
-		HTTPHeaders:    make(http.Header),
 		Protocol:       DefaultProtocol,
 	}
 	for _, opt := range opts {
@@ -88,9 +88,11 @@ func newBackend(
 		return nil, nil, fmt.Errorf("no endpoints defined")
 	}
 
+	httpHeaders := clienthelpers.HTTPHeaders(beltctx.Belt(ctx), cfg.RemoteLogLevel)
+
 	var errors error
 	for _, endpoint := range cfg.Endpoints {
-		backendClient, transport, err := newBackendUsingBackend(ctx, endpoint, cfg.Timeout, cfg.Protocol, cfg.HTTPHeaders)
+		backendClient, transport, err := newBackendUsingBackend(ctx, endpoint, cfg.Timeout, cfg.Protocol, httpHeaders)
 		errmon.ObserveErrorCtx(ctx, err)
 		if err != nil {
 			multierror.Append(errors, fmt.Errorf("unable to initialize a thrift client using endpoint '%s': %w", endpoint, err))

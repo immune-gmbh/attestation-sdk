@@ -1,6 +1,7 @@
 package servermiddleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/facebookincubator/go-belt/tool/experimental/errmon"
@@ -15,7 +16,9 @@ func RecoverPanic(
 ) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, request *http.Request) {
 		defer func() {
-			errmon.ObserveRecoverCtx(request.Context(), recover())
+			if ev := errmon.ObserveRecoverCtx(request.Context(), recover()); ev != nil {
+				fmt.Println(ev.StackTrace.String()) // TODO: remove this line, ObserveRecoverCtx should report the stacktrace by itself!
+			}
 		}()
 		handler(response, request)
 	}

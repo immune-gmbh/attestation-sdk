@@ -76,9 +76,9 @@ func (db *DB) Get(ctx context.Context, filters ...Filter) ([]*Firmware, error) {
 	query := "" +
 		fmt.Sprintf("SELECT %s FROM `firmware` ", strings.Join(columns, ",")) +
 		"RIGHT JOIN `firmware_target` ON `firmware_target`.`firmware_id` = `firmware`.`id` " +
-		"LEFT JOIN `firmware_measurement`.`firmware_id` = `firmware`.`id` " +
-		"LEFT JOIN `firmware_measurement_type`.`id` = `firmware_measurement`.`type_id` " +
-		"LEFT JOIN `firmware_measurement_metadata`.`type_id` = `firmware_measurement_type`.`id` " +
+		"LEFT JOIN `firmware_measurement` ON `firmware_measurement`.`firmware_id` = `firmware`.`id` " +
+		"LEFT JOIN `firmware_measurement_type` ON `firmware_measurement_type`.`id` = `firmware_measurement`.`type_id` " +
+		"LEFT JOIN `firmware_measurement_metadata` ON `firmware_measurement_metadata`.`type_id` = `firmware_measurement_type`.`id` " +
 		"WHERE " + whereCond
 	logger.FromCtx(ctx).Debugf("query:'%s', args:%v", query, args)
 

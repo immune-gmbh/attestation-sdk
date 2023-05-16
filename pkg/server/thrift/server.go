@@ -50,7 +50,7 @@ func NewServer(
 	observability *belt.Belt,
 	logLevel logger.Level,
 ) (*Server, error) {
-	protocolFactory := thrift.NewTJSONProtocolFactory()
+	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(nil)
 	svc := newService(ctrl)
 	processor := afas.NewAttestationFailureAnalyzerServiceProcessor(svc)
 	handler := thrift.NewThriftHandlerFunc(processor, protocolFactory, protocolFactory)

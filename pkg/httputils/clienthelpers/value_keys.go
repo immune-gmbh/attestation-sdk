@@ -1,4 +1,4 @@
-package clientoptions
+package clienthelpers
 
 type valueKey int
 

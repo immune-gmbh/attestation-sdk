@@ -1,7 +1,6 @@
 package client
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
@@ -13,7 +12,6 @@ type initConfig struct {
 	Protocol         string
 	RemoteLogLevel   logger.Level
 	LogLocalHostname string
-	HTTPHeaders      http.Header
 }
 
 // Option is an abstract option for NewClient.
