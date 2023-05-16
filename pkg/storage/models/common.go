@@ -9,10 +9,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson"
 )
 
-const (
-	sqlPlaceholder = "?"
-)
-
 func init() {
 	analysis.RegisterType((*SQLErrorWrapper)(nil))
 	analysis.RegisterType((*GenericSQLError)(nil))
