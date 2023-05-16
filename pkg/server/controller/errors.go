@@ -63,32 +63,6 @@ func (err ErrDecompressReceived) Unwrap() error {
 	return err.Err
 }
 
-// ErrInitSeRFClient implements "error", for the description see Error.
-type ErrInitSeRFClient struct {
-	Err error
-}
-
-func (err ErrInitSeRFClient) Error() string {
-	return fmt.Sprintf("unable to init SeRF client: %v", err.Err)
-}
-
-func (err ErrInitSeRFClient) Unwrap() error {
-	return err.Err
-}
-
-// ErrInitRFE implements "error", for the description see Error.
-type ErrInitRFE struct {
-	Err error
-}
-
-func (err ErrInitRFE) Error() string {
-	return fmt.Sprintf("unable to initialize a RockFortExpress client: %v", err.Err)
-}
-
-func (err ErrInitRFE) Unwrap() error {
-	return err.Err
-}
-
 // ErrInitCache implements "error", for the description see Error.
 type ErrInitCache struct {
 	// For describes the purpose of the cache, which initialization have failed.

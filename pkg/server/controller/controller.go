@@ -133,7 +133,7 @@ func (ctrl *Controller) getHostInfo(
 				if err == nil {
 					return device
 				}
-				log.Warnf("failed to get SeRF info for %s: %v", hostname, err)
+				log.Warnf("failed to get device info for %s: %v", hostname, err)
 			}
 		}
 		if resultHostInfo.AssetID != nil {
@@ -141,7 +141,7 @@ func (ctrl *Controller) getHostInfo(
 			if err == nil {
 				return device
 			}
-			log.Warnf("failed to get SeRF info by asset id %d: %v", *resultHostInfo.AssetID, err)
+			log.Warnf("failed to get device info by asset id %d: %v", *resultHostInfo.AssetID, err)
 		}
 
 		if resultHostInfo.Hostname != nil {
@@ -149,7 +149,7 @@ func (ctrl *Controller) getHostInfo(
 			if err == nil {
 				return device
 			}
-			log.Warnf("failed to get SeRF info for %s: %v", *resultHostInfo.Hostname, err)
+			log.Warnf("failed to get device info for %s: %v", *resultHostInfo.Hostname, err)
 		}
 		return nil
 	}()
