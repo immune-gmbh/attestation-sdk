@@ -280,7 +280,7 @@ func (err ErrUnableToGetDiffReport) Unwrap() error {
 type ErrNoImage struct{}
 
 func (err ErrNoImage) Error() string {
-	return fmt.Sprintf("no image")
+	return "no image"
 }
 
 // ErrInvalidImageID means the provided image ID could not be used, for
@@ -301,7 +301,7 @@ func (err ErrInvalidImageID) Unwrap() error {
 type ErrInvalidDataSource struct{}
 
 func (err ErrInvalidDataSource) Error() string {
-	return fmt.Sprintf("invalid data source value")
+	return "invalid data source value"
 }
 
 // ErrInvalidMeasurementFlow means input PCR measurements flow is unknown.

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"time"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
@@ -52,8 +51,4 @@ func (ctrl *Controller) CheckFirmwareVersion(
 
 type firmwareVersionDate struct {
 	version string
-
-	year  int
-	month time.Month
-	day   int
 }

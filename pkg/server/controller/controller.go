@@ -2,16 +2,11 @@ package controller
 
 import (
 	"context"
-	"crypto/sha512"
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 
-	"lukechampine.com/blake3"
-
 	css_errors "github.com/9elements/converged-security-suite/v2/pkg/errors"
-	"github.com/9elements/converged-security-suite/v2/pkg/uefi"
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/logger"
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
@@ -21,8 +16,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 func init() {
@@ -115,30 +108,6 @@ func (ctrl *Controller) purgeAPICache() {
 
 	logger.FromCtx(ctx).Infof("purge controller API cache")
 	// TODO: purge any cache
-}
-
-func uint64deref(p *uint64) uint64 {
-	if p == nil {
-		return 0
-	}
-	return *p
-}
-
-func getOrigFirmwareInfo(
-	ctx context.Context,
-	db firmwaredb.DB,
-	firmwareVersion string,
-	modelID int64,
-	cachingPolicy types.CachingPolicy,
-) (*firmwaredb.Firmware, error) {
-	fws, err := db.Get(ctx, firmwaredb.FilterVersion(firmwareVersion), firmwaredb.FilterModelIDs{modelID})
-	if err != nil {
-		return nil, err
-	}
-	if len(fws) != 1 {
-		return nil, fmt.Errorf("expected 1 entry, but got %d", len(fws))
-	}
-	return fws[0], nil
 }
 
 // getHostInfo tries to get full information about the host being analyzed.
@@ -234,43 +203,4 @@ func (ctrl *Controller) launchAsync(ctx context.Context, f func(ctx context.Cont
 	}()
 
 	return nil
-}
-
-func (ctrl *Controller) parseUEFI(b []byte) (*uefi.UEFI, error) {
-	// Preventing multiple concurrent parsing of the same image. Compute one and use everywhere, instead
-	l := ctrl.UEFIParseLock.Lock(firmwareImageCacheKey(b))
-	defer l.Unlock()
-
-	if l.UserData != nil {
-		// The value is already computed, just use it.
-		return l.UserData.(*uefi.UEFI), nil
-	}
-
-	f, err := uefi.ParseUEFIFirmwareBytes(b)
-	if err != nil {
-		return nil, err
-	}
-
-	l.UserData = f
-	return f, nil
-}
-
-func firmwareMetaCacheKey(imageMeta models.FirmwareImageMetadata) string {
-	return firmwareCacheKey(imageMeta.HashSHA2_512, imageMeta.HashBlake3_512)
-}
-
-func firmwareImageCacheKey(b []byte) string {
-	sha512Sum := sha512.Sum512(b)
-	blake3Sum := blake3.Sum512(b)
-	return firmwareCacheKey(sha512Sum[:], blake3Sum[:])
-}
-
-// For security reasons we do two different hashes (to avoid intentional
-// collisions).
-func firmwareCacheKey(sha512Sum, blake3Sum []byte) string {
-	var resultCacheKey strings.Builder
-	resultCacheKey.Write(sha512Sum[:])
-	resultCacheKey.Write(blake3Sum[:])
-
-	return resultCacheKey.String()
 }
