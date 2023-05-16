@@ -156,16 +156,16 @@ func (p *CompressionType) Value() (driver.Value, error) {
 type DataSource int64
 
 const (
-	DataSource_RawBlob  DataSource = 0
-	DataSource_Manifold DataSource = 1
+	DataSource_RawBlob     DataSource = 0
+	DataSource_BlobStorage DataSource = 1
 )
 
 func (p DataSource) String() string {
 	switch p {
 	case DataSource_RawBlob:
 		return "RawBlob"
-	case DataSource_Manifold:
-		return "Manifold"
+	case DataSource_BlobStorage:
+		return "BlobStorage"
 	}
 	return "<UNSET>"
 }
@@ -174,8 +174,8 @@ func DataSourceFromString(s string) (DataSource, error) {
 	switch s {
 	case "RawBlob":
 		return DataSource_RawBlob, nil
-	case "Manifold":
-		return DataSource_Manifold, nil
+	case "BlobStorage":
+		return DataSource_BlobStorage, nil
 	}
 	return DataSource(0), fmt.Errorf("not a valid DataSource string")
 }
@@ -367,14 +367,14 @@ func Range_Ptr(v Range_) *Range_ { return &v }
 //   - LastReported
 //   - EventLog
 //   - TPM
-//   - RTPFWTable
+//   - OrigTable
 type PCRValue struct {
 	Original     []byte `thrift:"Original,1" db:"Original" json:"Original,omitempty"`
 	Received     []byte `thrift:"Received,2" db:"Received" json:"Received,omitempty"`
 	LastReported []byte `thrift:"LastReported,3" db:"LastReported" json:"LastReported,omitempty"`
 	EventLog     []byte `thrift:"EventLog,4" db:"EventLog" json:"EventLog,omitempty"`
 	TPM          []byte `thrift:"TPM,5" db:"TPM" json:"TPM,omitempty"`
-	RTPFWTable   []byte `thrift:"RTPFWTable,6" db:"RTPFWTable" json:"RTPFWTable,omitempty"`
+	OrigTable    []byte `thrift:"OrigTable,6" db:"OrigTable" json:"OrigTable,omitempty"`
 }
 
 func NewPCRValue() *PCRValue {
@@ -411,10 +411,10 @@ func (p *PCRValue) GetTPM() []byte {
 	return p.TPM
 }
 
-var PCRValue_RTPFWTable_DEFAULT []byte
+var PCRValue_OrigTable_DEFAULT []byte
 
-func (p *PCRValue) GetRTPFWTable() []byte {
-	return p.RTPFWTable
+func (p *PCRValue) GetOrigTable() []byte {
+	return p.OrigTable
 }
 func (p *PCRValue) IsSetOriginal() bool {
 	return p.Original != nil
@@ -436,8 +436,8 @@ func (p *PCRValue) IsSetTPM() bool {
 	return p.TPM != nil
 }
 
-func (p *PCRValue) IsSetRTPFWTable() bool {
-	return p.RTPFWTable != nil
+func (p *PCRValue) IsSetOrigTable() bool {
+	return p.OrigTable != nil
 }
 
 func (p *PCRValue) Read(ctx context.Context, iprot thrift.TProtocol) error {
@@ -578,7 +578,7 @@ func (p *PCRValue) ReadField6(ctx context.Context, iprot thrift.TProtocol) error
 	if v, err := iprot.ReadBinary(ctx); err != nil {
 		return thrift.PrependError("error reading field 6: ", err)
 	} else {
-		p.RTPFWTable = v
+		p.OrigTable = v
 	}
 	return nil
 }
@@ -692,15 +692,15 @@ func (p *PCRValue) writeField5(ctx context.Context, oprot thrift.TProtocol) (err
 }
 
 func (p *PCRValue) writeField6(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetRTPFWTable() {
-		if err := oprot.WriteFieldBegin(ctx, "RTPFWTable", thrift.STRING, 6); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:RTPFWTable: ", p), err)
+	if p.IsSetOrigTable() {
+		if err := oprot.WriteFieldBegin(ctx, "OrigTable", thrift.STRING, 6); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:OrigTable: ", p), err)
 		}
-		if err := oprot.WriteBinary(ctx, p.RTPFWTable); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.RTPFWTable (6) field write error: ", p), err)
+		if err := oprot.WriteBinary(ctx, p.OrigTable); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.OrigTable (6) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 6:RTPFWTable: ", p), err)
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 6:OrigTable: ", p), err)
 		}
 	}
 	return err
@@ -727,7 +727,7 @@ func (p *PCRValue) Equals(other *PCRValue) bool {
 	if bytes.Compare(p.TPM, other.TPM) != 0 {
 		return false
 	}
-	if bytes.Compare(p.RTPFWTable, other.RTPFWTable) != 0 {
+	if bytes.Compare(p.OrigTable, other.OrigTable) != 0 {
 		return false
 	}
 	return true
@@ -4371,15 +4371,13 @@ func (p *CompressedBlob) String() string {
 // Attributes:
 //   - Blob
 //   - Filename
-//   - ManifoldID
-//   - EverstoreHandle
-//   - FwVersion
+//   - BlobStorageKey
+//   - FirmwareVersion
 type FirmwareImage struct {
 	Blob            *CompressedBlob  `thrift:"Blob,1" db:"Blob" json:"Blob,omitempty"`
 	Filename        *string          `thrift:"Filename,2" db:"Filename" json:"Filename,omitempty"`
-	ManifoldID      []byte           `thrift:"ManifoldID,3" db:"ManifoldID" json:"ManifoldID,omitempty"`
-	EverstoreHandle *string          `thrift:"EverstoreHandle,4" db:"EverstoreHandle" json:"EverstoreHandle,omitempty"`
-	FwVersion       *FirmwareVersion `thrift:"FwVersion,5" db:"FwVersion" json:"FwVersion,omitempty"`
+	BlobStorageKey  *string          `thrift:"BlobStorageKey,3" db:"BlobStorageKey" json:"BlobStorageKey,omitempty"`
+	FirmwareVersion *FirmwareVersion `thrift:"FirmwareVersion,4" db:"FirmwareVersion" json:"FirmwareVersion,omitempty"`
 }
 
 func NewFirmwareImage() *FirmwareImage {
@@ -4404,28 +4402,22 @@ func (p *FirmwareImage) GetFilename() string {
 	return *p.Filename
 }
 
-var FirmwareImage_ManifoldID_DEFAULT []byte
+var FirmwareImage_BlobStorageKey_DEFAULT string
 
-func (p *FirmwareImage) GetManifoldID() []byte {
-	return p.ManifoldID
+func (p *FirmwareImage) GetBlobStorageKey() string {
+	if !p.IsSetBlobStorageKey() {
+		return FirmwareImage_BlobStorageKey_DEFAULT
+	}
+	return *p.BlobStorageKey
 }
 
-var FirmwareImage_EverstoreHandle_DEFAULT string
+var FirmwareImage_FirmwareVersion_DEFAULT *FirmwareVersion
 
-func (p *FirmwareImage) GetEverstoreHandle() string {
-	if !p.IsSetEverstoreHandle() {
-		return FirmwareImage_EverstoreHandle_DEFAULT
+func (p *FirmwareImage) GetFirmwareVersion() *FirmwareVersion {
+	if !p.IsSetFirmwareVersion() {
+		return FirmwareImage_FirmwareVersion_DEFAULT
 	}
-	return *p.EverstoreHandle
-}
-
-var FirmwareImage_FwVersion_DEFAULT *FirmwareVersion
-
-func (p *FirmwareImage) GetFwVersion() *FirmwareVersion {
-	if !p.IsSetFwVersion() {
-		return FirmwareImage_FwVersion_DEFAULT
-	}
-	return p.FwVersion
+	return p.FirmwareVersion
 }
 func (p *FirmwareImage) CountSetFieldsFirmwareImage() int {
 	count := 0
@@ -4435,13 +4427,10 @@ func (p *FirmwareImage) CountSetFieldsFirmwareImage() int {
 	if p.IsSetFilename() {
 		count++
 	}
-	if p.IsSetManifoldID() {
+	if p.IsSetBlobStorageKey() {
 		count++
 	}
-	if p.IsSetEverstoreHandle() {
-		count++
-	}
-	if p.IsSetFwVersion() {
+	if p.IsSetFirmwareVersion() {
 		count++
 	}
 	return count
@@ -4456,16 +4445,12 @@ func (p *FirmwareImage) IsSetFilename() bool {
 	return p.Filename != nil
 }
 
-func (p *FirmwareImage) IsSetManifoldID() bool {
-	return p.ManifoldID != nil
+func (p *FirmwareImage) IsSetBlobStorageKey() bool {
+	return p.BlobStorageKey != nil
 }
 
-func (p *FirmwareImage) IsSetEverstoreHandle() bool {
-	return p.EverstoreHandle != nil
-}
-
-func (p *FirmwareImage) IsSetFwVersion() bool {
-	return p.FwVersion != nil
+func (p *FirmwareImage) IsSetFirmwareVersion() bool {
+	return p.FirmwareVersion != nil
 }
 
 func (p *FirmwareImage) Read(ctx context.Context, iprot thrift.TProtocol) error {
@@ -4513,18 +4498,8 @@ func (p *FirmwareImage) Read(ctx context.Context, iprot thrift.TProtocol) error 
 				}
 			}
 		case 4:
-			if fieldTypeId == thrift.STRING {
-				if err := p.ReadField4(ctx, iprot); err != nil {
-					return err
-				}
-			} else {
-				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-					return err
-				}
-			}
-		case 5:
 			if fieldTypeId == thrift.STRUCT {
-				if err := p.ReadField5(ctx, iprot); err != nil {
+				if err := p.ReadField4(ctx, iprot); err != nil {
 					return err
 				}
 			} else {
@@ -4565,27 +4540,18 @@ func (p *FirmwareImage) ReadField2(ctx context.Context, iprot thrift.TProtocol) 
 }
 
 func (p *FirmwareImage) ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadBinary(ctx); err != nil {
+	if v, err := iprot.ReadString(ctx); err != nil {
 		return thrift.PrependError("error reading field 3: ", err)
 	} else {
-		p.ManifoldID = v
+		p.BlobStorageKey = &v
 	}
 	return nil
 }
 
 func (p *FirmwareImage) ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(ctx); err != nil {
-		return thrift.PrependError("error reading field 4: ", err)
-	} else {
-		p.EverstoreHandle = &v
-	}
-	return nil
-}
-
-func (p *FirmwareImage) ReadField5(ctx context.Context, iprot thrift.TProtocol) error {
-	p.FwVersion = &FirmwareVersion{}
-	if err := p.FwVersion.Read(ctx, iprot); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.FwVersion), err)
+	p.FirmwareVersion = &FirmwareVersion{}
+	if err := p.FirmwareVersion.Read(ctx, iprot); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.FirmwareVersion), err)
 	}
 	return nil
 }
@@ -4608,9 +4574,6 @@ func (p *FirmwareImage) Write(ctx context.Context, oprot thrift.TProtocol) error
 			return err
 		}
 		if err := p.writeField4(ctx, oprot); err != nil {
-			return err
-		}
-		if err := p.writeField5(ctx, oprot); err != nil {
 			return err
 		}
 	}
@@ -4654,45 +4617,30 @@ func (p *FirmwareImage) writeField2(ctx context.Context, oprot thrift.TProtocol)
 }
 
 func (p *FirmwareImage) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetManifoldID() {
-		if err := oprot.WriteFieldBegin(ctx, "ManifoldID", thrift.STRING, 3); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:ManifoldID: ", p), err)
+	if p.IsSetBlobStorageKey() {
+		if err := oprot.WriteFieldBegin(ctx, "BlobStorageKey", thrift.STRING, 3); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:BlobStorageKey: ", p), err)
 		}
-		if err := oprot.WriteBinary(ctx, p.ManifoldID); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.ManifoldID (3) field write error: ", p), err)
+		if err := oprot.WriteString(ctx, string(*p.BlobStorageKey)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.BlobStorageKey (3) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 3:ManifoldID: ", p), err)
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 3:BlobStorageKey: ", p), err)
 		}
 	}
 	return err
 }
 
 func (p *FirmwareImage) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetEverstoreHandle() {
-		if err := oprot.WriteFieldBegin(ctx, "EverstoreHandle", thrift.STRING, 4); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:EverstoreHandle: ", p), err)
+	if p.IsSetFirmwareVersion() {
+		if err := oprot.WriteFieldBegin(ctx, "FirmwareVersion", thrift.STRUCT, 4); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:FirmwareVersion: ", p), err)
 		}
-		if err := oprot.WriteString(ctx, string(*p.EverstoreHandle)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.EverstoreHandle (4) field write error: ", p), err)
-		}
-		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 4:EverstoreHandle: ", p), err)
-		}
-	}
-	return err
-}
-
-func (p *FirmwareImage) writeField5(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetFwVersion() {
-		if err := oprot.WriteFieldBegin(ctx, "FwVersion", thrift.STRUCT, 5); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:FwVersion: ", p), err)
-		}
-		if err := p.FwVersion.Write(ctx, oprot); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.FwVersion), err)
+		if err := p.FirmwareVersion.Write(ctx, oprot); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.FirmwareVersion), err)
 		}
 		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 5:FwVersion: ", p), err)
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 4:FirmwareVersion: ", p), err)
 		}
 	}
 	return err
@@ -4715,18 +4663,15 @@ func (p *FirmwareImage) Equals(other *FirmwareImage) bool {
 			return false
 		}
 	}
-	if bytes.Compare(p.ManifoldID, other.ManifoldID) != 0 {
-		return false
-	}
-	if p.EverstoreHandle != other.EverstoreHandle {
-		if p.EverstoreHandle == nil || other.EverstoreHandle == nil {
+	if p.BlobStorageKey != other.BlobStorageKey {
+		if p.BlobStorageKey == nil || other.BlobStorageKey == nil {
 			return false
 		}
-		if (*p.EverstoreHandle) != (*other.EverstoreHandle) {
+		if (*p.BlobStorageKey) != (*other.BlobStorageKey) {
 			return false
 		}
 	}
-	if !p.FwVersion.Equals(other.FwVersion) {
+	if !p.FirmwareVersion.Equals(other.FirmwareVersion) {
 		return false
 	}
 	return true

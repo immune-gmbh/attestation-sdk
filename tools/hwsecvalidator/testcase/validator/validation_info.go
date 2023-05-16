@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
@@ -355,7 +354,7 @@ func getEventLog(filepath string, log logger.Logger) (*tpmeventlog.TPMEventLog, 
 		return nil, nil
 	}
 
-	eventLog, err := ioutil.ReadFile(EventLogPath)
+	eventLog, err := os.ReadFile(EventLogPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read eventlog conents: %w", err)
 	}

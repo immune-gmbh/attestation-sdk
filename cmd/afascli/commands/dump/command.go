@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
@@ -87,7 +87,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 
 	span, _ := tracer.StartChildSpanFromCtx(ctx, "writeFile")
 	defer span.Finish()
-	err = ioutil.WriteFile(outputPath, imageBytes, 0440)
+	err = os.WriteFile(outputPath, imageBytes, 0440)
 	if err != nil {
 		return fmt.Errorf("unable to save the firmware image: %w", err)
 	}

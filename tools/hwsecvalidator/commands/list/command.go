@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
@@ -44,7 +44,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 	}
 	imagePath := args[0]
 
-	image, err := ioutil.ReadFile(imagePath)
+	image, err := os.ReadFile(imagePath)
 	if err != nil {
 		return fmt.Errorf("failed to read firmware image file: %w", err)
 	}

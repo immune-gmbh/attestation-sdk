@@ -42,12 +42,12 @@ func asMySQLError(err error, errNo uint16) *mysql.MySQLError {
 
 // InsertFirmware adds an image to the storage (saves the images itself and it's metadata).
 func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.FirmwareImageMetadata, imageData []byte) (err error) {
-	// Here we insert metadata to MySQL and data to ManifoldClient.
+	// Here we insert metadata to MySQL and data to BlobStorageClient.
 	//
 	// However it's a problem to process errors correctly if there will
 	// be multiple workers.
 	//
-	// We don't want to send the same image multiple times to ManifoldClient
+	// We don't want to send the same image multiple times to BlobStorageClient
 	// (especially simultaneously), so we need to lock sending an image
 	// with specific ID. The easiest way to do that is through MySQL. Thereby
 	// we do the MySQL INSERT first.
@@ -136,12 +136,12 @@ func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.Firmwa
 		}
 	}
 
-	// Uploading the image to ManifoldClient.
+	// Uploading the image to BlobStorageClient.
 	err = stor.retryLoop(func() error {
-		return stor.BlobStorage.Replace(ctx, imageMeta.ManifoldPath(), imageData)
+		return stor.BlobStorage.Replace(ctx, imageMeta.BlobStoragePath(), imageData)
 	})
 	if err != nil {
-		return ErrUnableToUpload{Path: imageMeta.ManifoldPath(), Err: err}
+		return ErrUnableToUpload{Path: imageMeta.BlobStoragePath(), Err: err}
 	}
 
 	// Set the "ts_upload".

@@ -8,7 +8,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -69,7 +68,7 @@ func ParseRegisters(registersPath string) (registers.Registers, error) {
 		return nil, nil
 	}
 
-	registersJSON, err := ioutil.ReadFile(registersPath)
+	registersJSON, err := os.ReadFile(registersPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read registers: %w", err)
 	}

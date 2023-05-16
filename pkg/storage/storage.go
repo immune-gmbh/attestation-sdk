@@ -22,6 +22,7 @@ type BlobStorage interface {
 	io.Closer
 	Get(ctx context.Context, key string) ([]byte, error)
 	Replace(ctx context.Context, key string, blob []byte) error
+	Delete(ctx context.Context, key string) error
 }
 
 // Storage is the implementation of firmware images storage (which handles

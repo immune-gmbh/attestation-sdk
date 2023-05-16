@@ -8,7 +8,7 @@ import (
 // firmware version. Currently it is implemented through ugly logic of
 // downloading a tarball and looking for image from it.
 //
-// TODO: reimplement this logic to download images from Everstore/Manifold.
+// TODO: reimplement this logic to download images from Everstore/BlobStorage.
 type FirmwareRepo struct {
 	baseURL    string
 	callerName string

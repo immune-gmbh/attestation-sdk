@@ -92,7 +92,7 @@ func (req *AnalyzeRequestBuilder) AddDiffMeasuredBootInput(
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
-				FwVersion: &afas.FirmwareVersion{
+				FirmwareVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
 				},
 			},
@@ -182,7 +182,7 @@ func (req *AnalyzeRequestBuilder) AddIntelACMInput(
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
-				FwVersion: &afas.FirmwareVersion{
+				FirmwareVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
 				},
 			},
@@ -262,7 +262,7 @@ func (req *AnalyzeRequestBuilder) AddReproducePCRInput(
 	case len(firmwareVersion) > 0:
 		firmwareVersionArtifact := &afas.Artifact{
 			FwImage: &afas.FirmwareImage{
-				FwVersion: &afas.FirmwareVersion{
+				FirmwareVersion: &afas.FirmwareVersion{
 					Version: firmwareVersion,
 				},
 			},

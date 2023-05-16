@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -35,7 +35,7 @@ func TestExecReceive(t *testing.T) {
 				require.Len(t, arg, 2)
 				require.Equal(t, testArg, arg[0])
 				require.NotEqual(t, outputPathArgument, arg[1])
-				err := ioutil.WriteFile(arg[1], []byte(testOut), 0000)
+				err := os.WriteFile(arg[1], []byte(testOut), 0000)
 				require.NoError(t, err)
 				return &mockProcess{output: []byte(arg[0])}
 			},

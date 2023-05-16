@@ -165,7 +165,7 @@ func (dc *DataCalculator) resolveType(
 		return reflect.Value{}, nil, ErrMissingInput{missingType: t.String()}
 	}
 
-	// try to calcualte the value, but first we should resolve all its dependencies
+	// try to calculate the value, but first we should resolve all its dependencies
 	calculatorVal := reflect.ValueOf(calculator)
 	calculatorType := calculatorVal.Type()
 	if calculatorVal.Kind() != reflect.Func {
@@ -275,7 +275,7 @@ func (dc *DataCalculator) resolveType(
 	}
 	log.Debugf("Calculated result for type '%s' and key 0x'%X'", t, opHash)
 
-	// do not cache errors in a global cache, as they may disappear (for example someone will fix RTP table)
+	// do not cache errors in a global cache, as they may disappear (for example someone will fix the orig firmware table)
 	if dc.cache != nil && calcResult.err == nil {
 		dc.cache.Add(opHash, newGlobalCacheItem(calcResult.value, uniqueIssues(append(calcResult.issues, inputIssues...))))
 	}

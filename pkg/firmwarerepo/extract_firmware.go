@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"
 	fiano "github.com/linuxboot/fiano/pkg/uefi"
@@ -53,7 +52,7 @@ func ParseFirmwareImage(ctx context.Context, data []byte) *uefi.UEFI {
 // ExtractFirmwareFromTarball returns a firmware image extracted from tarball.
 func ExtractFirmwareFromTarball(ctx context.Context, tarball []byte) (*uefi.UEFI, string, error) {
 	// Unfortunately there was found no good way to extract a firmware image
-	// (there's no everstore handle filled in the RTP firmware table).
+	// (there's no everstore handle filled in the orig firmware table).
 	//
 	// So we just try to parse each file and return the one which is
 	// successfully parsed.
@@ -82,7 +81,7 @@ func ExtractFirmwareFromTarball(ctx context.Context, tarball []byte) (*uefi.UEFI
 			continue
 		}
 
-		data, err := ioutil.ReadAll(tarReader)
+		data, err := io.ReadAll(tarReader)
 		if err != nil {
 			return nil, "", fmt.Errorf("unable to read file '%s': %w", hdr.Name, err)
 		}
@@ -91,7 +90,7 @@ func ExtractFirmwareFromTarball(ctx context.Context, tarball []byte) (*uefi.UEFI
 		if fw == nil {
 			continue
 		}
-		log.Debugf("%s: a firmare image", hdr.Name)
+		log.Debugf("%s: a firmware image", hdr.Name)
 		return fw, hdr.Name, nil
 	}
 

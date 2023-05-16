@@ -170,7 +170,7 @@ func (analyzer *ReproducePCR) Analyze(ctx context.Context, in Input) (*analysis.
 		return nil, fmt.Errorf("unable to check if PCR0 matches in the expected flow: %w", err)
 	}
 
-	// TODO: delete this, the hash algorithm should be explicit, and not implicitely inferred from the hash length:
+	// TODO: delete this, the hash algorithm should be explicit, and not implicitly inferred from the hash length:
 	hashAlgo := hashAlgoForHashLength(ctx, tpmInstance, len(in.ExpectedPCR0))
 
 	// TODO: delete this, this is an intermediate code while migrating from `pcr` to `bootflow`:

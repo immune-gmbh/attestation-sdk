@@ -6,7 +6,7 @@ package flashrom
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"syscall"
 
@@ -41,7 +41,7 @@ func (f *flashrom) execReceive(ctx context.Context, cmd string, args ...string) 
 
 	outputEndChan := make(chan struct{})
 	go func() {
-		output, outputErr = ioutil.ReadAll(r)
+		output, outputErr = io.ReadAll(r)
 		_ = r.Close()
 		close(outputEndChan)
 	}()

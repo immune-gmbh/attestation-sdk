@@ -116,9 +116,9 @@ func (imgID ImageID) GoString() string {
 	return hex.EncodeToString(imgID[:])
 }
 
-// ManifoldPath returns the path should be used to store this image.
-func (imgID ImageID) ManifoldPath() string {
-	return "flat/" + imgID.String()
+// BlobStoragePath returns the path should be used to store this image.
+func (imgID ImageID) BlobStoragePath() string {
+	return imgID.String()
 }
 
 // IsZero returns true if ImageID contains the zero value.

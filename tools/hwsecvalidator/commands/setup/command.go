@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,7 +55,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		)}
 	}
 
-	image, err := ioutil.ReadFile(origImagePath)
+	image, err := os.ReadFile(origImagePath)
 	if err != nil {
 		return fmt.Errorf("unable to read to original image '%s': %w", origImagePath, err)
 	}
@@ -65,7 +64,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		return fmt.Errorf("unable to setup the test case '%s': %w", testCaseName, err)
 	}
 
-	if err := ioutil.WriteFile(dstImagePath, image, 0640); err != nil {
+	if err := os.WriteFile(dstImagePath, image, 0640); err != nil {
 		return fmt.Errorf("unable to save the modified firmware image to '%s': %w", dstImagePath, err)
 	}
 

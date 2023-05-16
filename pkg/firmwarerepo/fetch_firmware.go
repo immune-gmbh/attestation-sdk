@@ -3,7 +3,7 @@ package firmwarerepo
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -163,7 +163,7 @@ func (job *fetchFirmwareJob) httpFetch() ([]byte, error) {
 		return nil, ErrHTTPGet{Err: fmt.Errorf("invalid status code: %d", resp.StatusCode), URL: job.url}
 	}
 
-	imageBytes, err := ioutil.ReadAll(resp.Body)
+	imageBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, ErrHTTPGetBody{Err: err, URL: job.url}
 	}

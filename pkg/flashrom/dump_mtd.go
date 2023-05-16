@@ -7,7 +7,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -83,7 +82,7 @@ func (f *flashrom) findBIOSMTDDevName() (string, error) {
 	var otherStorages []string
 	for _, entry := range entries {
 		namePath := filepath.Join(f.Config.SysFSMTDPath, entry.Name(), "name")
-		nameBytes, err := ioutil.ReadFile(namePath)
+		nameBytes, err := os.ReadFile(namePath)
 		if err != nil {
 			return "", fmt.Errorf("unable to read the name of the storage '%s': %w", entry.Name(), err)
 		}
@@ -111,7 +110,7 @@ func (f *flashrom) readMTDMeta(devName string) (*mtdMeta, error) {
 	mtdMetaPath := filepath.Join(f.Config.SysFSMTDPath, devName)
 
 	readUint64From := func(path string) (uint64, error) {
-		b, err := ioutil.ReadFile(path)
+		b, err := os.ReadFile(path)
 		if err != nil {
 			return 0, fmt.Errorf("unable to read file '%s': %w", path, err)
 		}

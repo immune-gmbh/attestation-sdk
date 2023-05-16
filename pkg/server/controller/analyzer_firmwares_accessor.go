@@ -55,7 +55,7 @@ var _ analyzerinput.FirmwaresAccessor = (*AnalyzerFirmwaresAccessor)(nil)
 
 // NewAnalyzerFirmwaresAccessor creates a new instance of AnalyzerFirmwaresAccessor.
 // It provides firmware images as serializable analysis.Blob-s. Serialized analysis.Blob will
-// contain only ImageID to an image, which is saved to the Manifold storage. Thus any
+// contain only ImageID to an image, which is saved to the BlobStorage storage. Thus any
 // of these analysis.Blob-s could be saved to MySQL (as part of an Analyze report),
 // deserialized back and reused.
 //
@@ -330,7 +330,7 @@ func (a *AnalyzerFirmwaresAccessor) GetByVersion(
 	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
 		blob, filename, err := a.originalFirmwareStorage.DownloadByVersion(ctx, firmwareVersion)
 		if err != nil {
-			return nil, nil, nil, nil, fmt.Errorf("unable to get the RTP Firmware: %w", err)
+			return nil, nil, nil, nil, fmt.Errorf("unable to get the orig firmware: %w", err)
 		}
 		meta, parsed := a.metaByImage(ctx, blob, nil, filename)
 		return blob, &meta, parsed, biosInfoFromMeta(&meta), err

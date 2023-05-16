@@ -35,13 +35,13 @@ func init() {
 // TODO: consider replacing unique indexes with reflect.TypeOf(input) to have a single source of truth
 type AnalyzerID string
 
-// Analyzer is an abstract interface that each anylzer should implement
+// Analyzer is an abstract interface that each analyzer should implement
 type Analyzer[inputType any] interface {
 	ID() AnalyzerID
 	Analyze(context.Context, inputType) (*Report, error)
 }
 
-// ActualPSPFirmware represents parsed original AMD PSP firmware (the one we get from the RTP table and expect to be installed on the host)
+// ActualPSPFirmware represents parsed original AMD PSP firmware (the one we get from the orig firmware table and expect to be installed on the host)
 type ActualPSPFirmware struct {
 	Blob  Blob // contributes to the cache key
 	amdFW *amd_manifest.AMDFirmware
@@ -65,7 +65,7 @@ func NewActualPSPFirmware(amdFW *amd_manifest.AMDFirmware, blob Blob) ActualPSPF
 	}
 }
 
-// OriginalFirmware represents parsed original firmware (the one we get from the RTP table and expect to be installed on the host)
+// OriginalFirmware represents parsed original firmware (the one we get from the orig firmware table and expect to be installed on the host)
 type OriginalFirmware struct {
 	Blob // contributes into cache key
 	fw   *uefi.UEFI
@@ -226,7 +226,7 @@ func NewAlignedOriginalFirmware(fw *uefi.UEFI, offset uint64, blob Blob) Aligned
 	}
 }
 
-// AssetID represents information about the asset id of the host that is being analysed
+// AssetID represents information about the asset id of the host that is being analyzed
 type AssetID int64
 
 func cacheRegisters(regs registers.Registers) (objhash.ObjHash, error) {

@@ -12,6 +12,7 @@ type BlobStorage interface {
 
 	Get(ctx context.Context, key string) ([]byte, error)
 	Replace(ctx context.Context, key string, blob []byte) error
+	Delete(ctx context.Context, key string) error
 }
 
 func New(urlString string) (BlobStorage, error) {

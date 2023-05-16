@@ -22,7 +22,7 @@ struct PCRValue {
   3: optional binary LastReported;
   4: optional binary EventLog;
   5: optional binary TPM;
-  6: optional binary RTPFWTable;
+  6: optional binary OrigTable;
 }
 
 struct PCRValues {
@@ -48,7 +48,7 @@ enum CompressionType {
 
 enum DataSource {
   RawBlob = 0,
-  Manifold = 1,
+  BlobStorage = 1,
 }
 
 union VendorSpecificDiagInfo {
@@ -161,9 +161,8 @@ struct CompressedBlob {
 union FirmwareImage {
   1: CompressedBlob Blob;
   2: string Filename;
-  3: binary ManifoldID;
-  4: string EverstoreHandle;
-  5: FirmwareVersion FwVersion;
+  3: string BlobStorageKey;
+  4: FirmwareVersion FirmwareVersion;
 }
 
 struct PCR {

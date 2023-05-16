@@ -257,28 +257,6 @@ func NewAPCBSecurityTokensInput(
 	return result, nil
 }
 
-type firmwareVersionIndicies interface {
-	IsSetFirmwareVersion() bool
-	GetFirmwareVersion() int32
-}
-
-type originalImageArtifactsIndicies interface {
-	firmwareVersionIndicies
-	IsSetOriginalFirmwareImage() bool
-	GetOriginalFirmwareImage() int32
-}
-
-//type firmwareversion
-
-type actualImageArtifactIndicies interface {
-	GetActualFirmwareImage() int32
-}
-
-type optionalActualImageArtifactIndicies interface {
-	actualImageArtifactIndicies
-	IsSetActualFirmwareImage() bool
-}
-
 type registersArtifactsIndicies interface {
 	IsSetStatusRegisters() bool
 	GetStatusRegisters() int32

@@ -95,9 +95,9 @@ func (meta *FirmwareImageMetadata) CalcMissingInfo(ctx context.Context, image []
 	wg.Wait()
 }
 
-// ManifoldPath return the path should be used to store the image in the Manifold.
-func (meta FirmwareImageMetadata) ManifoldPath() string {
-	return meta.ImageID.ManifoldPath()
+// BlobStoragePath return the path should be used to store the image in the BlobStorage.
+func (meta FirmwareImageMetadata) BlobStoragePath() string {
+	return meta.ImageID.BlobStoragePath()
 }
 
 // ToThrift converts ImageMetadata to the structure defined in the Thrift model.

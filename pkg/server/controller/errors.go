@@ -94,20 +94,6 @@ func (err ErrGetTagStore) Unwrap() error {
 	return err.Err
 }
 
-// ErrInitRTPFW implements "error", for the description see Error.
-type ErrInitRTPFW struct {
-	// Err is the initialization error
-	Err error
-}
-
-func (err ErrInitRTPFW) Error() string {
-	return fmt.Sprintf("unable to initialize rtpfw: %v", err.Err)
-}
-
-func (err ErrInitRTPFW) Unwrap() error {
-	return err.Err
-}
-
 // ErrInitDataCalculator implements "error", for the description see Error.
 type ErrInitDataCalculator struct {
 	// Err is the initialization error
@@ -258,7 +244,7 @@ func (err ErrNoImage) Error() string {
 }
 
 // ErrInvalidImageID means the provided image ID could not be used, for
-// example there is no image with such ID in Manifold.
+// example there is no image with such ID in BlobStorage.
 type ErrInvalidImageID struct {
 	Err error
 }

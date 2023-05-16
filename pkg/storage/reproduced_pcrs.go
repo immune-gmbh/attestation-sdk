@@ -15,7 +15,7 @@ import (
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
 func (stor *Storage) FindReproducedPCRsOne(ctx context.Context, key models.UniqueKey) (models.ReproducedPCRs, error) {
@@ -45,7 +45,7 @@ func (stor *Storage) FindReproducedPCRsOne(ctx context.Context, key models.Uniqu
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
 func (stor *Storage) SelectReproducedPCRs(ctx context.Context) ([]models.ReproducedPCRs, error) {
@@ -74,7 +74,7 @@ func ptr[T any](v T) *T {
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
 func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) ([]models.ReproducedPCRs, []models.FirmwareImageMetadata, error) {

@@ -6,7 +6,7 @@ package analysis
 //     may have constraints against passing large blobs directly as input.
 //     For example if we want analysis be storable and reproducible, in some infras
 //     it will store only an object ID in the input instead of the whole blob
-//     (and object itself will be stored in an object storage, like GitHub LFS or Manifold).
+//     (and object itself will be stored in an object storage, like GitHub LFS or BlobStorage).
 //  2. Another reason to pass objectIDs instead of images themselves is to make cache
 //     more efficient, because calculated hashes for large objects might be too expensive.
 //

@@ -9,7 +9,7 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
 )
 
-// FindImage returns the metadata of the image stored in Manifold
+// FindImage returns the metadata of the image stored in BlobStorage
 func (fwwand *FirmwareWand) FindImage(
 	ctx context.Context,
 	imageBytes []byte,

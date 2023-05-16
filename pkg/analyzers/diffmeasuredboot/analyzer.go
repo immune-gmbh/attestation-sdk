@@ -120,7 +120,10 @@ func convDataChunk(chunk *diff.DataChunk) *diffanalysis.DataChunk {
 }
 
 // Analyze makes the difference analysis of firmwares
-func (analyzer *DiffMeasuredBoot) Analyze(ctx context.Context, input Input) (*analysis.Report, error) {
+func (analyzer *DiffMeasuredBoot) Analyze(
+	ctx context.Context,
+	input Input,
+) (*analysis.Report, error) {
 
 	// == getting the measurements ==
 

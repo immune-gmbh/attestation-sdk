@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 	"text/template"
@@ -63,23 +63,22 @@ type dumpCommand = dump.Command
 // Command is the implementation of `commands.Command`.
 type Command struct {
 	dumpCommand
-	analyzers               analyzersFlag
-	eventLog                *string
-	expectPCR0              *string
-	afasEndpoint            *string
-	firmwareRTPFilename     *string
-	firmwareEverstoreHandle *string
-	firmwareVersion         *string
-	firmwareDate            *string
-	registers               *string
-	tpmDevice               *string
-	flow                    *string
-	localhostRequest        *bool
-	showNotApplicable       *bool
-	dumpRequest             *string
-	useRequest              *string
-	outputJSON              *bool
-	outputFormat            *string
+	analyzers         analyzersFlag
+	eventLog          *string
+	expectPCR0        *string
+	afasEndpoint      *string
+	firmwareFilename  *string
+	firmwareVersion   *string
+	firmwareDate      *string
+	registers         *string
+	tpmDevice         *string
+	flow              *string
+	localhostRequest  *bool
+	showNotApplicable *bool
+	dumpRequest       *string
+	useRequest        *string
+	outputJSON        *bool
+	outputFormat      *string
 }
 
 // Usage prints the syntax of arguments for this command
@@ -168,7 +167,7 @@ func (cmd Command) FlagUseRequest(ctx context.Context) (*afas.AnalyzeRequest, er
 	}
 
 	r := base64.NewDecoder(base64.StdEncoding, f)
-	b, err := ioutil.ReadAll(r)
+	b, err := io.ReadAll(r)
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode base64 from file '%s': %w", *cmd.useRequest, err)
 	}
@@ -192,7 +191,7 @@ func (cmd Command) FirmwareVersionDate(ctx context.Context, actualFirmware []byt
 	}
 	// Try actualFirmware first (as we should take original firmware that matches it)
 	// Try local firmware DMI Table (if we do analysis for a local host)
-	// Try information found in Manifold (Manifold may store old/outdated information)
+	// Try information found in BlobStorage (BlobStorage may store old/outdated information)
 	var getFirmwareVersion []func() (string, error)
 	if len(actualFirmware) > 0 {
 		getFirmwareVersion = append(getFirmwareVersion, func() (string, error) {
@@ -291,6 +290,10 @@ func (cmd Command) FirmwarewandOptions() []firmwarewand.Option {
 	return append(helpers.FirmwarewandOptions(*cmd.afasEndpoint), firmwarewand.OptionFlashromOptions(cmd.FlashromOptions()))
 }
 
+func ptr[T any](in T) *T {
+	return &in
+}
+
 // TODO: Consider splitting "afascli analyze" to "afascli scan" and "afascli analyze".
 //
 //	The "scan" should gather all the information, but do not send it anywhere,
@@ -331,7 +334,7 @@ func (cmd Command) buildAnalyzeRequest(
 	)
 
 	if len(actualFirmwareFile) > 0 {
-		actualFirmware, err = ioutil.ReadFile(actualFirmwareFile)
+		actualFirmware, err = os.ReadFile(actualFirmwareFile)
 		if err != nil {
 			return nil, fmt.Errorf("failed to read file '%s': %w", actualFirmware, err)
 		}
@@ -418,13 +421,11 @@ func (cmd Command) buildAnalyzeRequest(
 	}
 
 	var actualImage afas.FirmwareImage
-	if len(*cmd.firmwareRTPFilename) > 0 {
-		actualImage.Filename = cmd.firmwareRTPFilename
-	} else if len(*cmd.firmwareEverstoreHandle) > 0 {
-		actualImage.EverstoreHandle = cmd.firmwareEverstoreHandle
+	if len(*cmd.firmwareFilename) > 0 {
+		actualImage.Filename = cmd.firmwareFilename
 	} else if actualFirmwareMeta != nil && len(actualFirmwareMeta.ImageID) > 0 {
-		logger.FromCtx(ctx).Infof("Use manifold image ID: %X", actualFirmwareMeta.ImageID)
-		actualImage.ManifoldID = actualFirmwareMeta.ImageID
+		logger.FromCtx(ctx).Infof("Use blob storage image ID: %X", actualFirmwareMeta.ImageID)
+		actualImage.BlobStorageKey = ptr(string(actualFirmwareMeta.ImageID))
 	} else if len(actualFirmware) > 0 {
 		compressedImage, err := compressXZ(actualFirmware)
 		// this should not happen as all images should be compressed. Treat as a fatal error

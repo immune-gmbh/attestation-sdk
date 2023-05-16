@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 
 	bootflowtypes "github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
-	"github.com/9elements/converged-security-suite/v2/pkg/tpmdetection"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
 	"github.com/facebookincubator/go-belt/tool/logger"
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"
@@ -67,12 +67,6 @@ func getActualPSPFirmware(ctx context.Context, in actualPSPFirmwareInput) (Actua
 	return NewActualPSPFirmware(amdFW, in.Firmware.Blob), nil, nil
 }
 
-type detectOriginalAttestationFlowInput struct {
-	Firmware  OriginalFirmware
-	TPMDevice tpmdetection.Type
-	Regs      ActualRegisters
-}
-
 type fixedRegistersInput struct {
 	ActualFirmware   ActualFirmwareBlob
 	OriginalFirmware OriginalFirmware        `exec:"optional"`
@@ -83,7 +77,7 @@ type fixedRegistersInput struct {
 }
 
 // getFixedRegisters tries to fix values of some registers that might be affected by known problems.
-// Previously we observed that some hosts had corrupeted value of ACM_POLICY_STATUS register which changed after
+// Previously we observed that some hosts had corrupted value of ACM_POLICY_STATUS register which changed after
 // an appropriate measurement was taken due to issues in Intel's firmware
 func getFixedRegisters(ctx context.Context, in fixedRegistersInput) (FixedRegisters, []Issue, error) {
 	log := logger.FromCtx(ctx)

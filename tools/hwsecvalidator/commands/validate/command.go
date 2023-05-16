@@ -6,7 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
@@ -94,7 +94,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		)}
 	}
 
-	image, err := ioutil.ReadFile(origImagePath)
+	image, err := os.ReadFile(origImagePath)
 	if err != nil {
 		return fmt.Errorf("unable to read to original image '%s': %w", origImagePath, err)
 	}
@@ -106,7 +106,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 		options = append(options, types.OptionHostNotBooted{})
 	}
 	if len(*cmd.SELs) > 0 {
-		b, err := ioutil.ReadFile(*cmd.SELs)
+		b, err := os.ReadFile(*cmd.SELs)
 		if err != nil {
 			return fmt.Errorf("unable to read SELs file '%s': '%w'", *cmd.SELs, err)
 		}

@@ -6,7 +6,7 @@ package flashrom
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strconv"
 )
@@ -33,7 +33,7 @@ func (f *flashrom) getIOMem() (IOMemEntries, error) {
 		return nil, fmt.Errorf("unable to open '%s': %w", f.Config.IOMemPath, err)
 	}
 
-	iomemBytes, err := ioutil.ReadAll(iomemFile)
+	iomemBytes, err := io.ReadAll(iomemFile)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read '%s': %w", f.Config.IOMemPath, err)
 	}

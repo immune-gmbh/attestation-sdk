@@ -25,7 +25,7 @@ import (
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
 func (stor *Storage) InsertAnalyzeReport(ctx context.Context, report *models.AnalyzeReport) (retErr error) {
@@ -145,7 +145,7 @@ type analyzeReportFindFilter struct {
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
 func (stor *Storage) FindAnalyzeReports(
@@ -350,7 +350,7 @@ func (stor *Storage) findAnalyzerReportsByAnalyzeReportID(
 //
 // TODO: Remove these functions from `Storage`. The initial purpose of storage is combine together
 //
-//	management of metadata in MySQL and data in Manifold for firmware images. All the rest
+//	management of metadata in MySQL and data in BlobStorage for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy (e.g. see the `tx` which semantically partially duplicates `stor.DB`).
 func (stor *Storage) FindAnalyzerReport(

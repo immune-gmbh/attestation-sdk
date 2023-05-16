@@ -20,7 +20,7 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 )
 
-// FirmwareImageFilename refers to the either firmware filename in the RTP table or one of the options below
+// FirmwareImageFilename refers to the either firmware filename in the orig firmware table or one of the options below
 type FirmwareImageFilename string
 
 // ArtifactsAccessor is a helper that unifies access to the input artifacts
@@ -137,17 +137,8 @@ func (a *artifactsAccessor) GetFirmware(
 			} else {
 				firmwareAccessor, err = a.firmwaresAccessor.GetByBlob(ctx, image)
 			}
-		case fwImage.IsSetManifoldID():
-			firmwareAccessor, err = a.firmwaresAccessor.GetByID(ctx, types.NewImageIDFromBytes(fwImage.GetManifoldID()))
-		case fwImage.IsSetFwVersion():
-			firmwareVersionInfo := fwImage.GetFwVersion()
-			firmwareAccessor, err = a.firmwaresAccessor.GetByVersion(
-				ctx,
-				firmwareVersionInfo.GetVersion(),
-			)
-			if err != nil {
-				log.Errorf("Failed to get firmware image of version '%s': %v", firmwareVersionInfo.GetVersion(), err)
-			}
+		case fwImage.IsSetBlobStorageKey():
+			firmwareAccessor, err = a.firmwaresAccessor.GetByID(ctx, types.NewImageIDFromBytes([]byte(fwImage.GetBlobStorageKey())))
 		default:
 			err = fmt.Errorf("not supported firmware image type for artifact '%d'", artIdx)
 		}
@@ -229,10 +220,4 @@ func (a *artifactsAccessor) GetMeasurementsFlow(ctx context.Context, inputIdx in
 	}
 	flow, err := typeconv.FromThriftFlow(artifact.GetMeasurementsFlow())
 	return types.BootFlow(flow), err
-}
-
-type firmwareImageArtifact struct {
-	image     []byte
-	imageHash objhash.ObjHash
-	err       error
 }

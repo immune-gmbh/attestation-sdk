@@ -5,7 +5,7 @@ package flashrom
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"testing"
 	"time"
 
@@ -25,7 +25,7 @@ func TestIntegrationExecReceiveTimeout(t *testing.T) {
 func TestIntegrationExecReceiveHelloWorld(t *testing.T) {
 	output, err := (&flashrom{}).execReceive(context.Background(), "curl", "file:///proc/cmdline", "-o", outputPathArgument)
 	require.NoError(t, err)
-	cmdLine, err := ioutil.ReadFile("/proc/cmdline")
+	cmdLine, err := os.ReadFile("/proc/cmdline")
 	require.NoError(t, err)
 	require.Equal(t, string(cmdLine), string(output))
 }

@@ -28,11 +28,11 @@ func (stor *Storage) GetFirmware(ctx context.Context, imageID types.ImageID) ([]
 
 // GetFirmwareBytes returns an image itself only by ImageID.
 func (stor *Storage) GetFirmwareBytes(ctx context.Context, imageID types.ImageID) (firmwareImage []byte, err error) {
-	return stor.getFirmwareBytesByPath(ctx, imageID.ManifoldPath())
+	return stor.GetFirmwareBytesByPath(ctx, imageID.BlobStoragePath())
 }
 
-// getFirmwareBytesByPath returns an image itself only by its path in the Manifold bucket.
-func (stor *Storage) getFirmwareBytesByPath(ctx context.Context, imagePath string) (firmwareImage []byte, err error) {
+// GetFirmwareBytesByPath returns an image itself only by its path in the BlobStorage
+func (stor *Storage) GetFirmwareBytesByPath(ctx context.Context, imagePath string) (firmwareImage []byte, err error) {
 	type getBytesByPathResult struct {
 		firmwareImage []byte
 		err           error
@@ -48,7 +48,7 @@ func (stor *Storage) getFirmwareBytesByPath(ctx context.Context, imagePath strin
 		}
 
 		// Since this storage is by design content-addressed, we can safely
-		// assume full cache coherence for a specific manifold path (if the file exist).
+		// assume full cache coherence for a specific blob storage path (if the file exist).
 		cachedValue, ok := stor.Cache.Get(ctx, cacheKey).([]byte)
 		if ok {
 			return cachedValue, nil

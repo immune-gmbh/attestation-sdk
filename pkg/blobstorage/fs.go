@@ -29,6 +29,11 @@ func (fs *FS) Replace(ctx context.Context, key string, blob []byte) error {
 	return os.WriteFile(objPath, blob, 0640)
 }
 
+func (fs *FS) Delete(ctx context.Context, key string) error {
+	objPath := fs.getPath(key)
+	return os.Remove(objPath)
+}
+
 func (fs *FS) getPath(key string) string {
 	return filepath.Join(fs.RootDir, key)
 }

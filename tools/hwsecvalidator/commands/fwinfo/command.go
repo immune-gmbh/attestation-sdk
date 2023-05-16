@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
@@ -48,7 +48,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 	}
 	imagePath := args[0]
 
-	imageBytes, err := ioutil.ReadFile(imagePath)
+	imageBytes, err := os.ReadFile(imagePath)
 	if err != nil {
 		return fmt.Errorf("unable to read image '%s': %w", imagePath, err)
 	}
