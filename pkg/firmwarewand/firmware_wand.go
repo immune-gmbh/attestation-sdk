@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	afas_client "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
 
@@ -33,7 +32,7 @@ func New(ctx context.Context, opts ...Option) (*FirmwareWand, error) {
 		firmwareAnalyzerOptions = append(firmwareAnalyzerOptions, afas_client.OptionEndpoints(cfg.afasEndpoints))
 	}
 
-	afasClient, err := client.NewClient(ctx, firmwareAnalyzerOptions...)
+	afasClient, err := afas_client.NewClient(ctx, firmwareAnalyzerOptions...)
 	if err != nil {
 		return nil, ErrInitFirmwareAnalyzer{Err: err}
 	}

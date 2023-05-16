@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS image_metadata (
     hash_blake3_512 BINARY(64) NOT NULL,
     hash_stable BINARY(128) DEFAULT NULL,
     INDEX (filename(16)),
-    INDEX (firmware_version(16), firmware_date),
+    INDEX (firmware_version(16)),
     INDEX (hash_sha2_512),
     INDEX (hash_blake3_512),
     UNIQUE INDEX (hash_stable)

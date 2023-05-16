@@ -2,8 +2,6 @@ package firmwarewand
 
 import (
 	"fmt"
-
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
 type ErrInitFirmwareAnalyzer struct {
@@ -116,14 +114,6 @@ func (err ErrCheckFirmware) Unwrap() error {
 
 func (err ErrCheckFirmware) ExitCode() int {
 	return 10
-}
-
-func jobIDString(b []byte) string {
-	jobID, err := types.ParseJobID(fmt.Sprintf("%X", b))
-	if err != nil {
-		return "<none>"
-	}
-	return jobID.String()
 }
 
 // ErrUnableToGetDiffReport is returned when DiffFirmware returned a report
