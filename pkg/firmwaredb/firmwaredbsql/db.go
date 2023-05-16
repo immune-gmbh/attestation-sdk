@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
@@ -13,14 +12,16 @@ import (
 )
 
 type DB struct {
-	DBURL string
+	DriverName string
+	DSN        string
 }
 
 var _ firmwaredb.DB = (*DB)(nil)
 
-func New(dbURL string) (*DB, error) {
+func New(driverName, dsn string) (*DB, error) {
 	db := &DB{
-		DBURL: dbURL,
+		DriverName: driverName,
+		DSN:        dsn,
 	}
 
 	if err := db.ping(); err != nil {
@@ -45,26 +46,11 @@ func (db *DB) ping() error {
 }
 
 func (db *DB) newConnection() (*sql.DB, error) {
-	driverName, dataSourceName, err := db.parseDBURL()
-	if err != nil {
-		return nil, ErrURL{Err: err}
-	}
-	rawDB, err := sql.Open(driverName, dataSourceName)
+	rawDB, err := sql.Open(db.DriverName, db.DSN)
 	if err != nil {
 		return nil, ErrOpen{Err: err}
 	}
 	return rawDB, nil
-}
-
-func (db *DB) parseDBURL() (string, string, error) {
-	parsedURL, err := url.Parse(db.DBURL)
-	if err != nil {
-		return "", "", ErrParseURL{Err: err, Description: UnableToParseURL{URL: db.DBURL}}
-	}
-
-	driverName := parsedURL.Scheme
-	dataSourceName := strings.SplitN(parsedURL.String(), "://", 2)[1]
-	return driverName, dataSourceName, nil
 }
 
 func (db *DB) Get(ctx context.Context, filters ...Filter) ([]*Firmware, error) {

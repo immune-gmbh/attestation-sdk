@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/devicegetter"
@@ -48,12 +49,21 @@ func usageExit() {
 
 func main() {
 	logLevel := logger.LevelInfo // the default value
+	defaultDSN := (&mysql.Config{
+		User:   os.Getenv("DBUSER"),
+		Passwd: os.Getenv("DBPASS"),
+		Net:    "tcp",
+		Addr:   "127.0.0.1:3306",
+		DBName: "afas",
+	}).FormatDSN()
 
 	pflag.Var(&logLevel, "log-level", "logging level")
 	netPprofAddr := pflag.String("net-pprof-addr", "", "if non-empty then listens with net/http/pprof")
 	thriftBindAddr := pflag.String("thrift-bind-addr", `:17545`, "the address to listen by thrift")
-	rdbmsURLOrigFW := pflag.String("rdbms-url-fw-orig", `mysql://root@localhost`, "")
-	rdbmsURLInternal := pflag.String("rdbms-url-internal", `mysql://root@localhost`, "")
+	rdbmsDriverOrigFW := pflag.String("rdbms-driver-fw-orig", "mysql", "")
+	rdbmsDSNOrigFW := pflag.String("rdbms-dsn-fw-orig", defaultDSN, "")
+	rdbmsDriverInternal := pflag.String("rdbms-driver-internal", "mysql", "")
+	rdbmsDSNInternal := pflag.String("rdbms-dsn-internal", defaultDSN, "")
 	firmwareImageReportBaseURL := pflag.String("firmware-image-repo-baseurl", "http://localhost/", "")
 	objectStorageURL := pflag.String("object-storage-url", "fs:///srv/afasd", "")
 	amountOfWorkers := pflag.Uint("workers", uint(runtime.NumCPU()), "amount of concurrent workers")
@@ -98,12 +108,12 @@ func main() {
 		log.Panic(err)
 	}
 
-	storage, err := storage.New(*rdbmsURLInternal, firmwareBlobStorage, firmwareBlobCache, log)
+	storage, err := storage.New(*rdbmsDriverInternal, *rdbmsDSNInternal, firmwareBlobStorage, firmwareBlobCache, log)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	origFirmwareDB, err := firmwaredbsql.New(*rdbmsURLOrigFW)
+	origFirmwareDB, err := firmwaredbsql.New(*rdbmsDriverOrigFW, *rdbmsDSNOrigFW)
 	if err != nil {
 		log.Panic(err)
 	}

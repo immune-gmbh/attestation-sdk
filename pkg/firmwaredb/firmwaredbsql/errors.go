@@ -6,18 +6,6 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
 )
 
-type InvalidURL struct{}
-
-func (InvalidURL) String() string { return "invalid URL" }
-
-type UnableToParseURL struct {
-	URL string
-}
-
-func (e UnableToParseURL) String() string {
-	return fmt.Sprintf("unable to parse URL '%s'", e.URL)
-}
-
 type UnableToOpen struct{}
 
 func (UnableToOpen) String() string { return "unable to open connection to SQL" }
@@ -48,8 +36,6 @@ func (e UnableToQuery) String() string {
 }
 
 type ErrOpen = firmwaredb.Err[UnableToOpen]
-type ErrURL = firmwaredb.Err[InvalidURL]
-type ErrParseURL = firmwaredb.Err[UnableToParseURL]
 type ErrConnect = firmwaredb.Err[UnableToConnect]
 type ErrPing = firmwaredb.Err[UnableToPing]
 type ErrCancelled = firmwaredb.Err[Cancelled]

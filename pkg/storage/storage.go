@@ -6,8 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -62,7 +60,8 @@ type Cache interface {
 
 // NewStorage returns an instance of Storage.
 func New(
-	rdbmsURL string,
+	rdbmsDriver string,
+	rdbmsDSN string,
 	blobStorage BlobStorage,
 	cache Cache,
 	log logger.Logger,
@@ -83,19 +82,9 @@ func New(
 		insertTriesLimit:         insertTriesLimit,
 	}
 
-	parsedURL, err := url.Parse(rdbmsURL)
+	db, err := sql.Open(rdbmsDriver, rdbmsDSN)
 	if err != nil {
-		return nil, fmt.Errorf("unable to parse URL '%s': %w", rdbmsURL, err)
-	}
-
-	if parsedURL.Scheme == "" {
-		return nil, fmt.Errorf("RDBMS driver is not set")
-	}
-
-	dataSourceString := strings.SplitN(parsedURL.String(), "://", 2)[1]
-	db, err := sql.Open(parsedURL.Scheme, dataSourceString)
-	if err != nil {
-		return nil, ErrInitMySQL{Err: err, DSN: dataSourceString}
+		return nil, ErrInitMySQL{Err: err, DSN: rdbmsDSN}
 	}
 
 	err = db.Ping()
