@@ -138,10 +138,10 @@ func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.Firmwa
 
 	// Uploading the image to BlobStorageClient.
 	err = stor.retryLoop(func() error {
-		return stor.BlobStorage.Replace(ctx, imageMeta.BlobStoragePath(), imageData)
+		return stor.BlobStorage.Replace(ctx, imageMeta.BlobStorageKey(), imageData)
 	})
 	if err != nil {
-		return ErrUnableToUpload{Path: imageMeta.BlobStoragePath(), Err: err}
+		return ErrUnableToUpload{Key: imageMeta.BlobStorageKey(), Err: err}
 	}
 
 	// Set the "ts_upload".

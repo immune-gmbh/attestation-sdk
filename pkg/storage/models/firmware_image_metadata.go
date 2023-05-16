@@ -95,9 +95,9 @@ func (meta *FirmwareImageMetadata) CalcMissingInfo(ctx context.Context, image []
 	wg.Wait()
 }
 
-// BlobStoragePath return the path should be used to store the image in the BlobStorage.
-func (meta FirmwareImageMetadata) BlobStoragePath() string {
-	return meta.ImageID.BlobStoragePath()
+// BlobStorageKey return the path should be used to store the image in the BlobStorage.
+func (meta FirmwareImageMetadata) BlobStorageKey() []byte {
+	return meta.ImageID.BlobStorageKey()
 }
 
 // ToThrift converts ImageMetadata to the structure defined in the Thrift model.

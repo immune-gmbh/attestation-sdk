@@ -37,7 +37,7 @@ func (cmd Command) Description() string {
 // SetupFlagSet is called to allow the command implementation
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
-	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
+	cmd.afasEndpoint = flag.String("afas-endpoint", "http://localhost:17545", "")
 	cmd.limit = flag.Uint64("limit", 1, "maximal amount of entries to fetch and display (the order is reversed-chronological)")
 	cmd.jobID = flag.String("job-id", "", "JobID to filter the reports by")
 	cmd.assetID = flag.Uint64("asset-id", 0, "AssetID to filter the reports by")

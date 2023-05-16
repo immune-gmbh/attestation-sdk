@@ -10,9 +10,9 @@ import (
 type BlobStorage interface {
 	io.Closer
 
-	Get(ctx context.Context, key string) ([]byte, error)
-	Replace(ctx context.Context, key string, blob []byte) error
-	Delete(ctx context.Context, key string) error
+	Get(ctx context.Context, key []byte) ([]byte, error)
+	Replace(ctx context.Context, key []byte, blob []byte) error
+	Delete(ctx context.Context, key []byte) error
 }
 
 func New(urlString string) (BlobStorage, error) {

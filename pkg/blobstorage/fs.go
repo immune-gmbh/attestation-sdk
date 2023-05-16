@@ -2,6 +2,7 @@ package blobstorage
 
 import (
 	"context"
+	"encoding/base32"
 	"os"
 	"path/filepath"
 )
@@ -19,23 +20,23 @@ func newFS(rootDir string) (*FS, error) {
 	}, nil
 }
 
-func (fs *FS) Get(ctx context.Context, key string) ([]byte, error) {
+func (fs *FS) Get(ctx context.Context, key []byte) ([]byte, error) {
 	objPath := fs.getPath(key)
 	return os.ReadFile(objPath)
 }
 
-func (fs *FS) Replace(ctx context.Context, key string, blob []byte) error {
+func (fs *FS) Replace(ctx context.Context, key []byte, blob []byte) error {
 	objPath := fs.getPath(key)
 	return os.WriteFile(objPath, blob, 0640)
 }
 
-func (fs *FS) Delete(ctx context.Context, key string) error {
+func (fs *FS) Delete(ctx context.Context, key []byte) error {
 	objPath := fs.getPath(key)
 	return os.Remove(objPath)
 }
 
-func (fs *FS) getPath(key string) string {
-	return filepath.Join(fs.RootDir, key)
+func (fs *FS) getPath(key []byte) string {
+	return filepath.Join(fs.RootDir, base32.StdEncoding.EncodeToString(key))
 }
 
 func (fs *FS) Close() error {

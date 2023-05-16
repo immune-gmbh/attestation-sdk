@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"os"
 	"time"
 
@@ -34,11 +35,12 @@ func usageExit() {
 func main() {
 	logLevel := logger.LevelInfo // the default value
 	defaultDSN := (&mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "afas",
+		User:      os.Getenv("DBUSER"),
+		Passwd:    os.Getenv("DBPASS"),
+		Net:       "tcp",
+		Addr:      "127.0.0.1:3306",
+		DBName:    "afas",
+		ParseTime: true,
 	}).FormatDSN()
 
 	rdbmsDriver := pflag.String("rdbms-driver", "mysql", "")
@@ -83,7 +85,7 @@ func main() {
 		JobID:           types.JobID{},
 		AssetID:         nil,
 		Timestamp:       time.Now(),
-		ProcessedAt:     nil,
+		ProcessedAt:     sql.NullTime{},
 		GroupKey:        nil,
 		AnalyzerReports: []models.AnalyzerReport{*report},
 	}), true, false)

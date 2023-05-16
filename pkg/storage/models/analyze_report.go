@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
@@ -25,7 +26,7 @@ type AnalyzeReport struct {
 	Timestamp time.Time `db:"timestamp"`
 
 	// ProcessedAt defines the time moment when the analysis report was processed
-	ProcessedAt *time.Time `db:"processed_at"`
+	ProcessedAt sql.NullTime `db:"processed_at"`
 
 	// GroupKey is the key used to aggregate multiple reports together.
 	//

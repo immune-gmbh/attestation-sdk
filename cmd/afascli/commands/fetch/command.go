@@ -37,7 +37,7 @@ func (cmd Command) Description() string {
 // SetupFlagSet is called to allow the command implementation
 // to setup which option flags it has.
 func (cmd *Command) SetupFlagSet(flag *flag.FlagSet) {
-	cmd.afasEndpoint = flag.String("afas-endpoint", "", "")
+	cmd.afasEndpoint = flag.String("afas-endpoint", "http://localhost:17545", "")
 	cmd.outputFlag = flag.String("output", "", "the path to save the image by; if empty then the image will be printed to stdout")
 }
 

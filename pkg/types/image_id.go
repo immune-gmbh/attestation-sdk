@@ -116,9 +116,9 @@ func (imgID ImageID) GoString() string {
 	return hex.EncodeToString(imgID[:])
 }
 
-// BlobStoragePath returns the path should be used to store this image.
-func (imgID ImageID) BlobStoragePath() string {
-	return imgID.String()
+// BlobStorageKey returns the path should be used to store this image.
+func (imgID ImageID) BlobStorageKey() []byte {
+	return imgID[:]
 }
 
 // IsZero returns true if ImageID contains the zero value.

@@ -4,7 +4,6 @@ package main
 
 import (
 	"context"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"os"
@@ -24,11 +23,12 @@ import (
 func main() {
 	logLevel := logger.LevelDebug // the default value
 	defaultDSN := (&mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "afas",
+		User:      os.Getenv("DBUSER"),
+		Passwd:    os.Getenv("DBPASS"),
+		Net:       "tcp",
+		Addr:      "127.0.0.1:3306",
+		DBName:    "afas",
+		ParseTime: true,
 	}).FormatDSN()
 	rdbmsDriver := pflag.String("rdbms-driver-internal", "mysql", "")
 	rdbmsDSN := pflag.String("rdbms-dsn-internal", defaultDSN, "")
@@ -92,10 +92,8 @@ func main() {
 				logger.FromCtx(ctx).Panicf("ImageID %s is not a converted one, but HashStable is set (%s); this should never happen, please diagnose", imgMeta.ImageID, imgMeta.HashStable)
 			}
 
-			imgPath := hex.EncodeToString(oldImgID)
-
 			if *stage == "create-new" {
-				imgData, err := stor.GetFirmwareBytesByPath(ctx, imgPath)
+				imgData, err := stor.GetFirmwareBytesByBlobStoreKey(ctx, oldImgID[:])
 				if err != nil {
 					if strings.Contains(err.Error(), "CodedMessage:[404] Path not found") {
 						logger.FromCtx(ctx).Warnf("unable to find image for old image ID %X", oldImgID)
@@ -122,10 +120,10 @@ func main() {
 			}
 
 			if *stage == "delete-old-data" {
-				err = stor.BlobStorage.Delete(ctx, imgPath)
+				err = stor.BlobStorage.Delete(ctx, oldImgID[:])
 				if err != nil {
-					logger.FromCtx(ctx).Panicf("unable to delete image with path '%s' (oldID: %X) from the blob storage bucket: %w",
-						imgPath, oldImgID, err)
+					logger.FromCtx(ctx).Panicf("unable to delete image with oldID:%X from the blob storage bucket: %v",
+						oldImgID, err)
 				}
 				logger.FromCtx(ctx).Debugf("deleted for %X", oldImgID)
 			}

@@ -35,12 +35,12 @@ func (err ErrMySQLPing) Unwrap() error {
 
 // ErrUnableToUpload implements "error", for the description see Error.
 type ErrUnableToUpload struct {
-	Path string
-	Err  error
+	Key []byte
+	Err error
 }
 
 func (err ErrUnableToUpload) Error() string {
-	return fmt.Sprintf("unable to upload file '%s': %v", err.Path, err.Err)
+	return fmt.Sprintf("unable to upload file '%X': %v", err.Key, err.Err)
 }
 
 func (err ErrUnableToUpload) Unwrap() error {

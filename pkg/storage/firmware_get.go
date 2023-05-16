@@ -28,16 +28,16 @@ func (stor *Storage) GetFirmware(ctx context.Context, imageID types.ImageID) ([]
 
 // GetFirmwareBytes returns an image itself only by ImageID.
 func (stor *Storage) GetFirmwareBytes(ctx context.Context, imageID types.ImageID) (firmwareImage []byte, err error) {
-	return stor.GetFirmwareBytesByPath(ctx, imageID.BlobStoragePath())
+	return stor.GetFirmwareBytesByBlobStoreKey(ctx, imageID.BlobStorageKey())
 }
 
 // GetFirmwareBytesByPath returns an image itself only by its path in the BlobStorage
-func (stor *Storage) GetFirmwareBytesByPath(ctx context.Context, imagePath string) (firmwareImage []byte, err error) {
+func (stor *Storage) GetFirmwareBytesByBlobStoreKey(ctx context.Context, blobStoreKey []byte) (firmwareImage []byte, err error) {
 	type getBytesByPathResult struct {
 		firmwareImage []byte
 		err           error
 	}
-	cacheKey, cacheKeyErr := objhash.Build("GetBytesByPath", imagePath)
+	cacheKey, cacheKeyErr := objhash.Build("GetBytesByPath", blobStoreKey)
 	var unlocker *lockmap.Unlocker
 	if cacheKeyErr == nil {
 		unlocker = stor.CacheLockMap.Lock(cacheKey)
@@ -55,7 +55,7 @@ func (stor *Storage) GetFirmwareBytesByPath(ctx context.Context, imagePath strin
 		}
 	}
 	err = stor.retryLoop(func() (err error) {
-		firmwareImage, err = stor.BlobStorage.Get(ctx, imagePath)
+		firmwareImage, err = stor.BlobStorage.Get(ctx, blobStoreKey)
 		return
 	})
 	if unlocker != nil {

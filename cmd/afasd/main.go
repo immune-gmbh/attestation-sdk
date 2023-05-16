@@ -55,11 +55,12 @@ func main() {
 		dbAddr = "127.0.0.1:3306"
 	}
 	defaultDSN := (&mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   dbAddr,
-		DBName: "afas",
+		User:      os.Getenv("DBUSER"),
+		Passwd:    os.Getenv("DBPASS"),
+		Net:       "tcp",
+		Addr:      dbAddr,
+		DBName:    "afas",
+		ParseTime: true,
 	}).FormatDSN()
 
 	pflag.Var(&logLevel, "log-level", "logging level")
