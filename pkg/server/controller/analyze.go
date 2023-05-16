@@ -188,7 +188,7 @@ func executeAnalyzer[analyzerInputType any](
 	}
 	if hostInfo != nil && hostInfo.AssetID != nil {
 		// TODO: Our analyzers are not AssetID-agnostic? Fix this. Analyzers
-		//       should know nothing about Meta's infra (and should be opensourcable).
+		//       should know nothing about our infra (and should be opensourcable).
 		analyzerInput.AddAssetID(*hostInfo.AssetID)
 	}
 
