@@ -124,7 +124,7 @@ func (ctrl *Controller) getHostInfo(
 	log := logger.FromCtx(ctx)
 
 	resultHostInfo := *requestHostInfo
-	serfDevice := func() *device.Device {
+	device := func() *device.Device {
 		if resultHostInfo.IsClientHostAnalyzed {
 			hostname, _ := ExtractHostnameFromCtx(ctx)
 			if len(hostname) > 0 {
@@ -153,10 +153,10 @@ func (ctrl *Controller) getHostInfo(
 		}
 		return nil
 	}()
-	if serfDevice != nil {
-		enrichHostInfo(ctx, serfDevice, false, &resultHostInfo)
+	if device != nil {
+		enrichHostInfo(ctx, device, false, &resultHostInfo)
 	}
-	return &resultHostInfo, serfDevice
+	return &resultHostInfo, device
 }
 
 // Close stops the Controller and blocks until all goroutines from launchAsync
