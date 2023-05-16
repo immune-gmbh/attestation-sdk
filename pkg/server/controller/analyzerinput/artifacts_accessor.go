@@ -35,7 +35,7 @@ type ArtifactsAccessor interface {
 
 // FirmwareImage combines firmware image metadata and data together.
 type FirmwareImage struct {
-	Meta    models.ImageMetadata
+	Meta    models.FirmwareImageMetadata
 	Content []byte
 }
 

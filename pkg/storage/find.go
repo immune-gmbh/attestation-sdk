@@ -43,7 +43,7 @@ func (f FindFirmwareFilter) IsEmpty() bool {
 // FindOne locks (with a shared lock) the row and returns image metadata.
 //
 // Second returned variable is a function to release the lock on the row.
-func (stor *Storage) FindOne(ctx context.Context, filter FindFirmwareFilter) (*models.ImageMetadata, context.CancelFunc, error) {
+func (stor *Storage) FindOne(ctx context.Context, filter FindFirmwareFilter) (*models.FirmwareImageMetadata, context.CancelFunc, error) {
 	metas, unlockFn, err := stor.Find(ctx, filter)
 	if err != nil {
 		return nil, nil, err
@@ -127,10 +127,10 @@ func ptr[T any](v T) *T {
 //	management of metadata in MySQL and data in Manifold for firmware images. All the rest
 //	entities should not be accessed through Storage. Otherwise locking, transactions and other
 //	usual stuff is pretty cludgy.
-func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) ([]models.ReproducedPCRs, []models.ImageMetadata, error) {
+func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) ([]models.ReproducedPCRs, []models.FirmwareImageMetadata, error) {
 	var (
 		leftRow  models.ReproducedPCRs
-		rightRow models.ImageMetadata
+		rightRow models.FirmwareImageMetadata
 	)
 	leftValues, leftColumns, err := helpers.GetValuesAndColumns(&leftRow, nil)
 	if err != nil {
@@ -154,7 +154,7 @@ func (stor *Storage) SelectReproducedPCRsWithImageMetadata(ctx context.Context) 
 
 	var (
 		leftResult  []models.ReproducedPCRs
-		rightResult []models.ImageMetadata
+		rightResult []models.FirmwareImageMetadata
 	)
 
 	allValues := append(append([]any{}, leftValues...), rightValues...)
@@ -190,7 +190,7 @@ func compileImageWhereConds(filters FindFirmwareFilter) (string, []interface{}) 
 	var whereConds []string
 	var whereArgs []interface{}
 
-	sample := models.ImageMetadata{}
+	sample := models.FirmwareImageMetadata{}
 	sampleStruct := reflect.ValueOf(&sample).Elem()
 	filtersStruct := reflect.ValueOf(&filters).Elem()
 	for i := 0; i < filtersStruct.NumField(); i++ {
@@ -225,7 +225,7 @@ func compileImageWhereConds(filters FindFirmwareFilter) (string, []interface{}) 
 // Find locks (with a shared lock) the rows and returns image metadata.
 //
 // Second returned variable is a function to release the lock on the row.
-func (stor *Storage) Find(ctx context.Context, filter FindFirmwareFilter) (imageMetas []*models.ImageMetadata, unlockFn context.CancelFunc, err error) {
+func (stor *Storage) Find(ctx context.Context, filter FindFirmwareFilter) (imageMetas []*models.FirmwareImageMetadata, unlockFn context.CancelFunc, err error) {
 
 	// Collecting WHERE conditions
 	whereConds, whereArgs := compileImageWhereConds(filter)
@@ -268,7 +268,7 @@ func (stor *Storage) Find(ctx context.Context, filter FindFirmwareFilter) (image
 	}()
 
 	// SELECT and lock
-	_, columns, err := helpers.GetValuesAndColumns(&models.ImageMetadata{}, nil)
+	_, columns, err := helpers.GetValuesAndColumns(&models.FirmwareImageMetadata{}, nil)
 	query := fmt.Sprintf("SELECT %s FROM `image_metadata` WHERE %s LOCK IN SHARE MODE",
 		strings.Join(columns, ","),
 		whereConds,

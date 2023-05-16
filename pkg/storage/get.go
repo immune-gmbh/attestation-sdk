@@ -11,7 +11,7 @@ import (
 
 // Get returns an image and the metadata by ImageID
 // (basically combines FindOne and GetBytes).
-func (stor *Storage) Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.ImageMetadata, error) {
+func (stor *Storage) Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.FirmwareImageMetadata, error) {
 	meta, unlockFunc, err := stor.FindOne(ctx, FindFirmwareFilter{ImageID: &imageID})
 	if err != nil {
 		return nil, nil, ErrGetMeta{Err: err}

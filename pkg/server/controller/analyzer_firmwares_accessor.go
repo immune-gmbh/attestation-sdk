@@ -35,7 +35,7 @@ type analyzerFirmwaresAccessorResult struct {
 type imageSaverAsync interface {
 	saveImageAsync(
 		ctx context.Context,
-		meta models.ImageMetadata,
+		meta models.FirmwareImageMetadata,
 		firmwareImage []byte,
 	)
 }
@@ -78,13 +78,13 @@ func NewAnalyzerFirmwaresAccessor(
 
 func (a *AnalyzerFirmwaresAccessor) saveImageAsync(
 	ctx context.Context,
-	meta models.ImageMetadata,
+	meta models.FirmwareImageMetadata,
 	image []byte,
 ) {
 	a.imageSaverAsync.saveImageAsync(ctx, meta, image)
 }
 
-func setHashes(ctx context.Context, meta models.ImageMetadata, image []byte) models.ImageMetadata {
+func setHashes(ctx context.Context, meta models.FirmwareImageMetadata, image []byte) models.FirmwareImageMetadata {
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "setHashes")
 	defer span.Finish()
 
@@ -122,13 +122,13 @@ func (a *AnalyzerFirmwaresAccessor) metaByImage(
 	image []byte,
 	parsedCache *uefi.UEFI,
 	filename string,
-) (models.ImageMetadata, *uefi.UEFI) {
+) (models.FirmwareImageMetadata, *uefi.UEFI) {
 	// Either image or parsedCache should not be nil
 	if image == nil {
 		image = parsedCache.Buf()
 	}
 
-	result := models.ImageMetadata{
+	result := models.FirmwareImageMetadata{
 		Size:  uint64(len(image)),
 		TSAdd: time.Now(),
 	}
@@ -142,10 +142,10 @@ func (a *AnalyzerFirmwaresAccessor) metaByImage(
 
 func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 	ctx context.Context,
-	meta models.ImageMetadata,
+	meta models.FirmwareImageMetadata,
 	image []byte,
 	parsedCache *uefi.UEFI,
-) (models.ImageMetadata, *uefi.UEFI) {
+) (models.FirmwareImageMetadata, *uefi.UEFI) {
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "trySetFWVersionAndDate")
 	defer span.Finish()
 	log := logger.FromCtx(ctx)
@@ -231,7 +231,7 @@ func (a *AnalyzerFirmwaresAccessor) trySetFWVersionAndDate(
 
 func (a *AnalyzerFirmwaresAccessor) getWrapper(
 	ctx context.Context,
-	getFn func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error),
+	getFn func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error),
 	methodName string,
 	rawCacheKey ...any,
 ) (retBlob analysis.Blob, retErr error) {
@@ -284,7 +284,7 @@ func (a *AnalyzerFirmwaresAccessor) getWrapper(
 	return blob, nil
 }
 
-func biosInfoFromMeta(meta *models.ImageMetadata) *dmidecode.BIOSInfo {
+func biosInfoFromMeta(meta *models.FirmwareImageMetadata) *dmidecode.BIOSInfo {
 	if meta == nil {
 		return nil
 	}
@@ -303,12 +303,12 @@ func biosInfoFromMeta(meta *models.ImageMetadata) *dmidecode.BIOSInfo {
 func (a *AnalyzerFirmwaresAccessor) GetByBlob(ctx context.Context, image []byte) (analysis.Blob, error) {
 	span, ctx := tracer.StartChildSpanFromCtx(ctx, "FW-GetByBlob")
 	defer span.Finish()
-	meta := models.ImageMetadata{
+	meta := models.FirmwareImageMetadata{
 		Size:  uint64(len(image)),
 		TSAdd: time.Now(),
 	}
 	meta = setHashes(ctx, meta, image)
-	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
+	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
 		meta, parsed := a.trySetFWVersionAndDate(ctx, meta, image, nil)
 		return image, &meta, parsed, biosInfoFromMeta(&meta), nil
 	}, "GetByBlob", meta.ImageID)
@@ -316,7 +316,7 @@ func (a *AnalyzerFirmwaresAccessor) GetByBlob(ctx context.Context, image []byte)
 
 // GetByID implements analyzerinput.FirmwaresAccessor (see the description of AnalyzerFirmwaresAccessor).
 func (a *AnalyzerFirmwaresAccessor) GetByID(ctx context.Context, imageID types.ImageID) (analysis.Blob, error) {
-	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
+	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
 		image, meta, err := a.storage.Get(ctx, imageID)
 		return image, meta, nil, biosInfoFromMeta(meta), err
 	}, "GetByID", imageID)
@@ -327,7 +327,7 @@ func (a *AnalyzerFirmwaresAccessor) GetByVersion(
 	ctx context.Context,
 	firmwareVersion string,
 ) (analysis.Blob, error) {
-	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.ImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
+	return a.getWrapper(ctx, func(ctx context.Context) ([]byte, *models.FirmwareImageMetadata, *uefi.UEFI, *dmidecode.BIOSInfo, error) {
 		blob, filename, err := a.originalFirmwareStorage.DownloadByVersion(ctx, firmwareVersion)
 		if err != nil {
 			return nil, nil, nil, nil, fmt.Errorf("unable to get the RTP Firmware: %w", err)

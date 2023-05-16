@@ -86,7 +86,7 @@ func (stor *Storage) UpsertReproducedPCRs(ctx context.Context, reproducedPCRs mo
 }
 
 // Insert adds an image to the storage (saves the images itself and it's metadata).
-func (stor *Storage) Insert(ctx context.Context, imageMeta models.ImageMetadata, imageData []byte) (err error) {
+func (stor *Storage) Insert(ctx context.Context, imageMeta models.FirmwareImageMetadata, imageData []byte) (err error) {
 	// Here we insert metadata to MySQL and data to ManifoldClient.
 	//
 	// However it's a problem to process errors correctly if there will

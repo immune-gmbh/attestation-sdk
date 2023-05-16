@@ -17,12 +17,12 @@ type Storage interface {
 	io.Closer
 
 	// Image
-	Insert(ctx context.Context, imageMeta models.ImageMetadata, imageData []byte) error
+	Insert(ctx context.Context, imageMeta models.FirmwareImageMetadata, imageData []byte) error
 	UpsertReproducedPCRs(ctx context.Context, reproducedPCRs models.ReproducedPCRs) error
-	Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.ImageMetadata, error)
+	Get(ctx context.Context, imageID types.ImageID) ([]byte, *models.FirmwareImageMetadata, error)
 	GetBytes(ctx context.Context, imageID types.ImageID) (firmwareImage []byte, err error)
-	Find(ctx context.Context, filters storage.FindFirmwareFilter) (imageMetas []*models.ImageMetadata, unlockFn context.CancelFunc, err error)
-	FindOne(ctx context.Context, filters storage.FindFirmwareFilter) (*models.ImageMetadata, context.CancelFunc, error)
+	Find(ctx context.Context, filters storage.FindFirmwareFilter) (imageMetas []*models.FirmwareImageMetadata, unlockFn context.CancelFunc, err error)
+	FindOne(ctx context.Context, filters storage.FindFirmwareFilter) (*models.FirmwareImageMetadata, context.CancelFunc, error)
 
 	// AnalyzeReport
 	InsertAnalyzeReport(ctx context.Context, report *models.AnalyzeReport) error

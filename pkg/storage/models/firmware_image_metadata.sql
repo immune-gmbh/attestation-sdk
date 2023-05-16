@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS image_metadata (
+CREATE TABLE IF NOT EXISTS firmware_image_metadata (
     image_id VARBINARY(192) PRIMARY KEY,
     firmware_version VARCHAR(1024) DEFAULT NULL,
     filename VARCHAR(4096) DEFAULT NULL,

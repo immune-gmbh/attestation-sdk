@@ -19,7 +19,7 @@ import (
 
 func (ctrl *Controller) saveImage(
 	ctx context.Context,
-	meta models.ImageMetadata,
+	meta models.FirmwareImageMetadata,
 	firmwareImage []byte,
 ) (*types.ImageID, error) {
 	if len(firmwareImage) == 0 {
@@ -30,7 +30,7 @@ func (ctrl *Controller) saveImage(
 
 func (ctrl *Controller) saveImageAsync(
 	ctx context.Context,
-	meta models.ImageMetadata,
+	meta models.FirmwareImageMetadata,
 	firmwareImage []byte,
 ) {
 	ctrl.launchAsync(ctx, func(ctx context.Context) {
@@ -52,14 +52,14 @@ type saveImageJob struct {
 	*Controller
 	JobID           uuid.UUID
 	CreatedAt       time.Time
-	FirmwareMeta    models.ImageMetadata
+	FirmwareMeta    models.FirmwareImageMetadata
 	FirmwareContent []byte
 
 	ctx context.Context
 }
 
 func (ctrl *Controller) newSaveImageJob(
-	meta models.ImageMetadata,
+	meta models.FirmwareImageMetadata,
 	firmwareImage []byte,
 ) *saveImageJob {
 	job := &saveImageJob{

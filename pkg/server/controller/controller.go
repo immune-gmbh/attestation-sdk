@@ -255,7 +255,7 @@ func (ctrl *Controller) parseUEFI(b []byte) (*uefi.UEFI, error) {
 	return f, nil
 }
 
-func firmwareMetaCacheKey(imageMeta models.ImageMetadata) string {
+func firmwareMetaCacheKey(imageMeta models.FirmwareImageMetadata) string {
 	return firmwareCacheKey(imageMeta.HashSHA2_512, imageMeta.HashBlake3_512)
 }
 

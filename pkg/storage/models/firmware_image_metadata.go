@@ -12,9 +12,9 @@ import (
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
 )
 
-// ImageMetadata is a metadata of a stored firmware image.
+// FirmwareImageMetadata is a metadata of a stored firmware image.
 // noinspection GoSnakeCaseUsage
-type ImageMetadata struct {
+type FirmwareImageMetadata struct {
 	ImageID         types.ImageID   `db:"image_id,pk"`
 	FirmwareVersion sql.NullString  `db:"firmware_version"`
 	Filename        sql.NullString  `db:"filename"`
@@ -26,14 +26,14 @@ type ImageMetadata struct {
 	HashStable      types.HashValue `db:"hash_stable"`
 }
 
-// NewImageMetadata returns a new instance of image metadata.
-func NewImageMetadata(
+// NewFirmwareImageMetadata returns a new instance of image metadata.
+func NewFirmwareImageMetadata(
 	image []byte,
 	firmwareVersion string,
 	firmwareDate string,
 	filename string,
-) ImageMetadata {
-	meta := ImageMetadata{
+) FirmwareImageMetadata {
+	meta := FirmwareImageMetadata{
 		TSAdd: time.Now(),
 	}
 	if firmwareVersion != "" {
@@ -53,7 +53,7 @@ func NewImageMetadata(
 }
 
 // CalcMissingInfo calculates values for empty fields based on the image
-func (meta *ImageMetadata) CalcMissingInfo(ctx context.Context, image []byte) {
+func (meta *FirmwareImageMetadata) CalcMissingInfo(ctx context.Context, image []byte) {
 	var wg sync.WaitGroup
 	if meta.ImageID.IsZero() {
 		wg.Add(1)
@@ -96,13 +96,13 @@ func (meta *ImageMetadata) CalcMissingInfo(ctx context.Context, image []byte) {
 }
 
 // ManifoldPath return the path should be used to store the image in the Manifold.
-func (meta ImageMetadata) ManifoldPath() string {
+func (meta FirmwareImageMetadata) ManifoldPath() string {
 	return meta.ImageID.ManifoldPath()
 }
 
 // ToThrift converts ImageMetadata to the structure defined in the Thrift model.
 // noinspection GoSnakeCaseUsage
-func (meta *ImageMetadata) ToThrift() *afas.FirmwareImageMetadata {
+func (meta *FirmwareImageMetadata) ToThrift() *afas.FirmwareImageMetadata {
 	result := &afas.FirmwareImageMetadata{
 		ImageID:        meta.ImageID[:],
 		HashSHA2_512:   meta.HashSHA2_512,
