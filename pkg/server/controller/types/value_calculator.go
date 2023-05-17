@@ -3,6 +3,7 @@ package types
 import (
 	"context"
 	"fmt"
+
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
@@ -80,7 +81,7 @@ func getActualFirmware(ctx context.Context, in actualFirmwareInput) (analysis.Ac
 		if fw := cacheAccessor.ParsedCache(); fw != nil {
 			return analysis.NewActualFirmware(fw, in.ActualFirmwareBlob), nil, nil
 		}
-		log.Debugf("no parsed firmware cache")
+		log.Debugf("no parsed firmware cache for the actual image")
 	}
 
 	fw, err := uefi.Parse(in.ActualFirmwareBlob.Bytes(), false)
@@ -102,7 +103,7 @@ func getOriginalFirmware(ctx context.Context, in originalFirmwareInput) (analysi
 		if fw := cacheAccessor.ParsedCache(); fw != nil {
 			return analysis.NewOriginalFirmware(fw, in.OriginalFirmwareBlob), nil, nil
 		}
-		log.Debugf("no parsed firmware cache")
+		log.Debugf("no parsed firmware cache for the original image")
 	}
 
 	fw, err := uefi.Parse(in.OriginalFirmwareBlob.Bytes(), false)

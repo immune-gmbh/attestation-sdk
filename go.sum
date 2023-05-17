@@ -123,8 +123,8 @@ github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.m
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
 github.com/envoyproxy/protoc-gen-validate v0.0.14/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/facebookincubator/go-belt v0.0.0-20230517001402-060460d45b69 h1:KgAcBaEp7n75V1SEQ5E1x9liD56buYJepJV91AWwgA4=
-github.com/facebookincubator/go-belt v0.0.0-20230517001402-060460d45b69/go.mod h1:IVtbJ8FYmTzOyJTBL6Mgkls2Rx/REnfuHAD1g4THRv4=
+github.com/facebookincubator/go-belt v0.0.0-20230517010547-2de607c1fb73 h1:7aCQ2gBywRxvo7mdn1lf/apTuX6By3NQooQyOELrHHY=
+github.com/facebookincubator/go-belt v0.0.0-20230517010547-2de607c1fb73/go.mod h1:IVtbJ8FYmTzOyJTBL6Mgkls2Rx/REnfuHAD1g4THRv4=
 github.com/fanliao/go-promise v0.0.0-20141029170127-1890db352a72/go.mod h1:PjfxuH4FZdUyfMdtBio2lsRr1AKEaVPwelzuHuh8Lqc=
 github.com/fatih/camelcase v1.0.0/go.mod h1:yN2Sb0lFhZJUdVvtELVWefmrXpuZESvPmqwoZc+/fpc=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=

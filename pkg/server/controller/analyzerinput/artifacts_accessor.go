@@ -139,12 +139,15 @@ func (a *artifactsAccessor) GetFirmware(
 			}
 		case fwImage.IsSetBlobStorageKey():
 			firmwareAccessor, err = a.firmwaresAccessor.GetByID(ctx, types.NewImageIDFromBytes([]byte(fwImage.GetBlobStorageKey())))
+		case fwImage.IsSetFirmwareVersion():
+			firmwareAccessor, err = a.firmwaresAccessor.GetByVersion(ctx, fwImage.GetFirmwareVersion().Version)
 		default:
 			err = fmt.Errorf("not supported firmware image type for artifact '%d'", artIdx)
 		}
 	default:
 		err = fmt.Errorf("unexpected artifact's '%d' type for obtaining firmware image", artIdx)
 	}
+
 	if err != nil {
 		log.Errorf("Failed to get an image: %v", err)
 		return nil, err

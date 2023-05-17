@@ -160,9 +160,8 @@ struct CompressedBlob {
 
 union FirmwareImage {
   1: CompressedBlob Blob;
-  2: string Filename;
-  3: string BlobStorageKey;
-  4: FirmwareVersion FirmwareVersion;
+  2: string BlobStorageKey;
+  3: FirmwareVersion FirmwareVersion;
 }
 
 struct PCR {

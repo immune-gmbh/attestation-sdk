@@ -37,7 +37,7 @@ func (ctrl *Controller) saveImageAsync(
 		log := logger.FromCtx(ctx)
 		id, err := ctrl.saveImage(ctx, meta, firmwareImage)
 		if err == nil {
-			log.Debugf("Saved image with ID 0x%X", *id)
+			log.Debugf("Saved image with ID %s", *id)
 			return
 		}
 		if errors.As(err, &storage.ErrAlreadyExists{}) {

@@ -4370,14 +4370,12 @@ func (p *CompressedBlob) String() string {
 
 // Attributes:
 //   - Blob
-//   - Filename
 //   - BlobStorageKey
 //   - FirmwareVersion
 type FirmwareImage struct {
 	Blob            *CompressedBlob  `thrift:"Blob,1" db:"Blob" json:"Blob,omitempty"`
-	Filename        *string          `thrift:"Filename,2" db:"Filename" json:"Filename,omitempty"`
-	BlobStorageKey  *string          `thrift:"BlobStorageKey,3" db:"BlobStorageKey" json:"BlobStorageKey,omitempty"`
-	FirmwareVersion *FirmwareVersion `thrift:"FirmwareVersion,4" db:"FirmwareVersion" json:"FirmwareVersion,omitempty"`
+	BlobStorageKey  *string          `thrift:"BlobStorageKey,2" db:"BlobStorageKey" json:"BlobStorageKey,omitempty"`
+	FirmwareVersion *FirmwareVersion `thrift:"FirmwareVersion,3" db:"FirmwareVersion" json:"FirmwareVersion,omitempty"`
 }
 
 func NewFirmwareImage() *FirmwareImage {
@@ -4391,15 +4389,6 @@ func (p *FirmwareImage) GetBlob() *CompressedBlob {
 		return FirmwareImage_Blob_DEFAULT
 	}
 	return p.Blob
-}
-
-var FirmwareImage_Filename_DEFAULT string
-
-func (p *FirmwareImage) GetFilename() string {
-	if !p.IsSetFilename() {
-		return FirmwareImage_Filename_DEFAULT
-	}
-	return *p.Filename
 }
 
 var FirmwareImage_BlobStorageKey_DEFAULT string
@@ -4424,9 +4413,6 @@ func (p *FirmwareImage) CountSetFieldsFirmwareImage() int {
 	if p.IsSetBlob() {
 		count++
 	}
-	if p.IsSetFilename() {
-		count++
-	}
 	if p.IsSetBlobStorageKey() {
 		count++
 	}
@@ -4439,10 +4425,6 @@ func (p *FirmwareImage) CountSetFieldsFirmwareImage() int {
 
 func (p *FirmwareImage) IsSetBlob() bool {
 	return p.Blob != nil
-}
-
-func (p *FirmwareImage) IsSetFilename() bool {
-	return p.Filename != nil
 }
 
 func (p *FirmwareImage) IsSetBlobStorageKey() bool {
@@ -4488,18 +4470,8 @@ func (p *FirmwareImage) Read(ctx context.Context, iprot thrift.TProtocol) error 
 				}
 			}
 		case 3:
-			if fieldTypeId == thrift.STRING {
-				if err := p.ReadField3(ctx, iprot); err != nil {
-					return err
-				}
-			} else {
-				if err := iprot.Skip(ctx, fieldTypeId); err != nil {
-					return err
-				}
-			}
-		case 4:
 			if fieldTypeId == thrift.STRUCT {
-				if err := p.ReadField4(ctx, iprot); err != nil {
+				if err := p.ReadField3(ctx, iprot); err != nil {
 					return err
 				}
 			} else {
@@ -4534,21 +4506,12 @@ func (p *FirmwareImage) ReadField2(ctx context.Context, iprot thrift.TProtocol) 
 	if v, err := iprot.ReadString(ctx); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
-		p.Filename = &v
-	}
-	return nil
-}
-
-func (p *FirmwareImage) ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(ctx); err != nil {
-		return thrift.PrependError("error reading field 3: ", err)
-	} else {
 		p.BlobStorageKey = &v
 	}
 	return nil
 }
 
-func (p *FirmwareImage) ReadField4(ctx context.Context, iprot thrift.TProtocol) error {
+func (p *FirmwareImage) ReadField3(ctx context.Context, iprot thrift.TProtocol) error {
 	p.FirmwareVersion = &FirmwareVersion{}
 	if err := p.FirmwareVersion.Read(ctx, iprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.FirmwareVersion), err)
@@ -4571,9 +4534,6 @@ func (p *FirmwareImage) Write(ctx context.Context, oprot thrift.TProtocol) error
 			return err
 		}
 		if err := p.writeField3(ctx, oprot); err != nil {
-			return err
-		}
-		if err := p.writeField4(ctx, oprot); err != nil {
 			return err
 		}
 	}
@@ -4602,45 +4562,30 @@ func (p *FirmwareImage) writeField1(ctx context.Context, oprot thrift.TProtocol)
 }
 
 func (p *FirmwareImage) writeField2(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetFilename() {
-		if err := oprot.WriteFieldBegin(ctx, "Filename", thrift.STRING, 2); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:Filename: ", p), err)
+	if p.IsSetBlobStorageKey() {
+		if err := oprot.WriteFieldBegin(ctx, "BlobStorageKey", thrift.STRING, 2); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:BlobStorageKey: ", p), err)
 		}
-		if err := oprot.WriteString(ctx, string(*p.Filename)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.Filename (2) field write error: ", p), err)
+		if err := oprot.WriteString(ctx, string(*p.BlobStorageKey)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.BlobStorageKey (2) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 2:Filename: ", p), err)
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 2:BlobStorageKey: ", p), err)
 		}
 	}
 	return err
 }
 
 func (p *FirmwareImage) writeField3(ctx context.Context, oprot thrift.TProtocol) (err error) {
-	if p.IsSetBlobStorageKey() {
-		if err := oprot.WriteFieldBegin(ctx, "BlobStorageKey", thrift.STRING, 3); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:BlobStorageKey: ", p), err)
-		}
-		if err := oprot.WriteString(ctx, string(*p.BlobStorageKey)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.BlobStorageKey (3) field write error: ", p), err)
-		}
-		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 3:BlobStorageKey: ", p), err)
-		}
-	}
-	return err
-}
-
-func (p *FirmwareImage) writeField4(ctx context.Context, oprot thrift.TProtocol) (err error) {
 	if p.IsSetFirmwareVersion() {
-		if err := oprot.WriteFieldBegin(ctx, "FirmwareVersion", thrift.STRUCT, 4); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:FirmwareVersion: ", p), err)
+		if err := oprot.WriteFieldBegin(ctx, "FirmwareVersion", thrift.STRUCT, 3); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:FirmwareVersion: ", p), err)
 		}
 		if err := p.FirmwareVersion.Write(ctx, oprot); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.FirmwareVersion), err)
 		}
 		if err := oprot.WriteFieldEnd(ctx); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 4:FirmwareVersion: ", p), err)
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 3:FirmwareVersion: ", p), err)
 		}
 	}
 	return err
@@ -4654,14 +4599,6 @@ func (p *FirmwareImage) Equals(other *FirmwareImage) bool {
 	}
 	if !p.Blob.Equals(other.Blob) {
 		return false
-	}
-	if p.Filename != other.Filename {
-		if p.Filename == nil || other.Filename == nil {
-			return false
-		}
-		if (*p.Filename) != (*other.Filename) {
-			return false
-		}
 	}
 	if p.BlobStorageKey != other.BlobStorageKey {
 		if p.BlobStorageKey == nil || other.BlobStorageKey == nil {
