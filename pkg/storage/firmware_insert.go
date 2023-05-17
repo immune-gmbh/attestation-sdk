@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/facebookincubator/go-belt/tool/experimental/errmon"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
 	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
 
@@ -61,6 +62,7 @@ func (stor *Storage) InsertFirmware(ctx context.Context, imageMeta models.Firmwa
 	// to a defer.
 	defer func() {
 		if err != nil {
+			errmon.ObserveErrorCtx(ctx, err)
 			rollbackErr := tx.Rollback()
 			if rollbackErr != nil {
 				// To do not leave a transaction which could hang other workers we panic,

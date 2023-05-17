@@ -70,7 +70,7 @@ func main() {
 	rdbmsDSNOrigFW := pflag.String("rdbms-dsn-fw-orig", defaultDSN, "")
 	rdbmsDriverInternal := pflag.String("rdbms-driver-internal", "mysql", "")
 	rdbmsDSNInternal := pflag.String("rdbms-dsn-internal", defaultDSN, "")
-	firmwareImageReportBaseURL := pflag.String("firmware-image-repo-baseurl", "http://localhost/", "")
+	origFirmwareImageRepoBaseURL := pflag.String("original-firmware-image-repo-baseurl", "http://orig-fw-repo:17546/", "")
 	blobStorageURL := pflag.String("blob-storage-url", "fs:///srv/afasd", "")
 	amountOfWorkers := pflag.Uint("workers", uint(runtime.NumCPU()), "amount of concurrent workers")
 	workersQueue := pflag.Uint("workers-queue", uint(runtime.NumCPU())*10000, "maximal amount of requests permitted in the queue")
@@ -124,7 +124,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	origFirmwareRepo := firmwarerepo.New(*firmwareImageReportBaseURL, "FirmwareAnalyzer")
+	origFirmwareRepo := firmwarerepo.New(*origFirmwareImageRepoBaseURL, "AttestationFailureAnalyzer")
 
 	dataCalculator, err := analysis.NewDataCalculator(*dataCacheSize)
 	if err != nil {

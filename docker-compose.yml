@@ -14,7 +14,7 @@ services:
       - db:/var/lib/mysql
       - ./scripts/initdb:/docker-entrypoint-initdb.d
       - ./pkg:/pkg
-  app:
+  afasd:
     build:
       dockerfile: Dockerfile
       context: cmd/afasd
@@ -26,11 +26,36 @@ services:
       - 17545:17545
     volumes:
       - rootgo:/root/go
+      - blobstore:/srv/afasd
       - ../AttestationFailureAnalysisService:/project
     links:
       - db
+  orig-fw-repo:
+    image: nginx
+    volumes:
+      - origfwimg:/srv/http
+    ports:
+      - 17546:17546
+    command:
+      - sh
+      - -c
+      - |
+        cat > /etc/nginx/conf.d/default.conf <<EOF
+        server {
+          listen 17546;
+          location / {
+            autoindex on;
+            root  /srv/http;
+          }
+        }
+        EOF
+        nginx -g 'daemon off;'
 volumes:
   db:
     driver: local
   rootgo:
+    driver: local
+  blobstore:
+    driver: local
+  origfwimg:
     driver: local
