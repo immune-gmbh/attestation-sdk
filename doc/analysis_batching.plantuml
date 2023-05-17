@@ -1,63 +1,50 @@
-@startuml afas_components
+@startmindmap analysis_batching
 
++[#LightGreen] AnalyzeRequest
+-- Artifacts
+--- 0: ActualFirmwareImage
+--- 1: OriginalFirmwareVersion
+--- 2: Status registers
+--- 3: TPM EventLog
+--- ...etc...
+-- AnalyzerInputs
+--- DiffMeasuredBoot
+---- ArtifactID(ActualFirmware): 0
+---- ArtifactID(OriginalFirmware): 1
+---- ArtifactID(TPMEventLog): 3
+---- ...etc...
+--- ReproducePCR
+---- ArtifactID(ActualFirmware): 0
+---- ArtifactID(TPMEventLog): 3
+---- ...etc...
+--- ...etc...
+++_ AnalyzerDispatcher
++++ DiffMeasuredBootInput
+++++_ DiffMeasuredBoot
++++ ReproducePCRInput
+++++_ ReproducePCR
++++ IntelACMInput
+++++_ IntelACM
++++ ...etc...
+++++_ ...etc...
 
-'package "Some Group" {
-'  HTTP - [First Component]
-'  [Another Component]
-'}
++[#LightGreen] AnalyzeResult
+-- DiffMeasuredBootReport
+---_ DiffMeasuredBoot
+---- DiffMeasuredBootInput
+-- ReproducePCRReport
+---_ ReproducePCR
+---- ReproducePCRInput
+-- IntelACMReport
+---_ IntelACM
+---- IntelACMInput
+-- ...etc...
+---_ ...etc...
+---- ...etc...
+++_ PrintReport
++++_ PrintDiffMeasureBootReport
++++_ PrintReproducePCRReport
++++_ PrintIntelACMReport
++++_ ...etc...
 
-node "target" {
-	[afascli]
-}
-
-node "Attestation Failure Analysis Service" {
-  interface HTTP as afasd_http
-  [afasd]
-  afasd_http - [afasd]
-
-  database MySQL as afasd_mysql {
-    folder "DB: afasd" as afasd_db {
-      file analyze_report
-      file analyzer_report
-      file "other blob metadata tables" as other_blob_metadata_tables
-      file firmware_image_metadata
-      file reproduced_pcrs
-      analyze_report -- analyzer_report
-      analyzer_report - firmware_image_metadata
-      analyzer_report -- other_blob_metadata_tables
-      firmware_image_metadata -- reproduced_pcrs
-    }
-  }
-
-  database BlobStorage as afasd_blobstorage {
-
-  }
-
-  afasd --> analyze_report: store all inputs and resulting reports
-  afasd -> afasd_blobstorage: store observed huge blob artifacts
-}
-
-afascli --> afasd_http: here is my status, diagnose it
-
-node "Repository of original firmwares (/other artifacts)" {
-  interface HTTP as origfwrepo_http
-  [origfwrepo]
-  origfwrepo_http - [origfwrepo]
-
-  database FileStorage as origfwrepo_filestorage {
-
-  }
-
-  database MySQL as origfwrepo_mysql {
-    folder "DB: firmware" as origfwrepo_db {
-      file "various tables" as tables
-    }
-  }
-
-  origfwrepo -- origfwrepo_filestorage: files
-  origfwrepo -- tables: metadata
-}
-
-afasd --> origfwrepo_http: get the original firmware for better analysis
-
-@enduml
+@endmindmap

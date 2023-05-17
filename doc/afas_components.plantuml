@@ -1,11 +1,5 @@
 @startuml afas_components
 
-
-'package "Some Group" {
-'  HTTP - [First Component]
-'  [Another Component]
-'}
-
 node "target" {
 	[afascli]
 }

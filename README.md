@@ -59,7 +59,7 @@ type BlobStorage interface {
 
 In result you will have yourown implementation of attestation failure analysis service, which is tailored to your attestation/provisioning flows. But the generic logic (like a generic API for analyzers) will be shared with other companies. You may also share specific analyzers with the public (similar to how some analyzers are published here).
 
-You can copy the hello-world implementations provided here and start gradually change them in your repository. Additional references:
+So overall you just copy the hello-world implementations provided here and start gradually change them in your repository, trying to reuse as much code as possible from this repository. Additional references:
 
 * [Here](https://github.com/facebookincubator/AttestationFailureAnalysisService/blob/main/pkg/server/controller/analyze.go#L116-L155) you can find a dispatcher of analyzers (when you will be reimplementing `controller`, this is the place where you can add yourown analyzers):
 * And [here](https://github.com/facebookincubator/AttestationFailureAnalysisService/blob/main/pkg/server/controller/types/value_calculator.go#L19-L24) you can find an example how to add yourown DataCalculators.
@@ -70,9 +70,31 @@ The analysis of this service is supposed to be heavily dependent on the [`bootfl
 
 ## Design
 
-### Components
+### Network components
 
 `AttestationFailureAnalysisService` implies dependency injection of major components, and the resulting scheme could be different. But at average it could be something like this:
 ![afas_components.png](doc/afas_components.png)
 
-For dummy demonstration there is a [`docker-compose.yml`](./docker-compose.yml) file, which brings up a scheme similar to shown above, but there `afasd` accesses directly the `firmware` tables and uses `nginx` to access the `FileStorage` (for simplicity of the demonstration).
+For dummy demonstration there is a [`docker-compose.yml`](./docker-compose.yml) file, which brings up a scheme similar to shown above, but there `afasd` accesses directly the `firmware` tables (and they are stored in the same database "`afasd`") and uses `nginx` to access the `FileStorage` (for simplicity of the demonstration).
+
+### Analysis batching
+
+To satisfy reasonable SLA for single analysis request (addressed to multiple Analyzers) we batch analyzers requests together.
+
+![analysis_batching.png](doc/analysis_batching.png)
+
+So in a nutshell:
+
+1. The client puts all artifacts into a list of artifacts. Then enumerates the list of `Analyzer`-s it wishes to run and defines the artifacts indexes as inputs to `Analyzer`-s (so that analyzers reuse the same artifacts and there is no need to send the same 64MiB image too all analyzers separately).
+2. The client sends the list of artifacts with the list of analyzer inputs to the server.
+3. The server finds an analyzer for each analyzer input and compiles an input for it.
+4. The server runs all analyzers concurrently.
+5. The server gathers reports from all analyzers and returns back to the client (and also stores to the DB).
+
+The "compiles" from point #3 above involves tree-like value resolution. For example, a couple of analyzers wants to see parsed original firmware, [aligned](https://github.com/immune-gmbh/AttestationFailureAnalysisService/blob/main/pkg/imgalign/get_aligned_image.go#L14-L19) with the actual firmware. But the client provided a binary image of the actual firmware and only a firmware version to find the original firmware. And converting the raw inputs to the required inputs -- is an expensive computation. So it is performed only once (during a single request) and then is fed to multiple analyzers (who requested that):
+
+![inputs_flow.png](doc/inputs_flow.png)
+
+`DataCalculator`-s and `Analyzer`-s were supposed to be the same entity. But for simplicity of the implementation it was temporary made two different things. May be in v2.0 it will be fixed.
+
+

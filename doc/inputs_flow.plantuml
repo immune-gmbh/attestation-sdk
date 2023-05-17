@@ -1,0 +1,62 @@
+@startuml inputs_flow
+
+package RawInputs {
+  usecase ActualFirmwareBlob as RawInputs_ActualFirmwareBlob
+  usecase OriginalFirmwareVersion as RawInputs_OriginalFirmwareVersion
+  usecase TPMEventLog as RawInputs_TPMEventLog
+}
+package DataCalculators {
+  rectangle DownloadOriginalFirmware
+  rectangle ParseOriginalFirmware
+  rectangle AlignOriginalFirmware
+
+  DownloadOriginalFirmware --> ParseOriginalFirmware
+  ParseOriginalFirmware --> AlignOriginalFirmware
+}
+
+package DiffMeasuredBoot {
+  package DiffMeasuredBootInput {
+    usecase ActualFirmwareBlob as DiffMeasuredBoot_ActualFirmwareBlob
+    usecase AlignedParsedOriginalFirmware as DiffMeasuredBoot_AlignedParsedOriginalFirmware
+  }
+  rectangle Analyze as DiffMeasuredBoot_Analyze
+  DiffMeasuredBoot_ActualFirmwareBlob --> DiffMeasuredBoot_Analyze
+  DiffMeasuredBoot_AlignedParsedOriginalFirmware --> DiffMeasuredBoot_Analyze
+  usecase DiffMeasuredBootReport
+  usecase GenericReport as DiffMeasuredBoot_GenericReport
+  DiffMeasuredBoot_Analyze --> DiffMeasuredBootReport
+  DiffMeasuredBoot_Analyze --> DiffMeasuredBoot_GenericReport
+}
+
+package ReproducePCR {
+  package ReproducePCRInput {
+    usecase ActualFirmwareBlob as ReproducePCR_ActualFirmwareBlob
+    usecase AlignedParsedOriginalFirmware as ReproducePCR_AlignedParsedOriginalFirmware
+    usecase TPMEventLog as ReproducePCR_TPMEventLog
+  }
+  rectangle Analyze as ReproducePCR_Analyze
+  ReproducePCR_ActualFirmwareBlob --> ReproducePCR_Analyze
+  ReproducePCR_AlignedParsedOriginalFirmware --> ReproducePCR_Analyze
+  ReproducePCR_TPMEventLog --> ReproducePCR_Analyze
+  usecase ReproducePCRReport
+  usecase GenericReport as ReproducePCR_GenericReport
+  ReproducePCR_Analyze --> ReproducePCRReport
+  ReproducePCR_Analyze --> ReproducePCR_GenericReport
+}
+
+RawInputs_ActualFirmwareBlob --> DiffMeasuredBoot_ActualFirmwareBlob
+RawInputs_ActualFirmwareBlob --> ReproducePCR_ActualFirmwareBlob
+RawInputs_ActualFirmwareBlob --> AlignOriginalFirmware
+RawInputs_OriginalFirmwareVersion --> DownloadOriginalFirmware
+AlignOriginalFirmware --> DiffMeasuredBoot_AlignedParsedOriginalFirmware
+AlignOriginalFirmware --> ReproducePCR_AlignedParsedOriginalFirmware
+RawInputs_TPMEventLog --> ReproducePCR_TPMEventLog
+
+usecase Result
+
+DiffMeasuredBootReport --> Result
+DiffMeasuredBoot_GenericReport --> Result
+ReproducePCRReport --> Result
+ReproducePCR_GenericReport --> Result
+
+@enduml
