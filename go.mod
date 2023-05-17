@@ -9,7 +9,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e
-	github.com/facebookincubator/go-belt v0.0.0-20230517012346-2f8d967a2649
+	github.com/facebookincubator/go-belt v0.0.0-20230517013408-bd07c9e3eef3
 	github.com/fatih/color v1.7.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/go-tpm v0.3.3
