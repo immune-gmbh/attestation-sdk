@@ -1,4 +1,9 @@
-all: thrift afascli afasd hwsecvalidator
+all: docs thrift afascli afasd hwsecvalidator
+
+docs:
+	for PLANTUML_FILE in doc/*.plantuml ; do \
+		plantuml -png $${PLANTUML_FILE} ; \
+	done
 
 builddir:
 	mkdir -p build

@@ -1,0 +1,23 @@
+@startuml attestation_success
+
+!$hide_afas = true
+!$hide_secops = true
+!includesub attestation_common.plantuml!parties
+
+!startsub scheme
+autoactivate on
+
+provisioning -> target: obtain a certificate
+
+target -> AttestService: here is a proof of a trusted state,\ngive me a token
+AttestService -> Monitoring: report success
+deactivate
+return token
+
+target -> CA: here is a token and CSR\ngive me a certificate
+return certificate
+
+return done
+!endsub
+
+@enduml

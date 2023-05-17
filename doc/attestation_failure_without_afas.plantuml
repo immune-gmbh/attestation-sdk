@@ -1,0 +1,20 @@
+@startuml attestation_failure_without_afas
+
+!$hide_afas = true
+!includesub attestation_common.plantuml!parties
+
+!startsub scheme
+autoactivate on
+
+provisioning -> target: obtain a certificate
+
+target -> AttestService: here is a proof of a trusted state,\ngive me a token
+AttestService -> Monitoring: report the failure
+Monitoring --> SecOps: escalate
+
+return failure
+
+return failed
+!endsub
+
+@enduml

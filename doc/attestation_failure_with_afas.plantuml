@@ -1,0 +1,30 @@
+@startuml attestation_failure_with_afas
+
+!includesub attestation_common.plantuml!parties
+
+!startsub scheme
+autoactivate on
+
+provisioning -> target: obtain a certificate
+
+target -> AttestService: here is a proof of a trusted state,\ngive me a token
+AttestService -> target: give me more info\nfor failure analysis
+return more info
+
+AttestService -> FailureAnalysisService: diagnose this failure
+return diagnosis
+
+AttestService -> Monitoring: report the diagnosed failure
+Monitoring --> SecOps: escalate\nif suspicious
+
+return diagnosis
+
+return diagnosis
+
+provisioning -> target: remediate
+return done
+
+!includesub attestation_success.plantuml!scheme
+!endsub
+
+@enduml
