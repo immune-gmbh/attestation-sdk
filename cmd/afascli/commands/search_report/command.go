@@ -125,7 +125,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 	}
 
 	for _, result := range result.Found {
-		analyzeformat.HumanReadable(os.Stdout, *result, true, *cmd.showNotApplicable)
+		analyzeformat.HumanReadable(os.Stdout, *result, false, true, *cmd.showNotApplicable)
 	}
 
 	return nil

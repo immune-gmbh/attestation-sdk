@@ -39,7 +39,7 @@ func init() {
 // not applicable. For example to show reports of AMD-related analyzers on an Intel target.
 //
 // TODO: use original types, instead of converted to Thrift.
-func HumanReadable(w io.Writer, result afas.AnalyzeResult_, enableColors bool, showNotSupported bool) {
+func HumanReadable(w io.Writer, result afas.AnalyzeResult_, suppressImageIDDuplicates bool, enableColors bool, showNotSupported bool) {
 	jobID, _ := types.NewJobIDFromBytes(result.JobID)
 	fmt.Fprintf(w, "Analyze job finished, jobID: %s (0x%X))\n", jobID, result.JobID)
 	for idx := 0; idx < len(result.Results); idx++ {
@@ -53,10 +53,10 @@ func HumanReadable(w io.Writer, result afas.AnalyzeResult_, enableColors bool, s
 		printAnalyzerResult(w, *analyzerResult.AnalyzerOutcome, enableColors)
 		fmt.Fprintf(w, "=== End of '%s' ===\n", analyzerResult.AnalyzerName)
 	}
-	printReferencesToImages(w, result)
+	printReferencesToImages(w, result, suppressImageIDDuplicates)
 }
 
-func printReferencesToImages(w io.Writer, result afas.AnalyzeResult_) {
+func printReferencesToImages(w io.Writer, result afas.AnalyzeResult_, suppressImageIDDuplicates bool) {
 	var actualImageIDs, originalImageIDs []types.ImageID
 	actualImageIDIsSet, originalImageIDIsSet := map[types.ImageID]struct{}{}, map[types.ImageID]struct{}{}
 	for idx := 0; idx < len(result.Results); idx++ {

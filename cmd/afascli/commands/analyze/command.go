@@ -563,6 +563,7 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 	if err != nil {
 		return commands.ErrArgs{Err: fmt.Errorf("unable to parse the -use-request flag: %w", err)}
 	}
+
 	if request == nil {
 		request, err = cmd.buildAnalyzeRequest(ctx, cfg, fwWand, args)
 		if err != nil {
@@ -616,7 +617,15 @@ func (cmd Command) Execute(ctx context.Context, cfg commands.Config, args []stri
 				return fmt.Errorf("failed to format the result: %w", err)
 			}
 		default:
-			format.HumanReadable(os.Stdout, *result, true, *cmd.showNotApplicable)
+			suppressImageIDDuplicates := false
+			for _, analyzer := range request.Analyzers {
+				switch {
+				case analyzer.IsSetDiffMeasuredBoot():
+					input := analyzer.GetDiffMeasuredBoot()
+					suppressImageIDDuplicates = input.IsSetOriginalFirmwareImage() && input.GetOriginalFirmwareImage() == input.GetActualFirmwareImage()
+				}
+			}
+			format.HumanReadable(os.Stdout, *result, suppressImageIDDuplicates, true, *cmd.showNotApplicable)
 		}
 	}
 	return nil

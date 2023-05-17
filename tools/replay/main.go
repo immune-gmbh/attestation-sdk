@@ -88,5 +88,5 @@ func main() {
 		ProcessedAt:     sql.NullTime{},
 		GroupKey:        nil,
 		AnalyzerReports: []models.AnalyzerReport{*report},
-	}), true, false)
+	}), false, true, false)
 }
