@@ -97,4 +97,11 @@ The "compiles" from point #3 above involves tree-like value resolution. For exam
 
 `DataCalculator`-s and `Analyzer`-s were supposed to be the same entity. But for simplicity of the implementation it was temporary made two different things. May be in v2.0 it will be fixed.
 
+### Dependency injection
 
+One of the major priorities of the project is dependency injection. Currently:
+
+* Analyzers are injectable if `controller` is reimplemented.
+* Network components are injectable as is.
+* Observability API [is injectable](https://github.com/facebookincubator/go-belt) as is.
+* Hardware security analysis logic is hardware injectable as is.
