@@ -3,6 +3,7 @@ package blobstorage
 import (
 	"context"
 	"encoding/base32"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -15,6 +16,10 @@ type FS struct {
 var _ BlobStorage = (*FS)(nil)
 
 func newFS(rootDir string) (*FS, error) {
+	err := os.MkdirAll(rootDir, 0750)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create the rootdir '%s': %w", rootDir, err)
+	}
 	return &FS{
 		RootDir: rootDir,
 	}, nil
