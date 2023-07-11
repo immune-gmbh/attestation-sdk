@@ -1,4 +1,4 @@
-# Contributing to AttestationFailureAnalysisService
+# Contributing to attestation-sdk
 We want to make contributing to this project as easy and transparent as
 possible.
 
@@ -12,5 +12,5 @@ We actively welcome your pull requests.
 5. Make sure your code lints.
 
 ## License
-By contributing to AttestationFailureAnalysisService, you agree that your contributions will be licensed
+By contributing to attestation-sdk, you agree that your contributions will be licensed
 under the LICENSE file in the root directory of this source tree.

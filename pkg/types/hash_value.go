@@ -18,9 +18,9 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/measurements"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/systemartifacts/biosimage"

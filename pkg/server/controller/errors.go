@@ -16,8 +16,8 @@ package controller
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/helpers"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller/helpers"
 )
 
 type ErrNoOrigImageToCompareWith = helpers.ErrNoOrigImageToCompareWith

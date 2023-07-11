@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmdetection"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
 )
 
 // Command is the implementation of `commands.Command`.

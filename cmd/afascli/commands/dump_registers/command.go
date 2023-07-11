@@ -18,8 +18,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	xregisters "github.com/immune-gmbh/attestation-sdk/pkg/registers"
 
 	css_helpers "github.com/9elements/converged-security-suite/v2/cmd/pcr0tool/commands/dumpregisters/helpers"
 )

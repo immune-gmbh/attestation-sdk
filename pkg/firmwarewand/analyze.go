@@ -15,7 +15,7 @@ package firmwarewand
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
 )
 
 // Analyze sends a multi-analyzing request to AFAS

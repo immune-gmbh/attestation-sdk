@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"os"
 
-	analyzeformat "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
-	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	analyzeformat "github.com/immune-gmbh/attestation-sdk/cmd/afascli/commands/analyze/format"
+	verbhelpers "github.com/immune-gmbh/attestation-sdk/cmd/afascli/helpers"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwarewand"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 // Command is the implementation of `commands.Command`.

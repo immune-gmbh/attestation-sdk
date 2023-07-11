@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 // AnalyzeReportGroupKey is an unique key used to aggregate multiple AnalyzeReport-s.

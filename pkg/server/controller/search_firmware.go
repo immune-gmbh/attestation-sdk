@@ -16,9 +16,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 // SearchFirmwareResult is the metadata information about firmwares which fits

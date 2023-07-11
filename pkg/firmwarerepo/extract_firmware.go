@@ -24,7 +24,7 @@ import (
 	fiano "github.com/linuxboot/fiano/pkg/uefi"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 )
 
 // ExtractFirmwareImage tries to extract firmware image from the data obtained by FirmwareStorage

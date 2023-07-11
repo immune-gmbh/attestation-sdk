@@ -12,7 +12,7 @@
 
 package firmwaredb
 
-import "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
+import "github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb/models"
 
 // FirmwareType represents description of firmware type values
 type FirmwareType = models.FirmwareType

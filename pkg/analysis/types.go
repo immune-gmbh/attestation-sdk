@@ -24,9 +24,9 @@ import (
 	"github.com/9elements/converged-security-suite/v2/pkg/uefi"
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 func init() {

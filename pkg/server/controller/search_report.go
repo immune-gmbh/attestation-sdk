@@ -18,10 +18,10 @@ import (
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/typeconv"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 type SearchReportResult = afas.SearchReportResult_

@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
 )
 
 // Command is the implementation of `commands.Command`.

@@ -14,7 +14,7 @@ package errors
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 
 	"github.com/linuxboot/fiano/pkg/guid"
 )

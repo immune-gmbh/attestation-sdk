@@ -18,12 +18,12 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/commands/analyze/format"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/replay/replay"
+	"github.com/immune-gmbh/attestation-sdk/cmd/afascli/commands/analyze/format"
+	"github.com/immune-gmbh/attestation-sdk/if/typeconv"
+	"github.com/immune-gmbh/attestation-sdk/pkg/observability"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/replay/replay"
 
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/experimental/errmon"

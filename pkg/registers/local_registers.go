@@ -16,7 +16,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/errors"
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"

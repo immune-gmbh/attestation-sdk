@@ -19,8 +19,8 @@ import (
 	"reflect"
 
 	"github.com/9elements/go-linux-lowlevel-hw/pkg/hwapi"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/txt_errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/txt_errors"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 )

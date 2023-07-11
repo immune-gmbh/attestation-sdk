@@ -15,7 +15,7 @@ package firmwarewand
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
 )
 
 func (fwwand *FirmwareWand) Dump(

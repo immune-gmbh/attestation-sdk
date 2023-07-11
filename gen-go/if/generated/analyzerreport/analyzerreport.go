@@ -9,12 +9,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
 	"time"
 )
 

@@ -16,7 +16,7 @@ import (
 )
 
 // NewMetrics returns the default Metrics handler for family of applications
-// based on AttestationFailureAnalysisService.
+// based on attestation-sdk.
 func NewMetrics() metrics.Metrics {
 	return metrics.Default()
 }

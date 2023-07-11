@@ -16,7 +16,7 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )

@@ -15,7 +15,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller"
 
 	"github.com/stretchr/testify/require"
 )

@@ -17,7 +17,7 @@ import (
 
 	"github.com/google/go-tpm/tpm2"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xtpmeventlog"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xtpmeventlog"
 )
 
 // ErrSetup is an error. See the description in method Error.

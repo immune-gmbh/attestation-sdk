@@ -17,8 +17,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller"
 )
 
 const (

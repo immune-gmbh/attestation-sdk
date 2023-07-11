@@ -18,9 +18,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/helpers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 
 	"github.com/go-sql-driver/mysql"
 )

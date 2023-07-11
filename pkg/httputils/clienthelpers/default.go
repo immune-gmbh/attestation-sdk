@@ -16,7 +16,7 @@ import (
 
 	"github.com/facebookincubator/go-belt"
 	"github.com/facebookincubator/go-belt/tool/logger"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/httputils/servermiddleware"
+	"github.com/immune-gmbh/attestation-sdk/pkg/httputils/servermiddleware"
 )
 
 func HTTPHeaders(belt *belt.Belt, removeLogLevel logger.Level) http.Header {

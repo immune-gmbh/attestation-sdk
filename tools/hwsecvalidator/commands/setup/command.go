@@ -19,8 +19,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/registry"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/registry"
 )
 
 // Command is the implementation of `commands.Command`.

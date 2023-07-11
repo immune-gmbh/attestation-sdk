@@ -17,7 +17,7 @@ import (
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 	bootflowtypes "github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flowscompat"
 )
 
 // ExtractResultingBootFlow returns the simplest bootflow, which results into

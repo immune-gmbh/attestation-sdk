@@ -14,7 +14,7 @@ package types
 import (
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
 )
 
 // Config is the settings used to adjust the validation process.

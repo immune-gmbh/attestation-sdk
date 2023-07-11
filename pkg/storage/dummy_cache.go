@@ -14,7 +14,7 @@ package storage
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
 )
 
 type dummyCache struct{}

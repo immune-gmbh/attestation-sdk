@@ -13,8 +13,8 @@
 package dataconverters
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzer"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzer/analyzers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzer/analyzers"
 )
 
 var _ analyzer.DataConverter = (*ParseOriginalFirmware)(nil)

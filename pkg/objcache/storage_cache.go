@@ -17,8 +17,8 @@ import (
 
 	"github.com/dgraph-io/ristretto"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
 )
 
 const (

@@ -21,7 +21,7 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/experimental/errmon"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
 )
 
 // DataCalculatorInterface calculates intermediate results that could be reused, like: measurements flow, fixed registers

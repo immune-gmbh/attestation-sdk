@@ -21,8 +21,8 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/hashicorp/go-multierror"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/lockmap"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/facebookincubator/go-belt/tool/logger/implementation/dummy"

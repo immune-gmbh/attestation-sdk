@@ -16,11 +16,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flowscompat"
+	"github.com/immune-gmbh/attestation-sdk/pkg/measurements"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/lib/format"

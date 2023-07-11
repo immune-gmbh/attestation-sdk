@@ -18,11 +18,11 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger/implementation/zap"
 	"github.com/facebookincubator/go-belt/tool/logger/types"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability/hooks/logentryfingerprint"
+	"github.com/immune-gmbh/attestation-sdk/pkg/observability/hooks/logentryfingerprint"
 )
 
 // NewLogger returns the default Logger for family of applications
-// based on AttestationFailureAnalysisService.
+// based on attestation-sdk.
 func NewLogger(ctx context.Context, opts ...types.Option) logger.Logger {
 	result := zap.Default()
 	result = result.WithPreHooks(logentryfingerprint.PreHook{})

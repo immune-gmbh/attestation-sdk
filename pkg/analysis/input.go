@@ -23,8 +23,8 @@ import (
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xjson"
 )
 
 // Input specifies input data for analysis

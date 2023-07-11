@@ -9,8 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/caching_policy"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/tpm"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/caching_policy"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/tpm"
 	"time"
 )
 

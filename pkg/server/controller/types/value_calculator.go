@@ -15,9 +15,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )

@@ -13,7 +13,7 @@ package imgalign
 
 import (
 	"context"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 	fianoUEFI "github.com/linuxboot/fiano/pkg/uefi"
 
 	"github.com/facebookincubator/go-belt/beltctx"

@@ -37,8 +37,8 @@ import (
 	"github.com/linuxboot/fiano/pkg/intel/metadata/cbnt"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/pcrbruteforcererrors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xtpmeventlog"
+	"github.com/immune-gmbh/attestation-sdk/pkg/pcrbruteforcererrors"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xtpmeventlog"
 )
 
 func init() {

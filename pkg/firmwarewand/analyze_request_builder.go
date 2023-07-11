@@ -16,11 +16,11 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/measurements"
+	"github.com/immune-gmbh/attestation-sdk/if/typeconv"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flowscompat"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"
 	"github.com/9elements/converged-security-suite/v2/pkg/registers"

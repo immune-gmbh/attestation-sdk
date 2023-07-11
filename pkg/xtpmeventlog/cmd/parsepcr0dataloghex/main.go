@@ -20,7 +20,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xtpmeventlog"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xtpmeventlog"
 )
 
 func assertNoError(err error) {

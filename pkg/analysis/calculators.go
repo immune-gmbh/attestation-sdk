@@ -26,11 +26,11 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/imgalign"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/imgalign"
+	"github.com/immune-gmbh/attestation-sdk/pkg/measurements"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 )
 
 type originalFirmwareInput struct {

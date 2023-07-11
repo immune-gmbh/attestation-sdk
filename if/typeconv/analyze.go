@@ -15,17 +15,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/analyzerreport"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
-	controllererrors "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/analyzerreport"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/apcbsectokens/report/generated/apcbsecanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/biosrtmvolume/report/generated/biosrtmanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	controllererrors "github.com/immune-gmbh/attestation-sdk/pkg/server/controller/errors"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
 )
 
 const (

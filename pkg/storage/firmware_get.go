@@ -14,10 +14,10 @@ package storage
 import (
 	"context"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/lockmap"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 // GetFirmware returns an image and the metadata by ImageID

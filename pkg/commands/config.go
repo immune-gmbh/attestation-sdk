@@ -13,7 +13,7 @@
 package commands
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwarewand"
 )
 
 type Config struct {

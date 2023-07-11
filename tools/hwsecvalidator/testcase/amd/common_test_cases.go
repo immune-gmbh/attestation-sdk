@@ -14,8 +14,8 @@ package amd
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
 )
 
 // PSBModifiedPEI specifies scenario when modifying PEI should lead to a non-bootable host because of PSB

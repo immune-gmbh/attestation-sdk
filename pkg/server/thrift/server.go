@@ -21,9 +21,9 @@ import (
 	"github.com/facebookincubator/go-belt"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/httputils/servermiddleware"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/httputils/servermiddleware"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller"
 )
 
 type serviceInterface interface {

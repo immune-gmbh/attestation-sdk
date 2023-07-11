@@ -18,7 +18,7 @@ import (
 )
 
 // NewTracer returns the default Tracer handler for family of applications
-// based on AttestationFailureAnalysisService.
+// based on attestation-sdk.
 func NewTracer(ctx context.Context) tracer.Tracer {
 	return tracer.Default()
 }

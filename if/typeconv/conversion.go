@@ -16,9 +16,9 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/measurements"
-	thrift_tpm "github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/tpm"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/measurements"
+	thrift_tpm "github.com/immune-gmbh/attestation-sdk/if/generated/tpm"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/types"
 	"github.com/9elements/converged-security-suite/v2/pkg/errors"

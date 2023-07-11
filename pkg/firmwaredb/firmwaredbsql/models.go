@@ -13,8 +13,8 @@
 package firmwaredbsql
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb/models"
 )
 
 // FirmwareType represents description of firmware type values

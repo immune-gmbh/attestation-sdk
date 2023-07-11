@@ -13,9 +13,9 @@ package testcase
 
 import (
 	"context"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/errors"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 )
 
 // Positive tests the happy-path (when nothing is corrupted).

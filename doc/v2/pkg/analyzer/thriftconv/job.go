@@ -13,8 +13,8 @@
 package thriftconv
 
 import (
-	thrift "github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/if/analyzer"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/pkg/analyzer"
+	thrift "github.com/immune-gmbh/attestation-sdk/doc/v2/if/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/pkg/analyzer"
 )
 
 // JobToThrift converts Job to a Thrift format.

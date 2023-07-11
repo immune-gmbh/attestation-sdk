@@ -15,11 +15,11 @@ package diffmeasuredboot
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/diffmeasuredboot/report/generated/diffanalysis"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 	pkgbytes "github.com/linuxboot/fiano/pkg/bytes"
 	"github.com/steakknife/hamming"
 )

@@ -17,10 +17,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/conv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/pspsignature/report/generated/pspsignanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/types/conv"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/types/generated/psptypes"
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
 	"github.com/facebookincubator/go-belt/tool/logger"

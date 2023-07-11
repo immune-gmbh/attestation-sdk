@@ -17,7 +17,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xjson"
 )
 
 type typeRegistryT map[TypeID]reflect.Type
@@ -99,7 +99,7 @@ func typeToID(t reflect.Type) TypeID {
 		// If the type is define in this package, then just use its name as the typeID.
 		//
 		// So that we will tag a type for example as "ActualFirmware"
-		// instead of "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis.ActualFirmware",
+		// instead of "github.com/immune-gmbh/attestation-sdk/pkg/analysis.ActualFirmware",
 		return TypeID(t.Name())
 	}
 
@@ -109,7 +109,7 @@ func typeToID(t reflect.Type) TypeID {
 		// the path inside `pkg` as the pkgpath.
 		//
 		// So that we will tag a type for example as "./analyzers/reproducepcr.ExpectedPCR0"
-		// instead of "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr.ExpectedPCR0".
+		// instead of "github.com/immune-gmbh/attestation-sdk/pkg/analyzers/reproducepcr.ExpectedPCR0".
 		relativePath := t.PkgPath()[len(pkgPkgPath)+1:]
 		return TypeID("./" + relativePath + "." + t.Name())
 	}

@@ -17,11 +17,11 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/device"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 type Storage interface {

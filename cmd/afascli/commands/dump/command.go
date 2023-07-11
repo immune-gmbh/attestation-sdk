@@ -19,8 +19,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
 
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 )

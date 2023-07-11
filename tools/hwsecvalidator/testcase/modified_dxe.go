@@ -15,10 +15,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/uefiedit"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/errors"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/uefiedit"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 
 	ffsConsts "github.com/9elements/converged-security-suite/v2/pkg/uefi/ffs/consts"
 	"github.com/klauspost/cpuid/v2"

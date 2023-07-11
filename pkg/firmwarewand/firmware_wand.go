@@ -16,8 +16,8 @@ import (
 	"context"
 	"os"
 
-	afas_client "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/client"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	afas_client "github.com/immune-gmbh/attestation-sdk/pkg/client"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
 
 	"github.com/facebookincubator/go-belt/beltctx"
 )

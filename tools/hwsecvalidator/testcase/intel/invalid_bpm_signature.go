@@ -16,9 +16,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/errors"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/errors"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 
 	"github.com/linuxboot/fiano/pkg/intel/metadata/fit"
 )

@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/if/generated/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/if/generated/analyzer"
 	"time"
 )
 

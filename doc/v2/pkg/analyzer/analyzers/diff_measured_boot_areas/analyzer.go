@@ -21,12 +21,12 @@ import (
 	"github.com/facebookincubator/go-belt/beltctx"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	ifanalyzer "github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/if/generated/analyzer"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/pkg/analyzer"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/pkg/analyzer/analyzers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/pkg/analyzer/analyzers/diff_measured_boot_areas/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/doc/v2/pkg/analyzer/dataconverters"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/diffdiag"
+	ifanalyzer "github.com/immune-gmbh/attestation-sdk/doc/v2/if/generated/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/pkg/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/pkg/analyzer/analyzers"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/pkg/analyzer/analyzers/diff_measured_boot_areas/helpers"
+	"github.com/immune-gmbh/attestation-sdk/doc/v2/pkg/analyzer/dataconverters"
+	"github.com/immune-gmbh/attestation-sdk/pkg/diffdiag"
 )
 
 type Input struct {

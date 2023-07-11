@@ -14,13 +14,13 @@ package analyzers
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/apcbsectokens"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/biosrtmvolume"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/pspsignature"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/diffmeasuredboot"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/apcbsectokens"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/biosrtmvolume"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/pspsignature"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/diffmeasuredboot"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/intelacm"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/reproducepcr"
 )
 
 // AnalyzerFactory represents a factory method for new analyzers

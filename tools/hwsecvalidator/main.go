@@ -32,11 +32,11 @@ import (
 	xlogrus "github.com/facebookincubator/go-belt/tool/logger/implementation/logrus"
 	fianoLog "github.com/linuxboot/fiano/pkg/log"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/fwinfo"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/list"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/setup"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/commands/validate"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/commands/fwinfo"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/commands/list"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/commands/setup"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/commands/validate"
 )
 
 var (

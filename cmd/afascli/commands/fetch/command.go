@@ -24,10 +24,10 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	verbhelpers "github.com/immune-gmbh/AttestationFailureAnalysisService/cmd/afascli/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwarewand"
+	verbhelpers "github.com/immune-gmbh/attestation-sdk/cmd/afascli/helpers"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwarewand"
 )
 
 // Command is the implementation of `commands.Command`.

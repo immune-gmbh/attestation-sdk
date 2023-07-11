@@ -1,10 +1,10 @@
-# `AttestationFailureAnalysisService`
+# `attestation-sdk`
 
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## About
 
-`AttestationFailureAnalysisService` is an extendible (dependency-injection focused) service tailored to provide machine readable reports, explaining why [Remote Attestation](https://en.wikipedia.org/wiki/Trusted_Computing#Remote_attestation) failed.
+`attestation-sdk` demonstrates an `AttestationFailureAnalysisService` -- an extendible (dependency-injection focused) service tailored to provide machine readable reports, explaining why [Remote Attestation](https://en.wikipedia.org/wiki/Trusted_Computing#Remote_attestation) failed.
 
 The initial purpose of this service is to automatically handle the red block in this diagram:
 ![attestation_overall.png](doc/media/attestation_overall.png)
@@ -63,12 +63,12 @@ In result you will have yourown implementation of attestation failure analysis s
 
 So overall you just copy the hello-world implementations provided here and start gradually change them in your repository, trying to reuse as much code as possible from this repository. Additional references:
 
-* [Here](https://github.com/facebookincubator/AttestationFailureAnalysisService/blob/main/pkg/server/controller/analyze.go#L116-L155) you can find a dispatcher of analyzers (when you will be reimplementing `controller`, this is the place where you can add yourown analyzers):
-* And [here](https://github.com/facebookincubator/AttestationFailureAnalysisService/blob/main/pkg/server/controller/types/value_calculator.go#L19-L24) you can find an example how to add yourown DataCalculators.
+* [Here](https://github.com/facebookincubator/attestation-sdk/blob/main/pkg/server/controller/analyze.go#L116-L155) you can find a dispatcher of analyzers (when you will be reimplementing `controller`, this is the place where you can add yourown analyzers):
+* And [here](https://github.com/facebookincubator/attestation-sdk/blob/main/pkg/server/controller/types/value_calculator.go#L19-L24) you can find an example how to add yourown DataCalculators.
 
 ### -- [`converged-security-suite`](https://github.com/9elements/converged-security-suite) --
 
-The analysis of this service is supposed to be heavily dependent on the [`bootflow`](https://github.com/9elements/converged-security-suite/tree/f6a71d3e2098ea46983678ec1e74bfb1c45f82c2/pkg/bootflow) package of `converged-security-suite`. This package is designed to be dependency-injectable, so when implementing an [Analyzer](https://github.com/immune-gmbh/AttestationFailureAnalysisService/blob/main/pkg/analysis/types.go#L38-L42) feel free to define yourown [`Flow`](https://github.com/9elements/converged-security-suite/blob/f6a71d3e2098ea46983678ec1e74bfb1c45f82c2/pkg/bootflow/flows/root.go#L10-L14). `<...the documentation how to do that is to be developed...>`
+The analysis of this service is supposed to be heavily dependent on the [`bootflow`](https://github.com/9elements/converged-security-suite/tree/f6a71d3e2098ea46983678ec1e74bfb1c45f82c2/pkg/bootflow) package of `converged-security-suite`. This package is designed to be dependency-injectable, so when implementing an [Analyzer](https://github.com/immune-gmbh/attestation-sdk/blob/main/pkg/analysis/types.go#L38-L42) feel free to define yourown [`Flow`](https://github.com/9elements/converged-security-suite/blob/f6a71d3e2098ea46983678ec1e74bfb1c45f82c2/pkg/bootflow/flows/root.go#L10-L14). `<...the documentation how to do that is to be developed...>`
 
 ## Design
 
@@ -93,7 +93,7 @@ So in a nutshell:
 4. The server runs all analyzers concurrently.
 5. The server gathers reports from all analyzers and returns back to the client (and also stores to the DB).
 
-The "compiles" from point #3 above involves tree-like value resolution. For example, a couple of analyzers wants to see parsed original firmware, [aligned](https://github.com/immune-gmbh/AttestationFailureAnalysisService/blob/main/pkg/imgalign/get_aligned_image.go#L14-L19) with the actual firmware. But the client provided a binary image of the actual firmware and only a firmware version to find the original firmware. And converting the raw inputs to the required inputs -- is an expensive computation. So it is performed only once (during a single request) and then is fed to multiple analyzers (who requested that):
+The "compiles" from point #3 above involves tree-like value resolution. For example, a couple of analyzers wants to see parsed original firmware, [aligned](https://github.com/immune-gmbh/attestation-sdk/blob/main/pkg/imgalign/get_aligned_image.go#L14-L19) with the actual firmware. But the client provided a binary image of the actual firmware and only a firmware version to find the original firmware. And converting the raw inputs to the required inputs -- is an expensive computation. So it is performed only once (during a single request) and then is fed to multiple analyzers (who requested that):
 
 ![inputs_flow.png](doc/media/inputs_flow.png)
 

@@ -9,7 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/amd/types/generated/psptypes"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/amd/types/generated/psptypes"
 	"time"
 )
 

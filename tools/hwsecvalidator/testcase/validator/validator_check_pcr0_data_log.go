@@ -16,7 +16,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xtpmeventlog"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xtpmeventlog"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/conditions/biosconds/intelconds"
 	"github.com/9elements/converged-security-suite/v2/pkg/tpmeventlog"

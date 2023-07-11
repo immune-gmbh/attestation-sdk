@@ -19,7 +19,7 @@ import (
 
 	"github.com/9elements/converged-security-suite/v2/cmd/pcr0tool/commands/sum"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/commands"
+	"github.com/immune-gmbh/attestation-sdk/pkg/commands"
 )
 
 // Command is the implementation of `commands.Command`.

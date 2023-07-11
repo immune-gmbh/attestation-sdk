@@ -16,7 +16,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
 )
 
 // CachedValue represents a value stored in DataCache

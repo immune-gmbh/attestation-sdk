@@ -27,7 +27,7 @@ services:
     volumes:
       - rootgo:/root/go
       - blobstore:/srv/afasd
-      - ../AttestationFailureAnalysisService:/project
+      - ../attestation-sdk:/project
     links:
       - db
   orig-fw-repo:

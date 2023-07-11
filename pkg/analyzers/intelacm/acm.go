@@ -17,7 +17,7 @@ import (
 
 	"github.com/linuxboot/fiano/pkg/intel/metadata/fit"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/intelacm/report/generated/intelacmanalysis"
 )
 
 // GetACMInfo tries to parse ACM information from a firmware image

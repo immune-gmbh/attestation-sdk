@@ -12,7 +12,7 @@ thrift:
 	rm -rf gen-go
 	find . -type l -name generated -exec rm -f {} +
 	for THRIFT_FILE in if/afas.thrift if/txt_errors.thrift if/device.thrift doc/v2/if/service.thrift ; do \
-		thrift -r --gen go:package_prefix=github.com/immune-gmbh/AttestationFailureAnalysisService/ $${THRIFT_FILE} ; \
+		thrift -r --gen go:package_prefix=github.com/immune-gmbh/attestation-sdk/ $${THRIFT_FILE} ; \
 	done
 	go fmt ./gen-go/...
 	for GENERATED_PATH in $(shell find gen-go -name generated | sed -e 's%gen-go/%%g' -e 's%/generated$$%%g') ; do \

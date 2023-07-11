@@ -16,7 +16,7 @@ import (
 	"database/sql/driver"
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson"
+	"github.com/immune-gmbh/attestation-sdk/pkg/xjson"
 )
 
 // Severity represents severity of an issue

@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb/models"
 )
 
 // Filter defines conditions to select firmware entries

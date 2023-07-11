@@ -19,12 +19,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	xregisters "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/registers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
+	"github.com/immune-gmbh/attestation-sdk/pkg/measurements"
+	xregisters "github.com/immune-gmbh/attestation-sdk/pkg/registers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller/helpers"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
 
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/bootengine"
 	"github.com/9elements/converged-security-suite/v2/pkg/bootflow/flows"

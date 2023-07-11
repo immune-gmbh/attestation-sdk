@@ -12,7 +12,7 @@
 package amd
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 )
 
 // NewPSPSignatureVerificationFailedSELValidator creates Validator that expects a signature verification failed SEL event

@@ -15,8 +15,8 @@ package devicegetter
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/device"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller"
 )
 
 // This is a dummy placeholder to replace code, which is specific to a company infra.

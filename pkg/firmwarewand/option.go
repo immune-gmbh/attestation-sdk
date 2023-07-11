@@ -13,7 +13,7 @@
 package firmwarewand
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flashrom"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flashrom"
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 )

@@ -23,9 +23,9 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/google/uuid"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 func (ctrl *Controller) saveImage(

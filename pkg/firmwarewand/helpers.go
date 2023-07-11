@@ -15,8 +15,8 @@ package firmwarewand
 import (
 	"os"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
 )
 
 func localHostInfo() (*afas.HostInfo, error) {

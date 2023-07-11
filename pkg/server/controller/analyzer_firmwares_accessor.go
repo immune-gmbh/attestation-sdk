@@ -21,16 +21,16 @@ import (
 	"github.com/facebookincubator/go-belt/tool/experimental/tracer"
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/dmidecode"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/lockmap"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/objhash"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/analyzerinput"
-	controllertypes "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/server/controller/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/uefi"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/dmidecode"
+	"github.com/immune-gmbh/attestation-sdk/pkg/lockmap"
+	"github.com/immune-gmbh/attestation-sdk/pkg/objhash"
+	"github.com/immune-gmbh/attestation-sdk/pkg/server/controller/analyzerinput"
+	controllertypes "github.com/immune-gmbh/attestation-sdk/pkg/server/controller/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/uefi"
 )
 
 // AnalyzerFirmwareAccessor implements analysis.Blob, but it is

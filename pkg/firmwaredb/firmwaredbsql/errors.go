@@ -15,7 +15,7 @@ package firmwaredbsql
 import (
 	"fmt"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb"
 )
 
 type UnableToOpen struct{}

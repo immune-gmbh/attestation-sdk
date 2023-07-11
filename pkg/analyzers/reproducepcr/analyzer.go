@@ -32,12 +32,12 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/google/go-tpm/tpm2"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/typeconv"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/flowscompat"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/measurements"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/if/typeconv"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzers/reproducepcr/report/generated/reproducepcranalysis"
+	"github.com/immune-gmbh/attestation-sdk/pkg/flowscompat"
+	"github.com/immune-gmbh/attestation-sdk/pkg/measurements"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 
 	// TODO: delete this:
 	"github.com/9elements/converged-security-suite/v2/pkg/pcr"

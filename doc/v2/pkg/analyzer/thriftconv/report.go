@@ -13,8 +13,8 @@
 package thriftconv
 
 import (
-	thrift "github.com/immune-gmbh/AttestationFailureAnalysisService/if/analyzer"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/analyzer"
+	thrift "github.com/immune-gmbh/attestation-sdk/if/analyzer"
+	"github.com/immune-gmbh/attestation-sdk/pkg/analyzer"
 )
 
 func ReportFromThrift(t *thrift.AnalysisReport) *analyzer.Report {

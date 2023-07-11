@@ -16,9 +16,9 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/device"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/identity"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/device"
+	"github.com/immune-gmbh/attestation-sdk/pkg/identity"
 )
 
 // ExtractHostnameFromCtx extracts hostname from provided thrift context

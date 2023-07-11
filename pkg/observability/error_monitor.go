@@ -20,7 +20,7 @@ import (
 )
 
 // NewErrorMonitor returns the default ErrorMonitor for family of applications
-// based on AttestationFailureAnalysisService.
+// based on attestation-sdk.
 func NewErrorMonitor(ctx context.Context, l logger.Logger) errmon.ErrorMonitor {
 	return errmonlogger.New(l)
 }

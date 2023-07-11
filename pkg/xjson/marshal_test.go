@@ -77,15 +77,15 @@ func (typeIDHandlerT) NewByTypeID(typeID TypeID) (any, error) {
 
 func newByTypeID(typeID TypeID) any {
 	switch typeID {
-	case "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct0":
+	case "github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct0":
 		return &Struct0{}
-	case "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct1":
+	case "github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct1":
 		return &Struct1{}
-	case "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct2":
+	case "github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct2":
 		return &Struct2{}
-	case "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct3":
+	case "github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct3":
 		return &Struct3{}
-	case "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.blob":
+	case "github.com/immune-gmbh/attestation-sdk/pkg/xjson.blob":
 		return &blob{}
 	case "int":
 		return &[]int{0}[0]
@@ -141,13 +141,13 @@ func TestMarshalUnmarshal(t *testing.T) {
 
 	expectedJSON := `{
 		"Iface0": {
-		  "github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct3": {
+		  "github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct3": {
 			"Int2": 5
 		  }
 		},
 		"Map": {
 		  "Struct1Key": {
-			"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct1": {
+			"github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct1": {
 			  "Iface1": null,
 			  "Int1": 7,
 			  "int": 6
@@ -156,16 +156,16 @@ func TestMarshalUnmarshal(t *testing.T) {
 		},
 		"Struct1": {
 		  "Iface1": {
-			"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.blob": "aGVsbG8gd29ybGQh"
+			"github.com/immune-gmbh/attestation-sdk/pkg/xjson.blob": "aGVsbG8gd29ybGQh"
 		  },
 		  "Int1": null,
 		  "int": 1
 		},
 		"StructPtr": {
 		  "Iface2": {
-			"*github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.Struct1": {
+			"*github.com/immune-gmbh/attestation-sdk/pkg/xjson.Struct1": {
 			  "Iface1": {
-				"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/xjson.blob": "aGVsbG8gYWdhaW4h"
+				"github.com/immune-gmbh/attestation-sdk/pkg/xjson.blob": "aGVsbG8gYWdhaW4h"
 			  },
 			  "Int1": 4,
 			  "int": 3

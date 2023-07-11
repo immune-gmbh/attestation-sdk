@@ -11,12 +11,12 @@ import (
 
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/go-sql-driver/mysql"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/blobstorage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/observability"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/blobstorage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/observability"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/helpers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 	"github.com/spf13/pflag"
 )
 

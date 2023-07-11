@@ -13,7 +13,7 @@
 package analyzers
 
 import (
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 type DumpedFirmwareStorage interface {

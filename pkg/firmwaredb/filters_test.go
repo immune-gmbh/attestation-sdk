@@ -15,7 +15,7 @@ package firmwaredb
 import (
 	"testing"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/firmwaredb/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/firmwaredb/models"
 	"github.com/stretchr/testify/require"
 )
 

@@ -15,7 +15,7 @@ package firmwarewand
 import (
 	"io"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/if/generated/afas"
+	"github.com/immune-gmbh/attestation-sdk/if/generated/afas"
 )
 
 type afasClient interface {

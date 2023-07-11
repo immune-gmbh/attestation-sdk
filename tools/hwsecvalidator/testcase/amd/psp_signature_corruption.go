@@ -19,8 +19,8 @@ import (
 	amd_manifest "github.com/linuxboot/fiano/pkg/amd/manifest"
 	"github.com/linuxboot/fiano/pkg/amd/psb"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/types"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/tools/hwsecvalidator/testcase/validator"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/types"
+	"github.com/immune-gmbh/attestation-sdk/tools/hwsecvalidator/testcase/validator"
 )
 
 // PSPSignatureCorruption is a configurable TestCase for corrupting AMD PSP firmware

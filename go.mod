@@ -1,4 +1,4 @@
-module github.com/immune-gmbh/AttestationFailureAnalysisService
+module github.com/immune-gmbh/attestation-sdk
 
 go 1.20
 

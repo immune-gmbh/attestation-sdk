@@ -21,9 +21,9 @@ import (
 	"github.com/facebookincubator/go-belt/tool/logger"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/helpers"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/storage/models"
-	"github.com/immune-gmbh/AttestationFailureAnalysisService/pkg/types"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/helpers"
+	"github.com/immune-gmbh/attestation-sdk/pkg/storage/models"
+	"github.com/immune-gmbh/attestation-sdk/pkg/types"
 )
 
 // InsertAnalyzeReport adds information about performed analysis.
@@ -245,7 +245,7 @@ func (stor *Storage) findAnalyzeReports(
 		//                analyze_report_id: 4193
 		//                      analyzer_id: DiffMeasuredBoot
 		//                       exec_error: NULL
-		//                            input: {"AssetID": 289649253, "ActualPCR0": "4lh54GB6ZmMElEnWrS3Ngf+3vmQ=", "ActualRegisters": {}, "ActualFirmwareBlob": {"Blob": {"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types.AnalyzerFirmwareAccessor": {"ImageID": "29ab3067dd805e21dc1f686bb5d4050fed61db9466edab018a7a6a4e4ea23cb90bbf99320b772d6b1ad4c56257052c72579cb82d3f35e01ed2de87cd9701df75a4e18db3d5b8a48d4c40352efda0279cc5aa586004daa5398c0ce133a879d5460186cf2ade9caad54e652d2c7303c922165277a895f4dd860d22a66db3455cce"}}}, "OriginalFirmwareBlob": {"Blob": {"github.com/immune-gmbh/AttestationFailureAnalysisService/server/controller/types.AnalyzerFirmwareAccessor": [...]}
+		//                            input: {"AssetID": 289649253, "ActualPCR0": "4lh54GB6ZmMElEnWrS3Ngf+3vmQ=", "ActualRegisters": {}, "ActualFirmwareBlob": {"Blob": {"github.com/immune-gmbh/attestation-sdk/server/controller/types.AnalyzerFirmwareAccessor": {"ImageID": "29ab3067dd805e21dc1f686bb5d4050fed61db9466edab018a7a6a4e4ea23cb90bbf99320b772d6b1ad4c56257052c72579cb82d3f35e01ed2de87cd9701df75a4e18db3d5b8a48d4c40352efda0279cc5aa586004daa5398c0ce133a879d5460186cf2ade9caad54e652d2c7303c922165277a895f4dd860d22a66db3455cce"}}}, "OriginalFirmwareBlob": {"Blob": {"github.com/immune-gmbh/attestation-sdk/server/controller/types.AnalyzerFirmwareAccessor": [...]}
 		//                   diagnosis_code: FirmwareVersionMismatch
 		//   input_actual_firmware_image_id: 0x29AB3067DD805E21DC1F686BB5D4050FED61DB9466EDAB018A7A6A4E4EA23CB90BBF99320B772D6B1AD4C56257052C72579CB82D3F35E01ED2DE87CD9701DF75A4E18DB3D5B8A48D4C40352EFDA0279CC5AA586004DAA5398C0CE133A879D5460186CF2ADE9CAAD54E652D2C7303C922165277A895F4DD860D22A66DB3455CCE
 		// input_original_firmware_image_id: 0x49E2C8F354E589DD361911204A365289AE5319795E38290F1BFCBA6977904A9587AA4FCD9266D6AF3F01EDD6467CAD5FEB3F23769BB770DD98A3F3DB6A892F13C7949E72308F081B187ED77DB2A32F8210636998C201F50EBC3F0CAFFB56CF71303CBD643203FC1A54932347D48FC2F2065F15777203CA02C13CB4C207A74988
