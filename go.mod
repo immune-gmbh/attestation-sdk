@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/9elements/converged-security-suite/v2 v2.7.1-0.20230512141505-f6a71d3e2098
 	github.com/9elements/go-linux-lowlevel-hw v0.0.0-20220518111144-a82949f8ff5b
-	github.com/apache/thrift v0.18.1
+	github.com/apache/thrift v0.17.1-0.20230202210901-d21188a627bd
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/digitalocean/go-smbios v0.0.0-20180907143718-390a4f403a8e
