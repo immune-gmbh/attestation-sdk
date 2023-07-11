@@ -552,8 +552,8 @@ github.com/xaionaro-facebook/go-dmidecode v0.0.0-20220413144237-c42d5bef2498/go.
 github.com/xaionaro-go/bytesextra v0.0.0-20220103144954-846e454ddea9 h1:LZsotURuIwV1yjhoaTpbdZHf0/7QtWtvXH8VZ4zs/ug=
 github.com/xaionaro-go/bytesextra v0.0.0-20220103144954-846e454ddea9/go.mod h1:op5hoGu7YbHB+PlxrR0jAhl5OaCpYCEqtdCfusfZCYk=
 github.com/xaionaro-go/gosrc v0.0.0-20201124181305-3fdf8476a735/go.mod h1:KWPOUqeg7VZ8gE4MQJJmG+YgmNf2yAkBiDI++R48tFg=
-github.com/xaionaro-go/unhash v0.0.0-20230427202706-0195a574c620 h1:XeXMsbvhUk06JRW3EMjWNdcudPvtu967ITc9LXSYG/Q=
-github.com/xaionaro-go/unhash v0.0.0-20230427202706-0195a574c620/go.mod h1:1oN15HnlwCVXbKEi8NdAYB427WQsC3wYvcpigcClk28=
+github.com/xaionaro-go/unhash v0.0.0-20230711171103-6b2ccd4bc15e h1:mnW/N2Ksf9WiKC1xH0S2VJbq/iLhHc0E96cl9/dVP8M=
+github.com/xaionaro-go/unhash v0.0.0-20230711171103-6b2ccd4bc15e/go.mod h1:1oN15HnlwCVXbKEi8NdAYB427WQsC3wYvcpigcClk28=
 github.com/xaionaro-go/unsafetools v0.0.0-20210722164218-75ba48cf7b3c h1:WeiZrQbFImtlpYCHdxWpjm033Zm0n1ihx3bD/9b6rYI=
 github.com/xaionaro-go/unsafetools v0.0.0-20210722164218-75ba48cf7b3c/go.mod h1:fnHPnf0CsRZNVxlSs0ZdUiYW49mLF5QFycfmoT+LuO4=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=

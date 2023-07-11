@@ -62,7 +62,7 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/xaionaro-go/bytesextra v0.0.0-20220103144954-846e454ddea9 // indirect
-	github.com/xaionaro-go/unhash v0.0.0-20230427202706-0195a574c620 // indirect
+	github.com/xaionaro-go/unhash v0.0.0-20230711171103-6b2ccd4bc15e // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
